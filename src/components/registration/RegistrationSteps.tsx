@@ -10,7 +10,7 @@ const RegistrationSteps: React.FC<RegistrationStepsProps> = ({ currentStep }) =>
     { number: 1, label: "Personal Info" },
     { number: 2, label: "Experience" },
     { number: 3, label: "Essays" },
-    { number: 4, label: "Committees & Details" },
+    { number: 4, label: "Details" },
     { number: 5, label: "Confirmation" },
   ];
 

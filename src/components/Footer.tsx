@@ -72,18 +72,17 @@ export default function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start">
                 <Mail className="mr-3 shrink-0 mt-1 text-blue-300" size={18} />
-                <span className="text-blue-200 text-sm sm:text-base">info@TuronMUN.org</span>
+                <span className="text-blue-200 text-sm sm:text-base">organization@turonmun.com</span>
               </li>
               <li className="flex items-start">
                 <Phone className="mr-3 shrink-0 mt-1 text-blue-300" size={18} />
-                <span className="text-blue-200 text-sm sm:text-base">+1 (555) 123-4567</span>
+                <span className="text-blue-200 text-sm sm:text-base">+7 778 226 68 70</span>
               </li>
               <li className="flex items-start">
                 <MapPin className="mr-3 shrink-0 mt-1 text-blue-300" size={18} />
                 <span className="text-blue-200 text-sm sm:text-base">
                   TuronMUN Conference Center<br />
-                  123 Diplomat Avenue<br />
-                  New York, NY 10001
+                  Fergana, Uzbekistan<br />
                 </span>
               </li>
             </ul>

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, MapPin, ChevronDown, ChevronUp, Filter } from 'lucide-react';
@@ -26,7 +25,7 @@ interface ScheduleDay {
 const scheduleData: ScheduleDay[] = [
   {
     day: 'Day 1',
-    date: 'July 28, 2025',
+    date: 'July 18, 2025',
     events: [
       { 
         time: '08:00 - 09:30', 

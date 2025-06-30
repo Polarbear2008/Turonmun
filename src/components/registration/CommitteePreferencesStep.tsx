@@ -59,10 +59,10 @@ const EssayStep: React.FC<EssayStepProps> = ({
       <p className="text-neutral-600 mb-6">Share your thoughts and perspectives through these essay questions</p>
       
       <div className="space-y-8">
-        {/* What sets you apart as a delegate? */}
+        {/* What aspects of your background, thinking, or presence set you apart from most delegates */}
         <div className="form-group">
           <label htmlFor="uniqueDelegateTrait" className="block text-sm font-medium text-neutral-700 mb-1">
-            What sets you apart as a delegate? <span className="text-red-500">*</span>
+            What aspects of your background, thinking, or presence set you apart from most delegates - and how? <span className="text-red-500">*</span>
           </label>
           <div className="relative">
             <div className="absolute top-3 left-0 pl-3 flex items-start pointer-events-none">

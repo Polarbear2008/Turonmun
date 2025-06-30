@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Mail, MessageCircle, Building, Calendar, Globe, Phone, Upload, ArrowRight } from 'lucide-react';
+import { User, Mail, MessageCircle, Building, Calendar, Globe, Phone, Upload, ArrowRight, CheckCircle } from 'lucide-react';
 
 interface PersonalInfoStepProps {
   formData: {
@@ -14,9 +14,17 @@ interface PersonalInfoStepProps {
   };
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
   nextStep: () => void;
+  photoFile?: File | null;
+  updatePhotoFile?: (file: File | null) => void;
 }
 
-const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ formData, handleChange, nextStep }) => {
+const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ 
+  formData, 
+  handleChange, 
+  nextStep,
+  photoFile,
+  updatePhotoFile 
+}) => {
   const isFormValid = () => {
     return (
       formData.fullName.trim() !== '' &&
@@ -143,7 +151,7 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ formData, handleCha
               required
             />
           </div>
-          <p className="text-xs text-neutral-500 mt-1">Format: DD/MM/YYYY</p>
+          <p className="text-xs text-neutral-500 mt-1">Format: MM/DD/YYYY</p>
         </div>
         
         {/* Country and City */}
@@ -193,7 +201,7 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ formData, handleCha
         {/* Upload Photo (Optional) */}
         <div className="form-group">
           <label htmlFor="photo" className="block text-sm font-medium text-neutral-700 mb-1">
-            Upload Your Photo <span className="text-neutral-500">(Optional)</span>
+            📷 Upload Your Photo <span className="text-neutral-500">(Optional)</span>
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -203,12 +211,23 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({ formData, handleCha
               type="file"
               id="photo"
               name="photo"
-              onChange={handleChange}
-              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0] || null;
+                if (updatePhotoFile) {
+                  updatePhotoFile(file);
+                }
+              }}
+              accept="image/jpeg,image/jpg,image/png,image/webp"
               className="pl-10 w-full px-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-diplomatic-300 focus:border-transparent transition-all file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-diplomatic-50 file:text-diplomatic-700 hover:file:bg-diplomatic-100"
             />
           </div>
-          <p className="text-xs text-neutral-500 mt-1">For your conference badge – headshots preferred, under 5MB if possible</p>
+          <p className="text-xs text-neutral-500 mt-1">For conference badge, headshots preferred, under 5MB (JPG, PNG, WebP)</p>
+          {photoFile && (
+            <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
+              <CheckCircle size={12} />
+              Photo selected: {photoFile.name}
+            </p>
+          )}
         </div>
       </div>
       

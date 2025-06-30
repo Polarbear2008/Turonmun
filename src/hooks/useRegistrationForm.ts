@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { sendRegistrationToGoogleSheets } from '../utils/googleSheetsIntegration';
-import { useToast } from './use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { sendRegistrationToGoogleSheets } from '@/utils/googleSheetsIntegration';
+import { uploadPhoto, uploadCertificate, generateApplicationId, uploadIELTSCertificate, uploadSATCertificate } from '@/utils/fileUpload';
 
 interface RegistrationFormData {
   fullName: string;
@@ -21,20 +22,18 @@ interface RegistrationFormData {
   type1InsightResponse: string;
   type2SelectedPrompt: string;
   type2PoliticalResponse: string;
-  committeePreference1: string;
-  committeePreference2: string;
-  committeePreference3: string;
-  motivation: string;
   feeAgreement: string;
   discountEligibility: string[];
   proofDocument: File | null;
-  cityOfDeparture: string;
-  specialNotes: string;
   finalConfirmation: boolean;
-  dietaryRestrictions: string;
   hasIELTS: boolean;
   hasSAT: boolean;
   agreeToTerms: boolean;
+  committee_preference1: string;
+  committee_preference2: string;
+  committee_preference3: string;
+  motivation: string;
+  applicationId: string;
 }
 
 interface FeeCalculation {
@@ -61,19 +60,19 @@ interface ApplicationData {
   type1_insight_response: string;
   type2_selected_prompt: string;
   type2_political_response: string;
+  fee_agreement: string;
+  discount_eligibility: string;
+  final_confirmation: boolean;
+  has_ielts: boolean;
+  has_sat: boolean;
+  status: string;
   committee_preference1: string;
   committee_preference2: string;
   committee_preference3: string;
   motivation: string;
-  fee_agreement: string;
-  discount_eligibility: string;
-  city_of_departure: string;
-  special_notes: string;
-  final_confirmation: boolean;
-  dietary_restrictions: string;
-  has_ielts: boolean;
-  has_sat: boolean;
-  status: string;
+  application_id: string;
+  photo_url: string;
+  certificate_url: string;
 }
 
 export const useRegistrationForm = () => {
@@ -97,22 +96,25 @@ export const useRegistrationForm = () => {
     type1InsightResponse: '',
     type2SelectedPrompt: '',
     type2PoliticalResponse: '',
-    committeePreference1: '',
-    committeePreference2: '',
-    committeePreference3: '',
-    motivation: '',
     feeAgreement: '',
     discountEligibility: [],
     proofDocument: null,
-    cityOfDeparture: '',
-    specialNotes: '',
     finalConfirmation: false,
-    dietaryRestrictions: '',
     hasIELTS: false,
     hasSAT: false,
-    agreeToTerms: false
+    agreeToTerms: false,
+    committee_preference1: 'Not Selected',
+    committee_preference2: 'Not Selected',
+    committee_preference3: 'Not Selected',
+    motivation: 'Not provided',
+    applicationId: generateApplicationId(),
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // File Upload State - Updated for dual certificates
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [ieltsFile, setIeltsFile] = useState<File | null>(null);
+  const [satFile, setSatFile] = useState<File | null>(null);
 
   // Calculate registration fee based on discount eligibility
   const calculateFee = (): FeeCalculation => {
@@ -167,34 +169,147 @@ export const useRegistrationForm = () => {
 
   const nextStep = () => {
     setStep(prev => prev + 1);
-    window.scrollTo(0, 0);
+    // Scroll to registration form section instead of top
+    setTimeout(() => {
+      const formElement = document.getElementById('registration-form-section');
+      if (formElement) {
+        formElement.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start',
+          inline: 'nearest'
+        });
+      }
+    }, 100);
   };
 
   const prevStep = () => {
     setStep(prev => prev - 1);
-    window.scrollTo(0, 0);
+    // Scroll to registration form section instead of top
+    setTimeout(() => {
+      const formElement = document.getElementById('registration-form-section');
+      if (formElement) {
+        formElement.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start',
+          inline: 'nearest'
+        });
+      }
+    }, 100);
   };
 
+  /**
+   * Update photo file
+   */
+  const updatePhotoFile = (file: File | null) => {
+    setPhotoFile(file);
+  };
+
+  /**
+   * Update IELTS certificate file
+   */
+  const updateIeltsCertificate = (file: File | null) => {
+    setIeltsFile(file);
+  };
+
+  /**
+   * Update SAT certificate file  
+   */
+  const updateSatCertificate = (file: File | null) => {
+    setSatFile(file);
+  };
+
+  /**
+   * Handle form submission - wrapper that manages success/failure flow
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
-      // 1. Send data to Google Sheets via Make.com webhook
-      let sheetsResult;
-      try {
-        sheetsResult = await sendRegistrationToGoogleSheets(formData);
+      const success = await submitForm();
+      if (success) {
+        // Move to confirmation step on success
+        nextStep();
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  /**
+   * Submit the complete registration form
+   */
+  const submitForm = async (): Promise<boolean> => {
+    try {
+      // Generate unique application ID
+      const applicationId = generateApplicationId();
+      
+      let photoUrl = '';
+      let ieltsUrl = '';
+      let satUrl = '';
+
+      // Upload photo if provided
+      if (photoFile) {
+        toast({
+          title: "Uploading photo...",
+          description: "Please wait while we upload your photo.",
+        });
         
-        if (!sheetsResult.success) {
-          console.error('Google Sheets error:', sheetsResult.message);
+        const photoResult = await uploadPhoto(photoFile, applicationId);
+        if (!photoResult.success) {
+          toast({
+            title: "Photo upload failed",
+            description: photoResult.error,
+            variant: "destructive",
+          });
+          return false;
         }
-      } catch (sheetError) {
-        console.error('Error sending to Google Sheets:', sheetError);
-        // Continue with Supabase even if Google Sheets fails
+        photoUrl = photoResult.url || '';
       }
 
-      // 2. Save to Supabase database for backup and admin management
-      const applicationData: ApplicationData = {
+      // Upload IELTS certificate if provided
+      if (ieltsFile) {
+        toast({
+          title: "Uploading IELTS certificate...",
+          description: "Please wait while we upload your IELTS certificate.",
+        });
+        
+        const ieltsResult = await uploadIELTSCertificate(ieltsFile, applicationId);
+        if (!ieltsResult.success) {
+          toast({
+            title: "IELTS certificate upload failed",
+            description: ieltsResult.error,
+            variant: "destructive",
+          });
+          return false;
+        }
+        ieltsUrl = ieltsResult.url || '';
+      }
+
+      // Upload SAT certificate if provided  
+      if (satFile) {
+        toast({
+          title: "Uploading SAT certificate...",
+          description: "Please wait while we upload your SAT certificate.",
+        });
+        
+        const satResult = await uploadSATCertificate(satFile, applicationId);
+        if (!satResult.success) {
+          toast({
+            title: "SAT certificate upload failed",
+            description: satResult.error,
+            variant: "destructive",
+          });
+          return false;
+        }
+        satUrl = satResult.url || '';
+      }
+
+      // Prepare form data with file URLs - INCLUDE ALL FORM FIELDS!
+      const submissionData = {
+        // Basic info fields
         full_name: formData.fullName,
         email: formData.email,
         telegram_username: formData.telegramUsername,
@@ -203,74 +318,74 @@ export const useRegistrationForm = () => {
         country: formData.countryAndCity,
         phone: formData.phone,
         experience: formData.experience,
+        
+        // Extended personal info
         previous_muns: formData.previousMUNs,
         portfolio_link: formData.portfolioLink,
+        
+        // Essay responses (THE MISSING DATA!)
         unique_delegate_trait: formData.uniqueDelegateTrait,
         issue_interest: formData.issueInterest,
         type1_selected_prompt: formData.type1SelectedPrompt,
         type1_insight_response: formData.type1InsightResponse,
         type2_selected_prompt: formData.type2SelectedPrompt,
         type2_political_response: formData.type2PoliticalResponse,
-        committee_preference1: formData.committeePreference1,
-        committee_preference2: formData.committeePreference2,
-        committee_preference3: formData.committeePreference3,
-        motivation: formData.motivation,
+        
+        // Committee preferences
+        committee_preference1: formData.committee_preference1 || 'Not Selected',
+        committee_preference2: formData.committee_preference2 || 'Not Selected', 
+        committee_preference3: formData.committee_preference3 || 'Not Selected',
+        motivation: formData.motivation || 'Not provided',
+        
+        // Fee and agreement data (THE MISSING DATA!)
         fee_agreement: formData.feeAgreement,
         discount_eligibility: formData.discountEligibility.join(', '),
-        city_of_departure: formData.cityOfDeparture,
-        special_notes: formData.specialNotes,
         final_confirmation: formData.finalConfirmation,
-        dietary_restrictions: formData.dietaryRestrictions,
-        has_ielts: formData.hasIELTS,
-        has_sat: formData.hasSAT,
-        status: 'pending',
+        
+        // Scores
+        has_ielts: formData.discountEligibility.includes('IELTS'),
+        has_sat: formData.discountEligibility.includes('SAT'),
+        
+        // File URLs
+        application_id: applicationId,
+        photo_url: photoUrl,
+        ielts_certificate_url: ieltsUrl,
+        sat_certificate_url: satUrl,
+        certificate_url: ieltsUrl || satUrl || '', // Backward compatibility
+        
+        // Status
+        status: 'pending'
       };
 
-      console.log('Saving application to Supabase:', applicationData);
-      
-      // Ensure we don't have undefined/null values that might cause issues
-      Object.keys(applicationData).forEach(key => {
-        const typedKey = key as keyof ApplicationData;
-        if (applicationData[typedKey] === undefined || applicationData[typedKey] === null) {
-          if (typeof applicationData[typedKey] === 'string') {
-            (applicationData[typedKey as keyof ApplicationData] as string) = '';
-          } else if (typeof applicationData[typedKey] === 'boolean') {
-            (applicationData[typedKey as keyof ApplicationData] as boolean) = false;
-          }
-        }
+      // Submit to database
+      toast({
+        title: "Submitting application...",
+        description: "Please wait while we process your application.",
       });
-      
-      const { data, error } = await supabase
-        .from('applications')
-        .insert(applicationData)
-        .select();
 
-      if (error) {
-        console.error('Supabase error:', error);
+      const { error: dbError } = await supabase
+        .from('applications')
+        .insert([submissionData]);
+
+      if (dbError) {
+        console.error('Database submission error:', dbError);
         toast({
-          title: "Application Error",
-          description: "There was a problem submitting your application. Please try again or contact support.",
+          title: "Submission failed",
+          description: "Failed to submit your application. Please try again.",
           variant: "destructive",
         });
-        return;
+        return false;
       }
 
-      console.log('Application saved successfully:', data);
-      
-      // Store success message in localStorage for after redirect
-      localStorage.setItem('registrationSuccess', 'true');
-      
-      // Move to confirmation step
-      nextStep();
+      return true;
     } catch (error) {
-      console.error('Submission error:', error);
+      console.error('Form submission error:', error);
       toast({
-        title: "Submission Error",
-        description: "There was a problem submitting your application. Please try again.",
+        title: "Submission failed",
+        description: "An unexpected error occurred. Please try again.",
         variant: "destructive",
       });
-    } finally {
-      setIsSubmitting(false);
+      return false;
     }
   };
 
@@ -282,6 +397,12 @@ export const useRegistrationForm = () => {
     handleChange,
     nextStep,
     prevStep,
-    handleSubmit
+    handleSubmit,
+    photoFile,
+    ieltsFile,
+    satFile,
+    updatePhotoFile,
+    updateIeltsCertificate,
+    updateSatCertificate
   };
 };

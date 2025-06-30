@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -32,7 +31,13 @@ const Registration = () => {
     handleChange,
     nextStep,
     prevStep,
-    handleSubmit
+    handleSubmit,
+    photoFile,
+    ieltsFile,
+    satFile,
+    updatePhotoFile,
+    updateIeltsCertificate,
+    updateSatCertificate
   } = useRegistrationForm();
 
   return (
@@ -53,6 +58,12 @@ const Registration = () => {
             nextStep={nextStep}
             prevStep={prevStep}
             handleSubmit={handleSubmit}
+            photoFile={photoFile}
+            ieltsFile={ieltsFile}
+            satFile={satFile}
+            updatePhotoFile={updatePhotoFile}
+            updateIeltsCertificate={updateIeltsCertificate}
+            updateSatCertificate={updateSatCertificate}
           />
         </div>
       </main>

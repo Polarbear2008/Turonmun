@@ -16,7 +16,8 @@ import {
   XCircle, 
   Trash2,
   ExternalLink,
-  Clock
+  Clock,
+  Upload
 } from 'lucide-react';
 
 interface Application {
@@ -43,14 +44,16 @@ interface Application {
   motivation?: string;
   fee_agreement?: string;
   discount_eligibility?: string;
-  city_of_departure?: string;
-  special_notes?: string;
   final_confirmation?: boolean;
-  dietary_restrictions?: string;
   has_ielts: boolean;
   has_sat: boolean;
   status: 'pending' | 'approved' | 'rejected';
   created_at: string;
+  application_id?: string;
+  photo_url?: string;
+  certificate_url?: string;
+  ielts_certificate_url?: string;
+  sat_certificate_url?: string;
 }
 
 interface ApplicationManagementModalProps {
@@ -201,6 +204,120 @@ const ApplicationManagementModal: React.FC<ApplicationManagementModalProps> = ({
                 </div>
               </div>
               
+              {/* Uploaded Files */}
+              {(application.photo_url || application.ielts_certificate_url || application.sat_certificate_url || application.certificate_url) && (
+                <div className="bg-purple-50 rounded-lg p-6">
+                  <h3 className="text-lg font-semibold mb-4 flex items-center">
+                    <Upload size={20} className="mr-2 text-purple-600" />
+                    Uploaded Files
+                  </h3>
+                  
+                  <div className="space-y-4">
+                    {application.photo_url && (
+                      <div>
+                        <span className="text-sm font-medium text-gray-600 block mb-2">📷 Applicant Photo:</span>
+                        <div className="flex items-start space-x-3">
+                          <img 
+                            src={application.photo_url} 
+                            alt={`${application.full_name}'s photo`}
+                            className="w-20 h-20 object-cover rounded-lg border border-gray-200 shadow-sm"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                            }}
+                          />
+                          <div className="flex-1">
+                            <a 
+                              href={application.photo_url} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-purple-600 hover:underline flex items-center text-sm"
+                            >
+                              <ExternalLink size={14} className="mr-1" />
+                              View Full Size
+                            </a>
+                            <p className="text-xs text-gray-500 mt-1">Click to open in new tab</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* IELTS Certificate */}
+                    {application.ielts_certificate_url && (
+                      <div>
+                        <span className="text-sm font-medium text-gray-600 block mb-2">📄 IELTS Certificate:</span>
+                        <div className="bg-white p-3 rounded border border-green-200">
+                          <a 
+                            href={application.ielts_certificate_url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-green-600 hover:underline flex items-center text-sm font-medium"
+                          >
+                            <FileText size={16} className="mr-2" />
+                            {application.ielts_certificate_url.toLowerCase().includes('.pdf') ? 'View IELTS PDF' : 'View IELTS Image'}
+                            <ExternalLink size={14} className="ml-1" />
+                          </a>
+                          <p className="text-xs text-gray-500 mt-1">IELTS score verification document</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* SAT Certificate */}
+                    {application.sat_certificate_url && (
+                      <div>
+                        <span className="text-sm font-medium text-gray-600 block mb-2">📊 SAT Certificate:</span>
+                        <div className="bg-white p-3 rounded border border-blue-200">
+                          <a 
+                            href={application.sat_certificate_url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:underline flex items-center text-sm font-medium"
+                          >
+                            <FileText size={16} className="mr-2" />
+                            {application.sat_certificate_url.toLowerCase().includes('.pdf') ? 'View SAT PDF' : 'View SAT Image'}
+                            <ExternalLink size={14} className="ml-1" />
+                          </a>
+                          <p className="text-xs text-gray-500 mt-1">SAT score verification document</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Legacy Certificate (for backward compatibility) */}
+                    {application.certificate_url && !application.ielts_certificate_url && !application.sat_certificate_url && (
+                      <div>
+                        <span className="text-sm font-medium text-gray-600 block mb-2">📋 Legacy Certificate:</span>
+                        <div className="bg-white p-3 rounded border border-gray-200">
+                          <a 
+                            href={application.certificate_url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-purple-600 hover:underline flex items-center text-sm font-medium"
+                          >
+                            <FileText size={16} className="mr-2" />
+                            {application.certificate_url.toLowerCase().includes('.pdf') ? 'View Certificate PDF' : 'View Certificate Image'}
+                            <ExternalLink size={14} className="ml-1" />
+                          </a>
+                          <p className="text-xs text-gray-500 mt-1">IELTS/SAT score verification document</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Discount Status Display */}
+                    <div className="bg-white p-3 rounded border border-gray-200">
+                      <h4 className="text-sm font-medium text-gray-700 mb-2">🎯 Discount Status:</h4>
+                      <div className="flex items-center space-x-4 text-xs">
+                        <div className={`px-2 py-1 rounded ${application.has_ielts ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}`}>
+                          IELTS: {application.has_ielts ? 'Eligible' : 'Not Selected'}
+                        </div>
+                        <div className={`px-2 py-1 rounded ${application.has_sat ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-600'}`}>
+                          SAT: {application.has_sat ? 'Eligible' : 'Not Selected'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
               {/* Experience & Background */}
               <div className="bg-gray-50 rounded-lg p-6">
                 <h3 className="text-lg font-semibold mb-4 flex items-center">
@@ -266,7 +383,7 @@ const ApplicationManagementModal: React.FC<ApplicationManagementModalProps> = ({
                 <div className="space-y-4">
                   {application.unique_delegate_trait && (
                     <div>
-                      <h4 className="text-sm font-semibold text-blue-800 mb-2">What sets you apart as a delegate?</h4>
+                      <h4 className="text-sm font-semibold text-blue-800 mb-2">What aspects of your background, thinking, or presence set you apart from most delegates - and how?</h4>
                       <p className="text-sm text-gray-800 bg-white p-3 rounded border leading-relaxed">
                         {application.unique_delegate_trait}
                       </p>
@@ -305,43 +422,39 @@ const ApplicationManagementModal: React.FC<ApplicationManagementModalProps> = ({
                   )}
                 </div>
               </div>
-              
-              {/* Motivation */}
-              {application.motivation && (
-                <div className="bg-green-50 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold mb-4 flex items-center">
-                    <Users size={20} className="mr-2 text-green-600" />
-                    Motivation for Joining
-                  </h3>
-                  <p className="text-sm text-gray-800 bg-white p-3 rounded border leading-relaxed">
-                    {application.motivation}
-                  </p>
-                </div>
-              )}
             </div>
             
             {/* Right Column - Preferences & Additional Info */}
             <div className="space-y-6">
               {/* Committee Preferences */}
-              <div className="bg-purple-50 rounded-lg p-6">
+              <div className="bg-green-50 rounded-lg p-6">
                 <h3 className="text-lg font-semibold mb-4 flex items-center">
-                  <Users size={20} className="mr-2 text-purple-600" />
+                  <Users size={20} className="mr-2 text-green-600" />
                   Committee Preferences
                 </h3>
                 
-                <div className="space-y-2">
-                  <div className="flex items-center">
-                    <span className="w-6 h-6 bg-purple-600 text-white rounded-full text-xs flex items-center justify-center mr-3">1</span>
-                    <span className="text-sm font-medium">{application.committee_preference1}</span>
+                <div className="space-y-3">
+                  <div>
+                    <span className="text-sm font-medium text-gray-600">Committee Choices:</span>
+                    <ol className="list-decimal pl-5 mt-1 space-y-1">
+                      <li className="text-sm text-gray-800">
+                        <strong>1st Choice:</strong> {application.committee_preference1}
+                      </li>
+                      <li className="text-sm text-gray-800">
+                        <strong>2nd Choice:</strong> {application.committee_preference2}
+                      </li>
+                      <li className="text-sm text-gray-800">
+                        <strong>3rd Choice:</strong> {application.committee_preference3}
+                      </li>
+                    </ol>
                   </div>
-                  <div className="flex items-center">
-                    <span className="w-6 h-6 bg-purple-500 text-white rounded-full text-xs flex items-center justify-center mr-3">2</span>
-                    <span className="text-sm font-medium">{application.committee_preference2}</span>
-                  </div>
-                  {application.committee_preference3 && (
-                    <div className="flex items-center">
-                      <span className="w-6 h-6 bg-purple-400 text-white rounded-full text-xs flex items-center justify-center mr-3">3</span>
-                      <span className="text-sm font-medium">{application.committee_preference3}</span>
+                  
+                  {application.motivation && application.motivation !== 'Not provided' && (
+                    <div>
+                      <span className="text-sm font-medium text-gray-600">Motivation for Joining:</span>
+                      <p className="text-sm text-gray-800 mt-1 bg-white p-3 rounded border leading-relaxed">
+                        {application.motivation}
+                      </p>
                     </div>
                   )}
                 </div>
@@ -374,13 +487,6 @@ const ApplicationManagementModal: React.FC<ApplicationManagementModalProps> = ({
                       <p className="text-sm text-gray-800 mt-1">{application.discount_eligibility}</p>
                     </div>
                   )}
-                  
-                  {application.city_of_departure && (
-                    <div>
-                      <span className="text-sm font-medium text-gray-600">City of Departure:</span>
-                      <p className="text-sm text-gray-800 mt-1">{application.city_of_departure}</p>
-                    </div>
-                  )}
                 </div>
               </div>
               
@@ -389,24 +495,6 @@ const ApplicationManagementModal: React.FC<ApplicationManagementModalProps> = ({
                 <h3 className="text-lg font-semibold mb-4">Additional Information</h3>
                 
                 <div className="space-y-4">
-                  {application.special_notes && (
-                    <div>
-                      <span className="text-sm font-medium text-gray-600">Special Notes/Requests:</span>
-                      <p className="text-sm text-gray-800 mt-1 bg-white p-3 rounded border">
-                        {application.special_notes}
-                      </p>
-                    </div>
-                  )}
-                  
-                  {application.dietary_restrictions && (
-                    <div>
-                      <span className="text-sm font-medium text-gray-600">Dietary Restrictions:</span>
-                      <p className="text-sm text-gray-800 mt-1 bg-white p-3 rounded border">
-                        {application.dietary_restrictions}
-                      </p>
-                    </div>
-                  )}
-                  
                   <div>
                     <span className="text-sm font-medium text-gray-600">Final Confirmation:</span>
                     <p className={`text-sm mt-1 px-2 py-1 rounded inline-block ${

@@ -17,14 +17,11 @@ ADD COLUMN type2_selected_prompt VARCHAR(10),
 ADD COLUMN type2_political_response TEXT,
 ADD COLUMN fee_agreement VARCHAR(10),
 ADD COLUMN discount_eligibility VARCHAR(100),
-ADD COLUMN city_of_departure VARCHAR(100),
-ADD COLUMN special_notes TEXT,
 ADD COLUMN final_confirmation BOOLEAN DEFAULT false;
 
 -- Add indexes for the new columns
 CREATE INDEX idx_applications_telegram ON applications(telegram_username);
 CREATE INDEX idx_applications_date_of_birth ON applications(date_of_birth);
-CREATE INDEX idx_applications_city_departure ON applications(city_of_departure);
 
 -- Update any existing records with placeholder values if needed
 -- (This is safe since we're adding nullable columns)
@@ -42,6 +39,4 @@ COMMENT ON COLUMN applications.type2_selected_prompt IS 'Selected prompt for Typ
 COMMENT ON COLUMN applications.type2_political_response IS 'Response to Type II Political Reflection prompt (115 words)';
 COMMENT ON COLUMN applications.fee_agreement IS 'Agreement to pay application fee (Yes/No)';
 COMMENT ON COLUMN applications.discount_eligibility IS 'Selected discount eligibility options (IELTS, SAT, None)';
-COMMENT ON COLUMN applications.city_of_departure IS 'City the applicant will be traveling from';
-COMMENT ON COLUMN applications.special_notes IS 'Any personal notes, preferences, or health/travel conditions';
 COMMENT ON COLUMN applications.final_confirmation IS 'Final confirmation that all information is accurate'; 

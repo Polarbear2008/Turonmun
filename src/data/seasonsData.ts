@@ -176,7 +176,7 @@ export const seasonsData = [
     id: "season5",
     year: "2025",
     title: "Season Five",
-    date: "July 28, 2025",
+    date: "July 18, 2025",
     endDate: "July 31, 2025",
     location: "Tashkent, Uzbekistan (Venue TBA)",
     route: "/past-conferences?season=5",

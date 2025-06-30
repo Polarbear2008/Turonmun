@@ -101,9 +101,8 @@ export default function Footer() {
               <li className="flex items-start">
                 <MapPin className="mr-3 shrink-0 mt-1 text-blue-300" size={18} />
                 <span className="text-blue-200 text-sm sm:text-base">
-                  FPSMUN Conference Center<br />
-                  123 Diplomat Avenue<br />
-                  New York, NY 10001
+                  TuronMUN Conference Center<br />
+                  Fergana, Uzbekistan<br />
                 </span>
               </li>
             </ul>

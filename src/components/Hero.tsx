@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { CustomButton } from './ui/custom-button';
 import { transitionVariants } from '@/lib/transition-utils';
 
-const conferenceDate = new Date('2025-07-28T09:00:00');
+const conferenceDate = new Date('2025-07-18T09:00:00');
 const conferenceLocation = 'Tashkent, Uzbekistan';
 
 const phrases = [
@@ -310,7 +310,7 @@ const Hero = () => {
                     className="flex items-center text-sm sm:text-base text-white"
                   >
                     <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-gold-400 mr-2.5" />
-                    <span>July 28, 2025</span>
+                    <span>July 18, 2025</span>
                   </motion.div>
                   
                   <motion.div 

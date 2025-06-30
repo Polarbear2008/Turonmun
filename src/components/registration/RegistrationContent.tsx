@@ -17,6 +17,12 @@ interface RegistrationContentProps {
   nextStep: () => void;
   prevStep: () => void;
   handleSubmit: (e: React.FormEvent) => Promise<void>;
+  photoFile?: File | null;
+  ieltsFile?: File | null;
+  satFile?: File | null;
+  updatePhotoFile?: (file: File | null) => void;
+  updateIeltsCertificate?: (file: File | null) => void;
+  updateSatCertificate?: (file: File | null) => void;
 }
 
 const RegistrationContent: React.FC<RegistrationContentProps> = ({
@@ -27,7 +33,13 @@ const RegistrationContent: React.FC<RegistrationContentProps> = ({
   handleChange,
   nextStep,
   prevStep,
-  handleSubmit
+  handleSubmit,
+  photoFile,
+  ieltsFile,
+  satFile,
+  updatePhotoFile,
+  updateIeltsCertificate,
+  updateSatCertificate
 }) => {
   const fee = calculateFee();
 
@@ -74,7 +86,7 @@ const RegistrationContent: React.FC<RegistrationContentProps> = ({
       </motion.div>
       
       {/* Registration form */}
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-3xl mx-auto" id="registration-form-section" style={{ scrollMarginTop: '80px' }}>
         <motion.div
           key={`step-${step}`}
           initial={{ opacity: 0, x: 20 }}
@@ -86,7 +98,9 @@ const RegistrationContent: React.FC<RegistrationContentProps> = ({
             <PersonalInfoStep 
               formData={formData} 
               handleChange={handleChange} 
-              nextStep={nextStep} 
+              nextStep={nextStep}
+              photoFile={photoFile}
+              updatePhotoFile={updatePhotoFile}
             />
           )}
           
@@ -116,6 +130,10 @@ const RegistrationContent: React.FC<RegistrationContentProps> = ({
               handleSubmit={handleSubmit}
               prevStep={prevStep}
               isSubmitting={isSubmitting}
+              ieltsFile={ieltsFile}
+              satFile={satFile}
+              updateIeltsCertificate={updateIeltsCertificate}
+              updateSatCertificate={updateSatCertificate}
             />
           )}
           

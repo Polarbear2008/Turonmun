@@ -17,10 +17,7 @@ interface AdditionalInfoStepProps {
     feeAgreement: string;
     discountEligibility: string[];
     proofDocument: File | null;
-    cityOfDeparture: string;
-    specialNotes: string;
     finalConfirmation: boolean;
-    dietaryRestrictions: string;
     agreeToTerms: boolean;
   };
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
@@ -28,6 +25,10 @@ interface AdditionalInfoStepProps {
   handleSubmit: (e: React.FormEvent) => void;
   prevStep: () => void;
   isSubmitting?: boolean;
+  updateIeltsCertificate?: (file: File | null) => void;
+  ieltsFile?: File | null;
+  updateSatCertificate?: (file: File | null) => void;
+  satFile?: File | null;
 }
 
 const AdditionalInfoStep: React.FC<AdditionalInfoStepProps> = ({ 
@@ -36,17 +37,17 @@ const AdditionalInfoStep: React.FC<AdditionalInfoStepProps> = ({
   calculateFee, 
   handleSubmit, 
   prevStep,
-  isSubmitting = false
+  isSubmitting = false,
+  updateIeltsCertificate,
+  ieltsFile,
+  updateSatCertificate,
+  satFile
 }) => {
   const fee = calculateFee();
 
   const isFormValid = () => {
     return (
-      formData.committeePreference1.trim() !== '' &&
-      formData.committeePreference2.trim() !== '' &&
-      formData.motivation.trim() !== '' &&
       formData.feeAgreement === 'Yes' &&
-      formData.cityOfDeparture.trim() !== '' &&
       formData.finalConfirmation &&
       formData.agreeToTerms
     );
@@ -57,115 +58,10 @@ const AdditionalInfoStep: React.FC<AdditionalInfoStepProps> = ({
 
   return (
     <div className="bg-white rounded-xl shadow-elegant p-8 border border-neutral-100">
-      <h2 className="text-2xl font-display font-semibold mb-2">Page 4 — Confirmation & Logistics</h2>
+      <h2 className="text-2xl font-display font-semibold mb-2">Page 4 — Details</h2>
       <p className="text-neutral-600 mb-6">Complete your registration with final details and confirmations</p>
       
       <div className="space-y-8">
-        {/* Committee Preferences Section */}
-        <div className="p-4 bg-neutral-50 rounded-lg border border-neutral-200">
-          <h3 className="text-lg font-semibold mb-4 text-diplomatic-800">Committee Preferences</h3>
-          
-          <div className="space-y-4">
-            {/* 1st Committee Preference */}
-            <div className="form-group">
-              <label htmlFor="committeePreference1" className="block text-sm font-medium text-neutral-700 mb-1">
-                1st Committee Preference <span className="text-red-500">*</span>
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Users size={18} className="text-neutral-400" />
-                </div>
-                <select
-                  id="committeePreference1"
-                  name="committeePreference1"
-                  value={formData.committeePreference1}
-                  onChange={handleChange}
-                  className="pl-10 w-full px-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-diplomatic-300 focus:border-transparent transition-all"
-                  required
-                >
-                  <option value="">Select your first choice</option>
-                  <option value="UNGA">United Nations General Assembly (UNGA)</option>
-                  <option value="WTO">World Trade Organization (WTO)</option>
-                  <option value="ECOSOC">Economic and Social Council (ECOSOC)</option>
-                  <option value="HRC">Human Rights Council (HRC)</option>
-                </select>
-              </div>
-            </div>
-
-            {/* 2nd Committee Preference */}
-            <div className="form-group">
-              <label htmlFor="committeePreference2" className="block text-sm font-medium text-neutral-700 mb-1">
-                2nd Committee Preference <span className="text-red-500">*</span>
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Users size={18} className="text-neutral-400" />
-                </div>
-                <select
-                  id="committeePreference2"
-                  name="committeePreference2"
-                  value={formData.committeePreference2}
-                  onChange={handleChange}
-                  className="pl-10 w-full px-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-diplomatic-300 focus:border-transparent transition-all"
-                  required
-                >
-                  <option value="">Select your second choice</option>
-                  <option value="UNGA">United Nations General Assembly (UNGA)</option>
-                  <option value="WTO">World Trade Organization (WTO)</option>
-                  <option value="ECOSOC">Economic and Social Council (ECOSOC)</option>
-                  <option value="HRC">Human Rights Council (HRC)</option>
-                </select>
-              </div>
-            </div>
-
-            {/* 3rd Committee Preference */}
-            <div className="form-group">
-              <label htmlFor="committeePreference3" className="block text-sm font-medium text-neutral-700 mb-1">
-                3rd Committee Preference <span className="text-neutral-500">(Optional)</span>
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Users size={18} className="text-neutral-400" />
-                </div>
-                <select
-                  id="committeePreference3"
-                  name="committeePreference3"
-                  value={formData.committeePreference3}
-                  onChange={handleChange}
-                  className="pl-10 w-full px-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-diplomatic-300 focus:border-transparent transition-all"
-                >
-                  <option value="">Select your third choice (optional)</option>
-                  <option value="UNGA">United Nations General Assembly (UNGA)</option>
-                  <option value="WTO">World Trade Organization (WTO)</option>
-                  <option value="ECOSOC">Economic and Social Council (ECOSOC)</option>
-                  <option value="HRC">Human Rights Council (HRC)</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Motivation */}
-            <div className="form-group">
-              <label htmlFor="motivation" className="block text-sm font-medium text-neutral-700 mb-1">
-                Motivation for Joining <span className="text-red-500">*</span>
-              </label>
-              <div className="relative">
-                <div className="absolute top-3 left-0 pl-3 flex items-start pointer-events-none">
-                  <FileText size={18} className="text-neutral-400" />
-                </div>
-                <textarea
-                  id="motivation"
-                  name="motivation"
-                  value={formData.motivation}
-                  onChange={handleChange}
-                  rows={4}
-                  className="pl-10 w-full px-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-diplomatic-300 focus:border-transparent transition-all resize-none"
-                  placeholder="Briefly describe why you want to participate in this MUN and what you hope to gain from the experience."
-                  required
-                />
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* Application Fee Agreement */}
         <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
@@ -310,85 +206,88 @@ const AdditionalInfoStep: React.FC<AdditionalInfoStepProps> = ({
               Upload Proof for Discounts
             </h3>
             
-            <div className="form-group">
-              <label htmlFor="proofDocument" className="block text-sm font-medium text-neutral-700 mb-1">
-                Upload your IELTS/SAT score document or screenshot
-              </label>
-              <div className="relative">
-                <input
-                  type="file"
-                  id="proofDocument"
-                  name="proofDocument"
-                  onChange={handleChange}
-                  accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                  className="w-full px-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-diplomatic-300 focus:border-transparent transition-all file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-yellow-50 file:text-yellow-700 hover:file:bg-yellow-100"
-                />
+            <div className="space-y-4">
+              {/* IELTS Certificate Upload */}
+              {formData.discountEligibility.includes('IELTS') && (
+                <div className="form-group">
+                  <label htmlFor="ieltsDocument" className="block text-sm font-medium text-neutral-700 mb-1">
+                    📄 Upload your IELTS Score Report
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="file"
+                      id="ieltsDocument"
+                      name="ieltsDocument"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0] || null;
+                        // Handle IELTS file upload via props
+                        if (updateIeltsCertificate) {
+                          updateIeltsCertificate(file);
+                        }
+                      }}
+                      accept=".pdf,.jpg,.jpeg,.png"
+                      className="w-full px-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-diplomatic-300 focus:border-transparent transition-all file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+                    />
+                  </div>
+                  <p className="text-xs text-neutral-500 mt-1">
+                    Upload IELTS score certificate (PDF, JPG, PNG only, max 10MB)
+                  </p>
+                  {ieltsFile && (
+                    <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
+                      <CheckCircle size={12} />
+                      IELTS file selected: {ieltsFile.name}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/* SAT Certificate Upload */}
+              {formData.discountEligibility.includes('SAT') && (
+                <div className="form-group">
+                  <label htmlFor="satDocument" className="block text-sm font-medium text-neutral-700 mb-1">
+                    📊 Upload your SAT Score Report
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="file"
+                      id="satDocument"
+                      name="satDocument"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0] || null;
+                        // Handle SAT file upload via props
+                        if (updateSatCertificate) {
+                          updateSatCertificate(file);
+                        }
+                      }}
+                      accept=".pdf,.jpg,.jpeg,.png"
+                      className="w-full px-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-diplomatic-300 focus:border-transparent transition-all file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                    />
+                  </div>
+                  <p className="text-xs text-neutral-500 mt-1">
+                    Upload SAT score certificate (PDF, JPG, PNG only, max 10MB)
+                  </p>
+                  {satFile && (
+                    <p className="text-xs text-blue-600 mt-1 flex items-center gap-1">
+                      <CheckCircle size={12} />
+                      SAT file selected: {satFile.name}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/* Upload Instructions */}
+              <div className="p-3 bg-white rounded border border-yellow-100">
+                <h4 className="text-sm font-semibold text-neutral-700 mb-2">📝 Upload Guidelines:</h4>
+                <ul className="text-xs text-neutral-600 space-y-1">
+                  <li>• Upload only the certificates for discounts you selected above</li>
+                  <li>• Accepted formats: PDF, JPG, PNG (max 10MB each)</li>
+                  <li>• Make sure scores are clearly visible</li>
+                  <li>• Files will be securely stored and reviewed by admins</li>
+                </ul>
               </div>
-              <p className="text-xs text-neutral-500 mt-1">Optional unless discount selected</p>
             </div>
           </div>
         )}
-
-        {/* City of Departure */}
-        <div className="form-group">
-          <label htmlFor="cityOfDeparture" className="block text-sm font-medium text-neutral-700 mb-1">
-            City of Departure <span className="text-red-500">*</span>
-          </label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <MapPin size={18} className="text-neutral-400" />
-            </div>
-            <input
-              type="text"
-              id="cityOfDeparture"
-              name="cityOfDeparture"
-              value={formData.cityOfDeparture}
-              onChange={handleChange}
-              className="pl-10 w-full px-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-diplomatic-300 focus:border-transparent transition-all"
-              placeholder="Which city will you be traveling from?"
-              required
-            />
-          </div>
-          <p className="text-xs text-neutral-500 mt-1">Useful for planning communication or outreach</p>
-        </div>
-
-        {/* Special Notes / Requests */}
-        <div className="form-group">
-          <label htmlFor="specialNotes" className="block text-sm font-medium text-neutral-700 mb-1">
-            Special Notes / Requests <span className="text-neutral-500">(Optional)</span>
-          </label>
-          <div className="relative">
-            <div className="absolute top-3 left-0 pl-3 flex items-start pointer-events-none">
-              <MessageSquare size={18} className="text-neutral-400" />
-            </div>
-            <textarea
-              id="specialNotes"
-              name="specialNotes"
-              value={formData.specialNotes}
-              onChange={handleChange}
-              rows={3}
-              className="pl-10 w-full px-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-diplomatic-300 focus:border-transparent transition-all resize-none"
-              placeholder="Any personal notes, preferences, or health/travel conditions you'd like to share?"
-            />
-          </div>
-          <p className="text-xs text-neutral-500 mt-1">Optional</p>
-        </div>
-
-        {/* Dietary Restrictions */}
-        <div className="form-group">
-          <label htmlFor="dietaryRestrictions" className="block text-sm font-medium text-neutral-700 mb-1">
-            Dietary Restrictions <span className="text-neutral-500">(Optional)</span>
-          </label>
-          <textarea
-            id="dietaryRestrictions"
-            name="dietaryRestrictions"
-            value={formData.dietaryRestrictions}
-            onChange={handleChange}
-            rows={2}
-            className="w-full px-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-diplomatic-300 focus:border-transparent transition-all"
-            placeholder="Please specify any dietary restrictions or allergies you may have."
-          />
-        </div>
 
         {/* Final Confirmation */}
         <div className="p-4 bg-diplomatic-50 rounded-lg border border-diplomatic-200">

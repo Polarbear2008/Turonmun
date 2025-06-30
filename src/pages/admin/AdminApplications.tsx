@@ -29,14 +29,16 @@ interface Application {
   motivation?: string;
   fee_agreement?: string;
   discount_eligibility?: string;
-  city_of_departure?: string;
-  special_notes?: string;
   final_confirmation?: boolean;
-  dietary_restrictions?: string;
   has_ielts: boolean;
   has_sat: boolean;
   status: 'pending' | 'approved' | 'rejected';
   created_at: string;
+  application_id?: string;
+  photo_url?: string;
+  certificate_url?: string;
+  ielts_certificate_url?: string;
+  sat_certificate_url?: string;
 }
 
 const AdminApplications = () => {
@@ -273,12 +275,14 @@ const AdminApplications = () => {
   };
 
   const handleExportCSV = () => {
-    // Create CSV content
     const headers = [
-      'Full Name', 'Email', 'Institution', 'Country', 
-      'Experience', 'Committee Preference 1', 'Committee Preference 2',
-      'Committee Preference 3', 'Motivation', 'Dietary Restrictions',
-      'Has IELTS', 'Has SAT', 'Status', 'Applied On'
+      'Full Name',
+      'Email',
+      'Institution',
+      'Country',
+      'Experience',
+      'Status',
+      'Application Date'
     ];
     
     const csvRows = [
@@ -289,13 +293,6 @@ const AdminApplications = () => {
         `"${app.institution || ''}"`,
         `"${app.country || ''}"`,
         `"${app.experience || ''}"`,
-        `"${app.committee_preference1 || ''}"`,
-        `"${app.committee_preference2 || ''}"`,
-        `"${app.committee_preference3 || ''}"`,
-        `"${app.motivation || ''}"`,
-        `"${app.dietary_restrictions || ''}"`,
-        app.has_ielts ? 'Yes' : 'No',
-        app.has_sat ? 'Yes' : 'No',
         app.status,
         new Date(app.created_at).toLocaleDateString()
       ].join(','))
@@ -517,21 +514,6 @@ const AdminApplications = () => {
                                 <MapPin size={14} className="mr-2" />
                                 {app.country}
                               </div>
-                              {app.city_of_departure && (
-                                <div className="flex items-center text-gray-500">
-                                  <MapPin size={14} className="mr-2" />
-                                  Traveling from: {app.city_of_departure}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                          
-                          <div className="mb-4">
-                            <div className="text-xs text-gray-500 mb-1">Committee Preferences:</div>
-                            <div className="text-sm text-gray-700">
-                              <div>1. {app.committee_preference1}</div>
-                              <div>2. {app.committee_preference2}</div>
-                              {app.committee_preference3 && <div>3. {app.committee_preference3}</div>}
                             </div>
                           </div>
                           

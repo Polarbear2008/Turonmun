@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Calendar, Trophy, Flag, Sparkles } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -50,7 +49,7 @@ const seasons = [
     name: "Season Four",
     description: "Our upcoming season with more opportunities for young diplomats to excel.",
     highlights: [
-      "July 28, 2025",
+      "July 18, 2025",
       "4 committees",
       "Application Deadline: March 23, 2025",
       "Location: Presidential School in Fergana",
@@ -74,7 +73,7 @@ export default function AboutSeasons() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
           {seasons.map((season) => (
-            <Card key={season.number} className={`border-none ${season.current ? 'shadow-xl ring-2 ring-diplomatic-500 ring-opacity-50' : 'shadow-lg'} hover:shadow-xl transition-shadow duration-300`}>
+            <Card key={season.number} className="border-none shadow-lg hover:shadow-xl transition-shadow duration-300">
               <CardContent className="p-6">
                 <div className="flex items-center mb-4">
                   <season.icon className="w-12 h-12 text-diplomatic-600 mr-4" />
