@@ -4,6 +4,7 @@ import ApplicationManagementModal from '@/components/admin/ApplicationManagement
 import { supabase, checkAuthState } from '@/integrations/supabase/client';
 import { CheckCircle, XCircle, Clock, User, School, MapPin, Download, Filter, Search, Trash2, Settings } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { exportApplicationsToExcel } from '@/utils/excelExport';
 
 interface Application {
   id: string;
@@ -274,42 +275,21 @@ const AdminApplications = () => {
     }
   };
 
-  const handleExportCSV = () => {
-    const headers = [
-      'Full Name',
-      'Email',
-      'Institution',
-      'Country',
-      'Experience',
-      'Status',
-      'Application Date'
-    ];
-    
-    const csvRows = [
-      headers.join(','),
-      ...filteredApplications.map(app => [
-        `"${app.full_name || ''}"`,
-        `"${app.email || ''}"`,
-        `"${app.institution || ''}"`,
-        `"${app.country || ''}"`,
-        `"${app.experience || ''}"`,
-        app.status,
-        new Date(app.created_at).toLocaleDateString()
-      ].join(','))
-    ];
-    
-    const csvContent = csvRows.join('\n');
-    
-    // Create download link
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'TuronMUN_applications.csv');
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleExportExcel = () => {
+    try {
+      const fileName = exportApplicationsToExcel(filteredApplications, 'TuronMUN_Applications');
+      toast({
+        title: "Export Successful",
+        description: `Applications exported to ${fileName}`,
+      });
+    } catch (error) {
+      console.error('Error exporting to Excel:', error);
+      toast({
+        title: "Export Failed",
+        description: "Failed to export applications. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   // Load email collections from Supabase
@@ -441,11 +421,11 @@ const AdminApplications = () => {
                       </div>
                       
                       <button
-                        onClick={handleExportCSV}
-                        className="bg-diplomatic-700 text-white py-2 px-3 rounded-md text-sm flex items-center hover:bg-diplomatic-800"
+                        onClick={handleExportExcel}
+                        className="bg-green-600 text-white py-2 px-3 rounded-md text-sm flex items-center hover:bg-green-700 transition-colors"
                       >
                         <Download size={14} className="mr-1" />
-                        Export CSV
+                        Export Excel
                       </button>
                     </div>
                   </div>
