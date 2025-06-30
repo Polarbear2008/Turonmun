@@ -7,10 +7,15 @@ import CallToAction from '@/components/past-conferences/CallToAction';
 import { ArrowLeft, Cpu, Globe as GlobeIcon, Lightbulb } from 'lucide-react';
 import ExperienceSection from '@/components/seasons/ExperienceSection';
 import { Link } from 'react-router-dom';
+import { Seo } from '@/components/seo';
 
 export default function Season3() {
   // Get the season data for Season 3
   const seasonData = seasonsData.find(season => season.id === "season3") || seasonsData[2];
+  
+  // Format dates for SEO
+  const startDate = new Date(seasonData.date).toISOString();
+  const endDate = new Date(seasonData.endDate).toISOString();
   
   // Scroll to top when component mounts
   useEffect(() => {
@@ -50,18 +55,77 @@ export default function Season3() {
   };
 
   return (
-    <PageLayout>
-      <motion.div
-        key="season-3"
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        variants={pageVariants}
-        className="bg-gradient-to-b from-white to-diplomatic-50"
-      >
-        {/* Hero Section - Digital Transformation Theme */}
-        <section className="relative py-24 md:py-32 overflow-hidden bg-gradient-to-r from-diplomatic-600 to-diplomatic-800">
-          {/* Background Pattern */}
+    <>
+      <Seo
+        title={`TuronMUN ${seasonData.year} | ${seasonData.theme}`}
+        description={seasonData.description}
+        canonical={`https://turonmun.uz${seasonData.route}`}
+        openGraph={{
+          type: 'website',
+          url: `https://turonmun.uz${seasonData.route}`,
+          title: `TuronMUN ${seasonData.year} | ${seasonData.theme}`,
+          description: seasonData.description,
+          images: [
+            {
+              url: `https://turonmun.uz/${seasonData.photos[0]?.url || 'images/og-image.jpg'}`,
+              width: 1200,
+              height: 630,
+              alt: `TuronMUN ${seasonData.year} - ${seasonData.theme}`,
+            },
+          ],
+          siteName: 'TuronMUN',
+        }}
+        twitter={{
+          cardType: 'summary_large_image',
+          site: '@turonmun',
+          handle: '@turonmun',
+        }}
+        additionalMetaTags={[
+          {
+            property: 'article:published_time',
+            content: new Date(seasonData.date).toISOString(),
+          },
+        ]}
+        structuredData={{
+          '@context': 'https://schema.org',
+          '@type': 'Event',
+          name: `TuronMUN ${seasonData.year} - ${seasonData.theme}`,
+          description: seasonData.description,
+          startDate: startDate,
+          endDate: endDate,
+          location: {
+            '@type': 'Place',
+            name: seasonData.location,
+            address: seasonData.location,
+          },
+          image: `https://turonmun.uz/${seasonData.photos[0]?.url || 'images/og-image.jpg'}`,
+          organizer: {
+            '@type': 'Organization',
+            name: 'TuronMUN',
+            url: 'https://turonmun.uz',
+          },
+          offers: {
+            '@type': 'Offer',
+            url: `https://turonmun.uz${seasonData.route}`,
+            price: '0',
+            priceCurrency: 'UZS',
+            availability: 'https://schema.org/SoldOut',
+            validFrom: new Date(seasonData.date).toISOString(),
+          },
+          eventStatus: 'https://schema.org/EventScheduled',
+        }}
+      />
+      <PageLayout>
+        <motion.div 
+          className="min-h-screen bg-gradient-to-b from-diplomatic-50 to-white"
+          variants={pageVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+        >
+          {/* Hero Section - Digital Transformation Theme */}
+          <section className="relative py-24 md:py-32 overflow-hidden bg-gradient-to-r from-diplomatic-600 to-diplomatic-800">
+            {/* Background Pattern */}
           <div className="absolute inset-0 z-0 opacity-20">
             <div className="absolute inset-0">
               {/* Digital pattern */}
@@ -344,5 +408,6 @@ export default function Season3() {
         <CallToAction selectedSeason={seasonData} />
       </motion.div>
     </PageLayout>
+  </>
   );
 }

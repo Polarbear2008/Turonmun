@@ -5,6 +5,8 @@ export const seasonsData = [
     year: "2023",
     title: "Season One",
     date: "July 28, 2024",
+    endDate: "July 30, 2024",
+    location: "Presidential School, Fergana, Uzbekistan",
     route: "/past-conferences?season=1",
     theme: "The Trembling Dawn",
     description: "Our first season brought together young diplomats from across Uzbekistan for an unforgettable MUN experience.",
@@ -45,6 +47,8 @@ export const seasonsData = [
     year: "2023",
     title: "Season Two",
     date: "November 3, 2023",
+    endDate: "November 5, 2023",
+    location: "International Hotel Tashkent, Tashkent, Uzbekistan",
     route: "/past-conferences?season=2",
     theme: "The Blossoming Brotherhood",
     description: "Expanding our reach with more committees and participants in our second season.",
@@ -86,6 +90,8 @@ export const seasonsData = [
     year: "2024",
     title: "Season Three",
     date: "January 4, 2024",
+    endDate: "January 7, 2024",
+    location: "International Hotel Tashkent, Tashkent, Uzbekistan",
     route: "/past-conferences?season=3",
     theme: "The Overwhelming Triumph",
     description: "Our biggest event yet with expanded committees and delegate participation.",
@@ -127,7 +133,9 @@ export const seasonsData = [
     id: "season4",
     year: "2024",
     title: "Season Four",
-    date: "April 2, 2024",
+    date: "March 15, 2024",
+    endDate: "March 17, 2024",
+    location: "International Hotel Tashkent, Tashkent, Uzbekistan",
     route: "/past-conferences?season=4",
     theme: "The Tightrope Masterpiece",
     description: "A season that challenged us with timing and logistics but delivered exceptional diplomatic experiences.",
@@ -168,7 +176,9 @@ export const seasonsData = [
     id: "season5",
     year: "2025",
     title: "Season Five",
-    date: "Coming Soon",
+    date: "November 15, 2025",
+    endDate: "November 18, 2025",
+    location: "Tashkent, Uzbekistan (Venue TBA)",
     route: "/past-conferences?season=5",
     theme: "The New Horizon",
     description: "Our upcoming season with more opportunities for young diplomats to excel in the art of diplomacy.",
@@ -208,4 +218,42 @@ export const seasonsData = [
   }
 ];
 
-export type SeasonData = typeof seasonsData[0];
+export type SeasonData = {
+  id: string;
+  year: string;
+  title: string;
+  date: string;
+  endDate: string;
+  location: string;
+  route: string;
+  theme: string;
+  description: string;
+  color: string;
+  accentColor: string;
+  lightBg: string;
+  mediumBg: string;
+  borderColor: string;
+  textColor: string;
+  secondaryTextColor: string;
+  patternStyle: string;
+  statistics: {
+    participants?: number;
+    committees?: number;
+    fee?: string;
+    location?: string;
+    deadline?: string;
+    [key: string]: any;
+  };
+  experience: string;
+  milestone: string;
+  highlights: string[];
+  organizers: Array<{
+    name: string;
+    role: string;
+    image: string;
+  }>;
+  photos: Array<{
+    url: string;
+    caption: string;
+  }>;
+};

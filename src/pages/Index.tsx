@@ -1,6 +1,7 @@
 
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { Seo } from '../components/seo';
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import AboutSection from '../components/AboutSection';
@@ -8,6 +9,10 @@ import CommitteesSection from '../components/CommitteesSection';
 import SchedulePreview from '../components/SchedulePreview';
 import FAQSection from '../components/FAQSection';
 import Footer from '../components/Footer';
+import { seasonsData } from '../data/seasonsData';
+
+// Get the latest season data
+const latestSeason = seasonsData[seasonsData.length - 1];
 
 const Index = () => {
   // Scroll to top on page load
@@ -38,6 +43,17 @@ const Index = () => {
 
   return (
     <div className="page-transition-container min-h-screen flex flex-col">
+      <Seo 
+        title="TuronMUN - Model United Nations Conference"
+        description="Join TuronMUN for an enriching Model United Nations experience. Develop diplomacy, debate, and leadership skills with students from around the world."
+        event={{
+          name: `TuronMUN ${latestSeason.title}`,
+          startDate: latestSeason.date,
+          endDate: latestSeason.endDate || latestSeason.date,
+          location: latestSeason.location,
+          description: latestSeason.description,
+        }}
+      />
       <Navbar />
       <motion.main
         variants={containerVariants}
