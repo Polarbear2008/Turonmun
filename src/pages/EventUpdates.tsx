@@ -32,7 +32,7 @@ const EventUpdates = () => {
     <PageLayout>
       <Helmet>
         <title>Event Updates | TuronMUN</title>
-        <meta name="description" content="Stay updated with the latest information about TuronMUN committees and schedule." />
+        <meta name="description" content="Latest information about TuronMUN committees and schedule." />
       </Helmet>
 
       <div className="container mx-auto px-4 py-16 md:py-24">
