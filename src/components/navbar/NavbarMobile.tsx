@@ -59,9 +59,7 @@ const MobileDropdownItem = memo(({
       <div>
         <div className="text-sm">{item.name}</div>
         <div className="text-xs opacity-75">
-          {item.name.includes("Season 1") ? "Global Health Emergencies" : 
-           item.name.includes("Season 2") ? "Climate Action & Development" : 
-           "Digital Transformation & Governance"}
+          {item.name}
         </div>
       </div>
     </a>

@@ -4,13 +4,12 @@ import { seasonsData } from '@/data/seasonsData';
 import PageLayout from '@/components/layout/PageLayout';
 import SeasonOverview from '@/components/past-conferences/SeasonOverview';
 import CallToAction from '@/components/past-conferences/CallToAction';
-import { ArrowLeft, Heart, Users, Award, Leaf, Globe as GlobeIcon } from 'lucide-react';
-import ExperienceSection from '@/components/seasons/ExperienceSection';
+import { ArrowLeft, Users, Calendar, MapPin, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-export default function Season2() {
-  // Get the season data for Season 2
-  const seasonData = seasonsData.find(season => season.id === "season2") || seasonsData[1];
+export default function Season4() {
+  // Get the season data for Season 4
+  const seasonData = seasonsData.find(season => season.id === "season4") || seasonsData[3];
   
   // Scroll to top when component mounts
   useEffect(() => {
@@ -52,52 +51,21 @@ export default function Season2() {
   return (
     <PageLayout>
       <motion.div
-        key="season-2"
+        key="season-4"
         initial="initial"
         animate="animate"
         exit="exit"
         variants={pageVariants}
         className="bg-gradient-to-b from-white to-diplomatic-50"
       >
-        {/* Hero Section - Environmental Theme */}
-        <section className="relative py-24 md:py-32 overflow-hidden bg-gradient-to-r from-diplomatic-600 to-diplomatic-800">
-          {/* Background Pattern */}
-          <div className="absolute inset-0 z-0 opacity-20">
+        {/* Hero Section */}
+        <section className="relative py-24 md:py-32 overflow-hidden bg-gradient-to-r from-diplomatic-700 to-diplomatic-900">
+          <div className="absolute inset-0 opacity-20">
             <div className="absolute inset-0">
-              {/* Environmental pattern */}
               <svg className="w-full h-full opacity-20" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                 <path d="M50,10 L90,50 L50,90 L10,50 Z" fill="#ffffff"/>
               </svg>
             </div>
-          </div>
-          
-          {/* Floating leaf animations */}
-          <div className="absolute inset-0 overflow-hidden">
-            {[...Array(10)].map((_, i) => (
-              <motion.div
-                key={`leaf-${i}`}
-                className="absolute text-white/20"
-                initial={{ 
-                  x: Math.random() * 100 + "%", 
-                  y: Math.random() * 100 + "%", 
-                  rotate: Math.random() * 360,
-                  scale: 0.5 + Math.random() * 1
-                }}
-                animate={{ 
-                  x: `${Math.random() * 100}%`,
-                  y: `${Math.random() * 100}%`,
-                  rotate: Math.random() * 360 + 360,
-                }}
-                transition={{ 
-                  duration: 20 + Math.random() * 10, 
-                  repeat: Infinity, 
-                  repeatType: "reverse",
-                  ease: "easeInOut"
-                }}
-              >
-                <Leaf size={24} />
-              </motion.div>
-            ))}
           </div>
           
           <div className="container mx-auto px-4 relative z-10">
@@ -123,7 +91,7 @@ export default function Season2() {
                 transition={{ duration: 0.5 }}
                 className="inline-block p-3 bg-white/10 backdrop-blur-sm rounded-full mb-6"
               >
-                <Leaf size={32} className="text-white" />
+                <Award size={32} className="text-white" />
               </motion.div>
               
               <motion.h1 
@@ -219,7 +187,7 @@ export default function Season2() {
                     <div className="grid md:grid-cols-3 gap-8 mt-12">
                       <div className="bg-gradient-to-br from-white to-diplomatic-50 p-6 rounded-xl shadow-sm border border-diplomatic-100 hover:shadow-md transition-shadow duration-300">
                         <div className="w-14 h-14 bg-gradient-to-br from-diplomatic-500 to-diplomatic-700 rounded-full flex items-center justify-center mb-4 mx-auto text-white">
-                          <Leaf className="h-6 w-6" />
+                          <Users className="h-6 w-6" />
                         </div>
                         <h4 className="font-bold text-lg mb-2 text-center text-gray-800">Committees</h4>
                         <p className="text-gray-600 text-center text-sm">
@@ -229,9 +197,7 @@ export default function Season2() {
                       
                       <div className="bg-gradient-to-br from-white to-diplomatic-50 p-6 rounded-xl shadow-sm border border-diplomatic-100 hover:shadow-md transition-shadow duration-300">
                         <div className="w-14 h-14 bg-gradient-to-br from-diplomatic-500 to-diplomatic-700 rounded-full flex items-center justify-center mb-4 mx-auto text-white">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
+                          <Calendar className="h-6 w-6" />
                         </div>
                         <h4 className="font-bold text-lg mb-2 text-center text-gray-800">Date</h4>
                         <p className="text-gray-600 text-center text-sm">
@@ -241,9 +207,7 @@ export default function Season2() {
                       
                       <div className="bg-gradient-to-br from-white to-diplomatic-50 p-6 rounded-xl shadow-sm border border-diplomatic-100 hover:shadow-md transition-shadow duration-300">
                         <div className="w-14 h-14 bg-gradient-to-br from-diplomatic-500 to-diplomatic-700 rounded-full flex items-center justify-center mb-4 mx-auto text-white">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                          </svg>
+                          <MapPin className="h-6 w-6" />
                         </div>
                         <h4 className="font-bold text-lg mb-2 text-center text-gray-800">Location</h4>
                         <p className="text-gray-600 text-center text-sm">
@@ -257,8 +221,6 @@ export default function Season2() {
             </div>
           </div>
         </section>
-
-
 
         {/* Experience Section */}
         <section className="relative py-20 bg-gradient-to-b from-diplomatic-50 to-diplomatic-100">
@@ -311,7 +273,7 @@ export default function Season2() {
                   className="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
                 >
                   <img
-                    src={`/seasons/season 2/${num}.jpg`}
+                    src={`/seasons/Season 4/${num}.jpg`}
                     alt={`${seasonData.title} highlight ${num}`}
                     className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105"
                     loading="lazy"

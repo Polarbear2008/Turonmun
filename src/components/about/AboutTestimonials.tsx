@@ -4,22 +4,34 @@ import { Card, CardContent } from '@/components/ui/card';
 
 const testimonials = [
   {
-    quote: "TuronMUN provided me with invaluable experience in diplomacy and public speaking. It truly shaped my academic career.",
-    author: "Alex Martinez",
-    role: "Former Delegate, Harvard University",
-    image: '/lovable-uploads/896f57e8-2e28-4948-9a76-272b7423f902.png'
+    quote: "Participating in TuronMUN has significantly improved my public speaking and diplomatic skills. I've been part of it since the first season, and each time I learn something new and valuable.",
+    author: "Azizbek Ismoilov",
+    role: "Delegate, Seasons 1-4"
   },
   {
-    quote: "The level of professionalism and authenticity in TuronMUN's committees is unmatched. A truly educational experience.",
-    author: "Sophia Wang",
-    role: "High School Advisor, International Academy",
-    image: '/lovable-uploads/896f57e8-2e28-4948-9a76-272b7423f902.png'
+    quote: "The committees were engaging and the topics were thought-provoking, pushing us to think critically about global issues.",
+    author: "Dilfuza Qodirova",
+    role: "MUN Coordinator"
   },
   {
-    quote: "Participating in TuronMUN opened doors to international opportunities and shaped my understanding of global politics.",
-    author: "James Okonjo",
-    role: "Delegate, Seasons 1-3",
-    image: '/lovable-uploads/896f57e8-2e28-4948-9a76-272b7423f902.png'
+    quote: "Leading one of the five committees in Season 3 was an incredible experience. Working with 105 delegates was both challenging and rewarding, and the level of organization was outstanding.",
+    author: "Javohir Toshmatov",
+    role: "Committee Chair, Season 3"
+  },
+  {
+    quote: "My son participated in Season 2, and it was one of the best experiences of his life. Now his younger sister can't wait to join as well!",
+    author: "Dilbar Otabekova",
+    role: "Parent of Season 2 Delegate"
+  },
+  {
+    quote: "Winning 'Best Social Media' on MyMUN was a proud moment for our entire team. It's amazing to see our hard work recognized on an international platform!",
+    author: "Shahzod Kholmatov",
+    role: "Social Media Coordinator"
+  },
+  {
+    quote: "Watching our evolution from FPSMUN to TuronMUN has been incredible. The growth of our team and program fills me with pride for what we've accomplished together.",
+    author: "Madina Karimova",
+    role: "Organizing Committee Member, Seasons 1-4"
   }
 ];
 
@@ -31,7 +43,7 @@ export default function AboutTestimonials() {
           <h2 className="text-3xl font-bold mb-4">Voices from Our Community</h2>
           <div className="w-20 h-1 bg-diplomatic-600 mx-auto mb-4" />
           <p className="text-neutral-600">
-            Hear from past delegates and advisors about their TuronMUN experience.
+            Hear from our community members about their TuronMUN experiences.
           </p>
         </div>
 
@@ -39,23 +51,14 @@ export default function AboutTestimonials() {
           {testimonials.map((testimonial, index) => (
             <Card key={index} className="border-none shadow-lg hover:shadow-xl transition-all duration-300">
               <CardContent className="p-6">
-                <div className="flex flex-col h-full">
+                <div className="flex flex-col h-full items-center text-center">
                   <div className="mb-4 text-4xl text-diplomatic-300">"</div>
                   <p className="text-neutral-700 mb-6 flex-grow italic">
                     {testimonial.quote}
                   </p>
-                  <div className="flex items-center">
-                    <div className="w-12 h-12 rounded-full overflow-hidden mr-4">
-                      <img
-                        src={testimonial.image}
-                        alt={testimonial.author}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold">{testimonial.author}</h4>
-                      <p className="text-sm text-neutral-500">{testimonial.role}</p>
-                    </div>
+                  <div className="text-center">
+                    <h4 className="font-semibold">{testimonial.author}</h4>
+                    <p className="text-sm text-neutral-500">{testimonial.role}</p>
                   </div>
                 </div>
               </CardContent>

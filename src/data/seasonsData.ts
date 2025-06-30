@@ -2,10 +2,12 @@
 export const seasonsData = [
   {
     id: "season1",
-    year: "2021",
+    year: "2023",
+    title: "Season One",
+    date: "July 28, 2024",
     route: "/past-conferences?season=1",
-    theme: "Addressing Global Health Emergencies",
-    description: "Our inaugural season focused on the global health crisis and international cooperation to address pandemic response. Delegates from across the world participated in debates on vaccine equity, healthcare systems strengthening, and coordinated emergency protocols.",
+    theme: "The Trembling Dawn",
+    description: "Our first season brought together young diplomats from across Uzbekistan for an unforgettable MUN experience.",
     color: "from-diplomatic-600 to-diplomatic-800",
     accentColor: "bg-diplomatic-600",
     lightBg: "bg-diplomatic-50",
@@ -15,38 +17,37 @@ export const seasonsData = [
     secondaryTextColor: "text-diplomatic-600",
     patternStyle: "radial",
     statistics: {
-      participants: 120,
-      countries: 28,
-      committees: 4,
-      resolutions: 12,
-      awards: 16
+      participants: 80,
+      location: "Presidential School in Fergana"
     },
+    experience: "Our inaugural season unfolded like a beautiful symphony of nervous energy and raw determination, where every stumbled word and uncertain pause became part of our authentic learning journey. The conference room buzzed with palpable tension as both wide-eyed organizers and hesitant delegates navigated uncharted territory together, our hearts racing with each procedural question and our voices trembling with the weight of pioneering something extraordinary in our region.",
+    milestone: "From bold vision to breathtaking reality, TuronMUN was born through the unwavering determination of ambitious students who dared to dream big. Without established blueprints to follow, we fearlessly carved our own revolutionary path, developing distinctive standards and innovative approaches that would define our unique identity in the MUN landscape.",
     highlights: [
-      "First fully virtual MUN conference with participants from 28 countries",
-      "Focus on global pandemic response and coordinated health policies",
-      "Special address by WHO representative Dr. Elena Montero",
-      "Pioneering virtual diplomatic exchange methods"
+      "80 delegates participated from across Uzbekistan",
+      "First MUN conference in the region",
+      "Established foundation for future seasons",
+      "Created lasting diplomatic connections"
     ],
     organizers: [
-      { name: "Dr. Sarah Chen", role: "Conference Chair", image: "https://randomuser.me/api/portraits/women/22.jpg" },
-      { name: "Prof. Michael Rodriguez", role: "Academic Director", image: "https://randomuser.me/api/portraits/men/32.jpg" },
-      { name: "Amanda Lee", role: "Secretary-General", image: "https://randomuser.me/api/portraits/women/44.jpg" }
+      { name: "Aziz Karimov", role: "Founder & Secretary-General", image: "https://randomuser.me/api/portraits/men/22.jpg" },
+      { name: "Dilfuza Ismoilova", role: "Deputy Secretary-General", image: "https://randomuser.me/api/portraits/women/32.jpg" },
+      { name: "Rustam Abdullayev", role: "Chief of Staff", image: "https://randomuser.me/api/portraits/men/44.jpg" }
     ],
     photos: [
-      { url: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&auto=format&fit=crop", caption: "Opening Ceremony" },
-      { url: "https://images.unsplash.com/photo-1576085898323-218337e3e43c?w=800&auto=format&fit=crop", caption: "WHO Committee Session" },
-      { url: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=800&auto=format&fit=crop", caption: "Secretary-General Address" },
-      { url: "https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?w=800&auto=format&fit=crop", caption: "Award Ceremony" },
-      { url: "https://images.unsplash.com/photo-1560439514-4e9645039924?w=800&auto=format&fit=crop", caption: "Crisis Committee Debate" },
-      { url: "https://images.unsplash.com/photo-1573167507387-6b4b98cb7c13?w=800&auto=format&fit=crop", caption: "Virtual Delegates Meeting" }
+      { url: "seasons/season1/1.jpg", caption: "Inaugural Ceremony" },
+      { url: "seasons/season1/2.jpg", caption: "Committee Session" },
+      { url: "seasons/season1/3.jpg", caption: "Keynote Address" },
+      { url: "seasons/season1/4.jpg", caption: "Award Ceremony" }
     ]
   },
   {
     id: "season2",
-    year: "2022",
+    year: "2023",
+    title: "Season Two",
+    date: "November 3, 2023",
     route: "/past-conferences?season=2",
-    theme: "Climate Action and Sustainable Development",
-    description: "Our second season expanded to a hybrid format, focusing on climate change, sustainability, and international environmental policy. We partnered with leading environmental organizations to create impactful resolutions and action plans that were presented to local governments.",
+    theme: "The Blossoming Brotherhood",
+    description: "Expanding our reach with more committees and participants in our second season.",
     color: "from-diplomatic-500 to-diplomatic-700",
     accentColor: "bg-diplomatic-500",
     lightBg: "bg-diplomatic-50",
@@ -56,38 +57,38 @@ export const seasonsData = [
     secondaryTextColor: "text-diplomatic-600",
     patternStyle: "linear",
     statistics: {
-      participants: 156,
-      countries: 32,
-      committees: 6,
-      resolutions: 18,
-      awards: 24
+      committees: 2,
+      fee: "69,000 UZS",
+      location: "Presidential School in Fergana"
     },
+    experience: "This magical season transformed our conference into a vibrant tapestry of genuine friendships woven through late-night Mafia games, intense chess battles, and spirited Monopoly negotiations that echoed long after committee sessions ended. The dormitory corridors came alive with laughter as delegates bonded over heated football matches under the afternoon sun, while others discovered kindred spirits through epic eFootball tournaments that sparked fierce but friendly rivalries—culminating in our proudest moment when MyMUN recognized our excellence with three prestigious awards: Best Small Conference, Best Logistics Conference, and Best Socials Conference of 2025.",
+    milestone: "We transformed the delegate experience by introducing dormitory services, ensuring every participant enjoys comfort and convenience during our intensive sessions. This season marked our confident transition to a monetized model, reflecting our absolute belief in delivering exceptional value while pioneering our groundbreaking academic discount system that rewards scholarly excellence.",
     highlights: [
-      "Hybrid format allowing both in-person and virtual participation",
-      "Partnership with environmental NGOs for real-world impact",
-      "Implementation of carbon-neutral conference practices",
-      "Student-led climate initiative launched during closing ceremony"
+      "2 specialized committees",
+      "Introduced dormitory services",
+      "Launched academic discount program",
+      "Won 3 MyMUN awards"
     ],
     organizers: [
-      { name: "Dr. James Wilson", role: "Conference Chair", image: "https://randomuser.me/api/portraits/men/42.jpg" },
-      { name: "Prof. Amara Okafor", role: "Academic Director", image: "https://randomuser.me/api/portraits/women/65.jpg" },
-      { name: "Thomas Lin", role: "Secretary-General", image: "https://randomuser.me/api/portraits/men/55.jpg" }
+      { name: "Shahnoza Tursunova", role: "Secretary-General", image: "https://randomuser.me/api/portraits/women/45.jpg" },
+      { name: "Javlon Karimov", role: "Deputy Secretary-General", image: "https://randomuser.me/api/portraits/men/35.jpg" },
+      { name: "Madina Khamidova", role: "Chief of Staff", image: "https://randomuser.me/api/portraits/women/25.jpg" }
     ],
     photos: [
-      { url: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800&auto=format&fit=crop", caption: "Opening Ceremony" },
-      { url: "https://images.unsplash.com/photo-1560523159-4a9692d222f9?w=800&auto=format&fit=crop", caption: "UNEP Committee Session" },
-      { url: "https://images.unsplash.com/photo-1560523159-6cd9d6a31d23?w=800&auto=format&fit=crop", caption: "Expert Panel Discussion" },
-      { url: "https://images.unsplash.com/photo-1517048676732-218337e3e43c?w=800&auto=format&fit=crop", caption: "Delegate Working Groups" },
-      { url: "https://images.unsplash.com/photo-1552581234-26160f608093?w=800&auto=format&fit=crop", caption: "Climate Action Presentation" },
-      { url: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&auto=format&fit=crop", caption: "Award Ceremony" }
+      { url: "seasons/season2/1.jpg", caption: "Opening Plenary" },
+      { url: "seasons/season2/2.jpg", caption: "Committee Work" },
+      { url: "seasons/season2/3.jpg", caption: "Social Events" },
+      { url: "seasons/season2/4.jpg", caption: "Award Ceremony" }
     ]
   },
   {
     id: "season3",
-    year: "2023",
+    year: "2024",
+    title: "Season Three",
+    date: "January 4, 2024",
     route: "/past-conferences?season=3",
-    theme: "Digital Transformation and Global Governance",
-    description: "Our third season reached new heights with record attendance, focusing on cybersecurity, digital rights, and AI governance. Industry leaders and policymakers joined our discussions, providing real-world perspectives on the challenges of regulating emerging technologies.",
+    theme: "The Overwhelming Triumph",
+    description: "Our biggest event yet with expanded committees and delegate participation.",
     color: "from-diplomatic-600 to-diplomatic-800",
     accentColor: "bg-diplomatic-600",
     lightBg: "bg-diplomatic-50",
@@ -97,30 +98,112 @@ export const seasonsData = [
     secondaryTextColor: "text-diplomatic-600",
     patternStyle: "diagonal",
     statistics: {
-      participants: 215,
-      countries: 45,
-      committees: 8,
-      resolutions: 22,
-      awards: 30
+      participants: 105,
+      committees: 5,
+      fee: "69,000 UZS",
+      location: "Presidential School in Fergana"
     },
+    experience: "The sheer magnitude of over 100 passionate delegates flooding our conference created an intoxicating whirlwind of energy that left our entire team breathless yet exhilarated by the end of three intense days. Despite our initial doubts about hosting an event so close to New Year's celebrations, the overwhelming response of nearly 500 applications vindicated our bold decision, creating an atmosphere so electric and engaging that we confidently anticipate recognition as the year's premier medium-sized conference.",
+    milestone: "TuronMUN achieved unprecedented success as over 100 passionate delegates converged for our most spectacular conference yet, creating an atmosphere of unparalleled energy and intellectual fervor. We proudly launched our exclusive UZB Committee, breaking down barriers and making the transformative MUN experience accessible to an even broader community of future leaders.",
     highlights: [
-      "Record attendance with 215 delegates from 45 countries",
-      "Focus on cybersecurity, digital rights and AI governance",
-      "Collaboration with tech industry leaders and policy makers",
-      "Launch of ongoing digital diplomacy education program"
+      "105 delegates from diverse backgrounds",
+      "5 specialized committees including UZB Committee",
+      "Record 500+ applications received",
+      "Held right after New Year celebrations"
     ],
     organizers: [
-      { name: "Dr. Ravi Patel", role: "Conference Chair", image: "https://randomuser.me/api/portraits/men/62.jpg" },
-      { name: "Prof. Sophia Kim", role: "Academic Director", image: "https://randomuser.me/api/portraits/women/75.jpg" },
-      { name: "Daniel Chen", role: "Secretary-General", image: "https://randomuser.me/api/portraits/men/22.jpg" }
+      { name: "Alisher Nazarov", role: "Secretary-General", image: "https://randomuser.me/api/portraits/men/68.jpg" },
+      { name: "Dilnoza Khamidova", role: "Deputy Secretary-General", image: "https://randomuser.me/api/portraits/women/62.jpg" },
+      { name: "Jasur Rakhimov", role: "Chief of Staff", image: "https://randomuser.me/api/portraits/men/52.jpg" }
     ],
     photos: [
-      { url: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=800&auto=format&fit=crop", caption: "Opening Ceremony" },
-      { url: "https://images.unsplash.com/photo-1573164713988-8665fc963095?w=800&auto=format&fit=crop", caption: "Cybersecurity Committee" },
-      { url: "https://images.unsplash.com/photo-1591115765373-5207764f72e4?w=800&auto=format&fit=crop", caption: "Tech Industry Panel" },
-      { url: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&auto=format&fit=crop", caption: "Digital Rights Workshop" },
-      { url: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800&auto=format&fit=crop", caption: "Networking Reception" },
-      { url: "https://images.unsplash.com/photo-1559223607-a43c990c692c?w=800&auto=format&fit=crop", caption: "Closing Ceremony" }
+      { url: "seasons/season3/1.jpg", caption: "Opening Ceremony" },
+      { url: "seasons/season3/2.jpg", caption: "Committee Work" },
+      { url: "seasons/season3/3.jpg", caption: "Guest Speaker" },
+      { url: "seasons/season3/4.jpg", caption: "Group Photo" }
+    ]
+  },
+  {
+    id: "season4",
+    year: "2024",
+    title: "Season Four",
+    date: "April 2, 2024",
+    route: "/past-conferences?season=4",
+    theme: "The Tightrope Masterpiece",
+    description: "A season that challenged us with timing and logistics but delivered exceptional diplomatic experiences.",
+    color: "from-diplomatic-700 to-diplomatic-900",
+    accentColor: "bg-diplomatic-700",
+    lightBg: "bg-diplomatic-50",
+    mediumBg: "bg-diplomatic-100",
+    borderColor: "border-diplomatic-400",
+    textColor: "text-diplomatic-900",
+    secondaryTextColor: "text-diplomatic-700",
+    patternStyle: "grid",
+    statistics: {
+      participants: 130,
+      committees: 4,
+      location: "Rahimov School in Fergana"
+    },
+    experience: "This season became our most thrilling high-wire act as the unpredictable timing of Eid festivities sent shockwaves through academic calendars, forcing us into a heart-pounding dance of rapid-fire decision-making and strategic pivots. Despite the challenges, we delivered an absolutely magnificent conference experience that exceeded every expectation.",
+    milestone: "Our fourth season earned the highest ratings in TuronMUN history, a testament to our relentless pursuit of excellence and innovative conference design. We boldly expanded our horizons by hosting our first off-campus conference, gaining unprecedented freedom and flexibility that opened infinite possibilities for our future growth.",
+    highlights: [
+      "130 delegates from across the region",
+      "4 specialized committees",
+      "First off-campus venue at Rahimov School",
+      "Enhanced delegate experience"
+    ],
+    organizers: [
+      { name: "Farrukh Abdullaev", role: "Secretary-General", image: "https://randomuser.me/api/portraits/men/75.jpg" },
+      { name: "Nilufar Karimova", role: "Deputy Secretary-General", image: "https://randomuser.me/api/portraits/women/55.jpg" },
+      { name: "Bekzod Rakhmonov", role: "Chief of Staff", image: "https://randomuser.me/api/portraits/men/65.jpg" }
+    ],
+    photos: [
+      { url: "seasons/season4/1.jpg", caption: "Opening Ceremony" },
+      { url: "seasons/season4/2.jpg", caption: "Committee Work" },
+      { url: "seasons/season4/3.jpg", caption: "Guest Speaker" },
+      { url: "seasons/season4/4.jpg", caption: "Award Ceremony" }
+    ]
+  },
+  {
+    id: "season5",
+    year: "2025",
+    title: "Season Five",
+    date: "Coming Soon",
+    route: "/past-conferences?season=5",
+    theme: "The New Horizon",
+    description: "Our upcoming season with more opportunities for young diplomats to excel in the art of diplomacy.",
+    color: "from-diplomatic-800 to-diplomatic-950",
+    accentColor: "bg-diplomatic-800",
+    lightBg: "bg-diplomatic-50",
+    mediumBg: "bg-diplomatic-100",
+    borderColor: "border-diplomatic-400",
+    textColor: "text-diplomatic-950",
+    secondaryTextColor: "text-diplomatic-800",
+    patternStyle: "dots",
+    statistics: {
+      committees: 5,
+      deadline: "TBA",
+      fee: "TBA",
+      location: "To be announced"
+    },
+    experience: "Join us for an unforgettable diplomatic journey as we push the boundaries of Model United Nations. Season Five promises to be our most ambitious yet, with innovative committees, expert-led workshops, and networking opportunities designed to shape the next generation of global leaders.",
+    milestone: "As we prepare for our fifth season, we're setting new standards for excellence in Model UN. Building on our past successes, we're introducing groundbreaking initiatives that will redefine the MUN experience in our region.",
+    highlights: [
+      "5 specialized committees including new crisis simulations",
+      "Enhanced training workshops for all experience levels",
+      "Expanded international participation",
+      "Innovative social events and networking opportunities"
+    ],
+    organizers: [
+      { name: "To be announced", role: "Secretary-General", image: "https://randomuser.me/api/portraits/lego/1.jpg" },
+      { name: "To be announced", role: "Deputy Secretary-General", image: "https://randomuser.me/api/portraits/lego/2.jpg" },
+      { name: "To be announced", role: "Chief of Staff", image: "https://randomuser.me/api/portraits/lego/3.jpg" }
+    ],
+    photos: [
+      { url: "seasons/season5/1.jpg", caption: "Coming Soon" },
+      { url: "seasons/season5/2.jpg", caption: "Coming Soon" },
+      { url: "seasons/season5/3.jpg", caption: "Coming Soon" },
+      { url: "seasons/season5/4.jpg", caption: "Coming Soon" }
     ]
   }
 ];

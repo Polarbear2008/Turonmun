@@ -57,9 +57,7 @@ const DropdownItem = memo(({
       >
         <div className="text-sm font-medium">{item.name}</div>
         <div className="line-clamp-2 text-xs text-neutral-500">
-          {item.name.includes("Season 1") ? "Global Health Emergencies" : 
-           item.name.includes("Season 2") ? "Climate Action & Development" : 
-           "Digital Transformation & Governance"}
+          {item.name}
         </div>
       </a>
     </li>

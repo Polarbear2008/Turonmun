@@ -3,55 +3,75 @@ import React from 'react';
 
 const timelineEvents = [
   {
-    year: '2020',
-    title: 'TuronMUN Foundation',
-    description: 'Established with a vision to create a premier MUN experience focused on fostering diplomatic excellence and international cooperation among students.',
+    year: 'June 28, 2024',
+    title: 'FPSMUN Founded',
+    description: 'The beginning of our journey with a vision to create a premier MUN experience.',
     milestones: [
-      'Founding team assembled from 5 countries',
-      'First committees designed',
-      'Initial partnership with 3 educational institutions'
+      'Official founding of FPSMUN',
+      'Telegram channel created',
+      'Registered through mymun.com'
     ]
   },
   {
-    year: '2021',
-    title: 'First Virtual Conference',
-    description: 'Successfully adapted to the global pandemic with our first fully virtual conference, expanding our reach internationally.',
+    year: 'July 1, 2024',
+    title: 'Season 1 Registration Opens',
+    description: 'Launching our first season with great enthusiasm and participation.',
     milestones: [
-      'Developed custom virtual debate platform',
-      'Recruited delegates from 15 countries',
-      'First international speaker series launched'
+      'Registration for first season begins',
+      '80 delegates from across Uzbekistan participated',
+      'Held on July 28, 2024'
     ]
   },
   {
-    year: '2022',
-    title: 'International Expansion',
-    description: 'Extended our reach to over 50 countries worldwide, establishing TuronMUN as a truly global conference.',
+    year: 'November 3, 2024',
+    title: 'Season 2',
+    description: 'Expanding our reach with more committees and participants.',
     milestones: [
-      'Launched regional qualification events',
-      'Established scholarship program for delegates from developing nations',
-      'Published first edition of TuronMUN Journal of International Affairs'
+      '2 committees',
+      'Participation fee: 69,000 UZS',
+      'Location: Presidential School in Fergana'
     ]
   },
   {
-    year: '2023',
-    title: 'Innovation in Diplomacy',
-    description: 'Introduced new committee formats and diplomatic scenarios, pushing the boundaries of traditional MUN.',
+    year: 'January 4, 2025',
+    title: 'Season 3',
+    description: 'Our biggest event yet with expanded committees and delegate participation.',
     milestones: [
-      'Created crisis committees with real-time developments',
-      'Integrated AI-powered research assistants',
-      'Partnered with diplomatic missions for authentic training'
+      '5 committees',
+      '105 delegates',
+      'Location: Presidential School in Fergana'
     ]
   },
   {
-    year: '2025',
-    title: 'Season 1 Launch',
-    description: 'Our most ambitious season yet, combining in-person and virtual components for maximum global participation.',
+    year: 'January 25, 2025',
+    title: 'Historic Partnership',
+    description: 'Game-changing partnership with Nukus Presidential School MUN.',
     milestones: [
-      'Expecting delegates from 30+ countries',
-      '10 specialized committees addressing critical global issues',
-      'New youth leadership training program'
-    ],
-    current: true
+      'First MUN conference in Karakalpakstan',
+      'Expanding MUN culture in new regions',
+      'Strengthening national MUN community'
+    ]
+  },
+  {
+    year: 'May 1, 2025',
+    title: 'Global Recognition',
+    description: 'FerganaPSMUN 2024 wins multiple awards on MyMUN.',
+    milestones: [
+      'Best Small Conference',
+      'Best Socials',
+      'Best Logistics',
+      'First for Central Asia on this scale'
+    ]
+  },
+  {
+    year: 'May 12, 2025',
+    title: 'Rebranding to TuronMUN',
+    description: 'A new era and identity begins.',
+    milestones: [
+      'Transition from FPSMUN to TuronMUN',
+      'New vision for the future',
+      'Continued commitment to excellence in MUN'
+    ]
   }
 ];
 
@@ -63,7 +83,7 @@ export default function AboutTimeline() {
           <h2 className="text-3xl font-bold mb-4">Our Journey</h2>
           <div className="w-20 h-1 bg-diplomatic-600 mx-auto mb-4" />
           <p className="text-neutral-600">
-            Tracing our path of growth and impact in the MUN community from our founding to the present day.
+            Our journey from humble beginnings to becoming a recognized name in the MUN community.
           </p>
         </div>
 
@@ -71,16 +91,15 @@ export default function AboutTimeline() {
           {timelineEvents.map((event, index) => (
             <div key={index} className="flex gap-4 mb-12">
               <div className="flex flex-col items-center">
-                <div className={`w-6 h-6 rounded-full ${event.current ? 'bg-diplomatic-600 animate-pulse' : 'bg-diplomatic-500'} flex items-center justify-center`}>
-                  {event.current && <div className="w-3 h-3 bg-white rounded-full"></div>}
+                <div className="w-6 h-6 rounded-full bg-diplomatic-500 flex items-center justify-center">
                 </div>
                 {index !== timelineEvents.length - 1 && (
                   <div className="w-0.5 h-full bg-diplomatic-200" />
                 )}
               </div>
-              <div className={`flex-1 pb-8 ${event.current ? 'bg-diplomatic-50 p-6 rounded-lg border-l-4 border-diplomatic-500' : ''}`}>
+              <div className="flex-1 pb-8">
                 <div className="text-sm text-diplomatic-600 font-semibold mb-1">
-                  {event.year} {event.current && <span className="ml-2 inline-block px-2 py-0.5 bg-diplomatic-100 text-diplomatic-700 rounded-full text-xs">CURRENT</span>}
+                  {event.year}
                 </div>
                 <h3 className="text-2xl font-bold mb-2">{event.title}</h3>
                 <p className="text-neutral-600 mb-4">{event.description}</p>

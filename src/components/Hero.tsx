@@ -6,14 +6,14 @@ import { Link } from 'react-router-dom';
 import { CustomButton } from './ui/custom-button';
 import { transitionVariants } from '@/lib/transition-utils';
 
-const conferenceDate = new Date('2025-04-02T09:00:00');
-const conferenceLocation = 'Fergana Presidential School, Uzbekistan';
+const conferenceDate = new Date('2025-11-15T09:00:00');
+const conferenceLocation = 'Tashkent, Uzbekistan';
 
 const phrases = [
   "Shaping Tomorrow's Leaders",
-  "Build Connections",
-  "Shape the Future",
-  "Join Season 1"
+  "Build Lasting Connections",
+  "Shape the Future of Diplomacy",
+  "Join Season 5"
 ];
 
 const Hero = () => {
@@ -181,7 +181,7 @@ const Hero = () => {
                 variants={transitionVariants.slideInLeft}
                 className="block text-white"
               >
-                <span className="text-gradient-gold">TuronMUN</span> Season 1
+                <span className="text-gradient-gold">TuronMUN</span> Season 5
               </motion.span>
               <motion.span 
                 variants={transitionVariants.fadeVariants}

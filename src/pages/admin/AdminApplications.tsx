@@ -35,14 +35,48 @@ const AdminApplications = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { isAuthenticated } = await checkAuthState();
-      if (isAuthenticated) {
-        fetchApplications();
+      try {
+        setLoading(true);
+        const { isAuthenticated, user } = await checkAuthState();
+        console.log('Auth state:', { isAuthenticated, user });
+        
+        if (!isAuthenticated || !user) {
+          console.log('Not authenticated, redirecting to login...');
+          window.location.href = '/admin';
+          return;
+        }
+        
+        await fetchApplications();
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        toast({
+          title: "Authentication Error",
+          description: "Failed to verify authentication status",
+          variant: "destructive",
+        });
+      } finally {
+        setAuthChecked(true);
+        setLoading(false);
       }
-      setAuthChecked(true);
     };
     
     checkAuth();
+    
+    // Set up a realtime subscription to applications
+    const subscription = supabase
+      .channel('applications')
+      .on('postgres_changes', 
+        { event: '*', schema: 'public', table: 'applications' },
+        () => {
+          console.log('Applications changed, refreshing...');
+          fetchApplications();
+        }
+      )
+      .subscribe();
+      
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
@@ -51,36 +85,42 @@ const AdminApplications = () => {
 
   const fetchApplications = async () => {
     try {
-      setLoading(true);
       console.log('Fetching applications...');
-      const { data, error } = await supabase
+      const { data, error, status } = await supabase
         .from('applications')
         .select('*')
         .order('created_at', { ascending: false });
         
+      console.log('Supabase response:', { status, error, count: data?.length });
+      
       if (error) {
-        console.error('Error fetching applications:', error);
-        throw error;
+        console.error('Supabase error:', error);
+        throw new Error(error.message);
       }
       
-      console.log('Applications fetched:', data?.length || 0);
+      if (!data) {
+        console.warn('No data returned from applications table');
+        setApplications([]);
+        return;
+      }
+      
+      console.log(`Successfully fetched ${data.length} applications`);
       
       // Convert the string status to the defined type
-      const typedData = (data || []).map(app => ({
+      const typedData = data.map(app => ({
         ...app,
         status: (app.status || 'pending') as 'pending' | 'approved' | 'rejected'
       }));
       
       setApplications(typedData);
-    } catch (error) {
-      console.error('Error fetching applications:', error);
+    } catch (error: any) {
+      console.error('Error in fetchApplications:', error);
       toast({
         title: "Error",
-        description: "Failed to load applications. Please try refreshing the page.",
+        description: error.message || "Failed to load applications. Please check your connection and try again.",
         variant: "destructive",
       });
-    } finally {
-      setLoading(false);
+      setApplications([]);
     }
   };
 
@@ -183,11 +223,12 @@ const AdminApplications = () => {
     document.body.removeChild(link);
   };
 
-  if (!authChecked) {
+  if (!authChecked || loading) {
     return (
-      <AdminLayout title="Applications Management">
-        <div className="flex items-center justify-center h-64">
-          <div className="loader w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      <AdminLayout title="Applications">
+        <div className="flex flex-col items-center justify-center h-64 space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-diplomatic-600"></div>
+          <p className="text-diplomatic-600">Loading applications...</p>
         </div>
       </AdminLayout>
     );

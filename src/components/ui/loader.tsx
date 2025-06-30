@@ -3,37 +3,16 @@ import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
 interface LoaderProps {
-  size?: 'sm' | 'md' | 'lg';
-  variant?: 'primary' | 'secondary' | 'diplomatic';
   className?: string;
   fullPage?: boolean;
   text?: string;
 }
 
 const Loader: React.FC<LoaderProps> = ({
-  size = 'md',
-  variant = 'diplomatic',
   className,
   fullPage = false,
   text
 }) => {
-  // Size mappings
-  const sizeMap = {
-    sm: { loader: 'w-5 h-10', container: 'py-2' },
-    md: { loader: 'w-10 h-20', container: 'py-4' },
-    lg: { loader: 'w-16 h-32', container: 'py-6' }
-  };
-
-  // Color variants
-  const variantMap = {
-    primary: { c1: '#000000', c2: '#3b69d4' },
-    secondary: { c1: '#1a1a1a', c2: '#6b7280' },
-    diplomatic: { c1: '#1a2a4a', c2: '#4a7bde' }
-  };
-
-  const { c1, c2 } = variantMap[variant];
-  const { loader, container } = sizeMap[size];
-
   const containerVariants = {
     initial: { opacity: 0 },
     animate: { 
@@ -58,7 +37,7 @@ const Loader: React.FC<LoaderProps> = ({
     }
   };
 
-  const loaderContent = (
+  return (
     <motion.div
       variants={containerVariants}
       initial="initial"
@@ -66,18 +45,11 @@ const Loader: React.FC<LoaderProps> = ({
       exit="exit"
       className={cn(
         "flex flex-col items-center justify-center gap-4",
-        container,
         fullPage ? "min-h-[80vh]" : "",
         className
       )}
     >
-      <div 
-        className={cn("loader", loader)}
-        style={{ 
-          '--c1': c1, 
-          '--c2': c2 
-        } as React.CSSProperties}
-      />
+      <div className="loader" />
       
       {text && (
         <motion.p 
@@ -89,8 +61,6 @@ const Loader: React.FC<LoaderProps> = ({
       )}
     </motion.div>
   );
-
-  return loaderContent;
 };
 
 export { Loader };

@@ -4,34 +4,34 @@ import { Card, CardContent } from '@/components/ui/card';
 
 const galleryImages = [
   {
-    src: '/lovable-uploads/896f57e8-2e28-4948-9a76-272b7423f902.png',
-    alt: 'Opening Ceremony',
-    caption: 'Opening Ceremony from Season 3'
+    src: '/lovable-uploads/mun-action-1.jpg',
+    alt: 'TuronMUN Delegates in Action',
+    caption: 'Delegates engaged in committee discussions'
   },
   {
-    src: '/lovable-uploads/896f57e8-2e28-4948-9a76-272b7423f902.png',
-    alt: 'Committee Session',
-    caption: 'Security Council in Session'
+    src: '/lovable-uploads/mun-action-2.jpg',
+    alt: 'TuronMUN Committee Session',
+    caption: 'Active participation in committee session'
   },
   {
-    src: '/lovable-uploads/896f57e8-2e28-4948-9a76-272b7423f902.png',
-    alt: 'Delegate Caucus',
-    caption: 'Delegates in an Unmoderated Caucus'
+    src: '/lovable-uploads/mun-action-3.jpg',
+    alt: 'TuronMUN Debate',
+    caption: 'Delegates passionately debating global issues'
   },
   {
-    src: '/lovable-uploads/896f57e8-2e28-4948-9a76-272b7423f902.png',
-    alt: 'Award Ceremony',
-    caption: 'Season 2 Award Ceremony'
+    src: '/lovable-uploads/mun-action-4.jpg',
+    alt: 'TuronMUN Speakers',
+    caption: 'Delegates delivering their country\'s position'
   },
   {
-    src: '/lovable-uploads/896f57e8-2e28-4948-9a76-272b7423f902.png',
-    alt: 'Guest Speaker',
-    caption: 'Distinguished Diplomat Address'
+    src: '/lovable-uploads/mun-action-5.jpg',
+    alt: 'TuronMUN Group Photo',
+    caption: 'TuronMUN participants and organizers'
   },
   {
-    src: '/lovable-uploads/896f57e8-2e28-4948-9a76-272b7423f902.png',
-    alt: 'Social Event',
-    caption: 'Delegate Social Night'
+    src: '/lovable-uploads/mun-action-6.jpg',
+    alt: 'TuronMUN Closing Ceremony',
+    caption: 'Awarding outstanding delegates'
   }
 ];
 

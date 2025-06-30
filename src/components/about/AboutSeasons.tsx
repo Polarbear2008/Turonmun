@@ -7,52 +7,56 @@ import { CustomButton } from '@/components/ui/custom-button';
 const seasons = [
   {
     number: 1,
-    year: "2020",
-    name: "Inaugural Season",
-    description: "Our first-ever season focused on establishing TuronMUN as a platform for diplomatic excellence and global cooperation.",
+    year: "2024",
+    name: "Season One",
+    description: "Our first season brought together young diplomats from across Uzbekistan for an unforgettable MUN experience.",
     highlights: [
-      "10 participating schools",
-      "4 committees",
-      "200+ delegates"
+      "July 28, 2024",
+      "80 delegates participated",
+      "Participants from all over Uzbekistan"
     ],
     icon: Calendar
   },
   {
     number: 2,
-    year: "2021",
-    name: "Virtual Horizons",
-    description: "Adapted to the global pandemic with our first fully virtual conference, expanding our reach internationally.",
+    year: "2024",
+    name: "Season Two",
+    description: "Expanding our reach with more committees and participants in our second season.",
     highlights: [
-      "25 participating schools",
-      "6 committees",
-      "500+ delegates from 15 countries"
+      "November 3, 2024",
+      "2 committees",
+      "Participation fee: 69,000 UZS",
+      "Location: Presidential School in Fergana"
     ],
     icon: Trophy
   },
   {
     number: 3,
-    year: "2022-2023",
-    name: "Global Convergence",
-    description: "Returned to in-person events while maintaining virtual options, creating a hybrid model that increased accessibility.",
+    year: "2025",
+    name: "Season Three",
+    description: "Our biggest event yet with expanded committees and delegate participation.",
     highlights: [
-      "40 participating schools",
-      "8 committees",
-      "750+ delegates from 22 countries"
+      "January 4, 2025",
+      "5 committees",
+      "105 delegates",
+      "Location: Presidential School in Fergana",
+      "Participation fee: 69,000 UZS"
     ],
     icon: Flag
   },
   {
     number: 4,
-    year: "2023-2024",
-    name: "Diplomatic Excellence",
-    description: "Our current season focuses on innovation in diplomatic simulations and tackling contemporary global challenges.",
+    year: "2025",
+    name: "Season Four",
+    description: "Our upcoming season with more opportunities for young diplomats to excel.",
     highlights: [
-      "50+ participating schools",
-      "10 committees",
-      "Expected 1000+ delegates from 30+ countries"
+      "April 2, 2025",
+      "4 committees",
+      "Application Deadline: March 23, 2025",
+      "Location: Presidential School in Fergana",
+      "Participation fee: 79,000 UZS"
     ],
-    icon: Sparkles,
-    current: true
+    icon: Sparkles
   }
 ];
 
@@ -64,7 +68,7 @@ export default function AboutSeasons() {
           <h2 className="text-3xl font-bold mb-4">Our Seasons of Diplomacy</h2>
           <div className="w-20 h-1 bg-diplomatic-600 mx-auto mb-4" />
           <p className="text-neutral-600">
-            Exploring our journey from our founding to the present day, each season represents growth, innovation, and impact.
+            Our journey through the seasons, showcasing our growth and the impact we've made in the MUN community.
           </p>
         </div>
 
@@ -79,11 +83,6 @@ export default function AboutSeasons() {
                     <h3 className="text-2xl font-bold">{season.name}</h3>
                   </div>
                 </div>
-                {season.current && (
-                  <div className="mb-4 inline-block px-3 py-1 bg-diplomatic-100 text-diplomatic-700 rounded-full text-sm font-semibold">
-                    Current Season
-                  </div>
-                )}
                 <p className="text-neutral-600 mb-4">{season.description}</p>
                 <ul className="space-y-2 mb-4">
                   {season.highlights.map((highlight, index) => (

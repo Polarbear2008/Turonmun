@@ -15,12 +15,12 @@ export const navLinks = [
     path: '/past-conferences',
     hasDropdown: true,
     dropdownItems: [
-      { name: 'Season 1 (2021)', path: '/seasons/1' },
-      { name: 'Season 2 (2022)', path: '/seasons/2' },
-      { name: 'Season 3 (2023)', path: '/seasons/3' },
+      { name: 'Season 1', path: '/seasons/1' },
+      { name: 'Season 2', path: '/seasons/2' },
+      { name: 'Season 3', path: '/seasons/3' },
+      { name: 'Season 4', path: '/seasons/4' }
     ]
   },
-  { name: 'Resources', path: '/resources' },
   { name: 'Contact', path: '/contact' },
 ];
 

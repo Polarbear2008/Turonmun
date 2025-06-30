@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
-import { Upload, X, Image as ImageIcon, Trash2 } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Upload, X, Image as ImageIcon, Trash2, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 interface ImageUploadProps {
   currentImageUrl?: string;
@@ -16,9 +17,19 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(true);
+  const [imageError, setImageError] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+
+  // Reset loading states when image changes
+  useEffect(() => {
+    if (currentImageUrl) {
+      setIsImageLoading(true);
+      setImageError(false);
+    }
+  }, [currentImageUrl]);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -34,7 +45,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     e.preventDefault();
     setIsDragging(false);
     const files = Array.from(e.dataTransfer.files);
-    if (files.length > 0) {
+    if (files && files.length > 0) {
       handleFileUpload(files[0]);
     }
   };
@@ -47,21 +58,27 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   };
 
   const handleFileUpload = async (file: File) => {
+    // Reset states
+    setImageError(false);
+    setIsImageLoading(true);
+
     // Validate file type
-    if (!file.type.startsWith('image/')) {
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/avif'];
+    if (!validTypes.some(type => file.type === type)) {
       toast({
         title: "Invalid File Type",
-        description: "Please select an image file (PNG, JPG, etc.)",
+        description: "Please select a valid image file (JPEG, PNG, WebP, AVIF)",
         variant: "destructive",
       });
       return;
     }
 
     // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
       toast({
         title: "File Too Large",
-        description: "Please select an image smaller than 5MB",
+        description: `Please select an image smaller than 5MB (current: ${(file.size / 1024 / 1024).toFixed(2)}MB)`,
         variant: "destructive",
       });
       return;
@@ -71,33 +88,37 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       setIsUploading(true);
       setUploadProgress(0);
 
-      // Create unique filename
+      // Create unique filename with better naming
       const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+      const randomString = Math.random().toString(36).substring(2, 8);
+      const fileName = `committee-${timestamp}-${randomString}.${fileExt}`;
       const filePath = `committees/${fileName}`;
 
-      // Upload to Supabase Storage
+      // Upload to Supabase Storage with progress tracking
       const { data, error } = await supabase.storage
         .from('committees')
         .upload(filePath, file, {
           cacheControl: '3600',
-          upsert: false
+          upsert: false,
         });
 
       if (error) {
         console.error('Upload error:', error);
-        throw error;
+        throw new Error(error.message);
       }
 
-      // Get public URL
+      // Get public URL with cache busting
       const { data: { publicUrl } } = supabase.storage
         .from('committees')
-        .getPublicUrl(filePath);
-
-      console.log('File uploaded successfully:', publicUrl);
+        .getPublicUrl(filePath, {
+          download: false
+        });
       
-      onImageChange(publicUrl);
+      // Add timestamp to force cache refresh
+      const cacheBustedUrl = `${publicUrl}?t=${Date.now()}`;
       
+      onImageChange(cacheBustedUrl);
       toast({
         title: "Upload Successful",
         description: "Committee image has been uploaded successfully",
@@ -105,6 +126,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
     } catch (error: any) {
       console.error('Error uploading file:', error);
+      setImageError(true);
       toast({
         title: "Upload Failed",
         description: error.message || "Failed to upload image. Please try again.",
@@ -113,7 +135,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     } finally {
       setIsUploading(false);
       setUploadProgress(0);
-      // Reset file input
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -160,77 +181,114 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
   return (
     <div className="space-y-4">
-      <label className="block text-sm font-medium text-gray-700">Committee Image</label>
-      
-      {currentImageUrl ? (
-        <div className="relative group">
-          <img 
-            src={currentImageUrl} 
-            alt="Committee" 
-            className="w-full h-48 object-cover rounded-lg border-2 border-gray-200"
-          />
-          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity flex items-center justify-center rounded-lg">
-            <button
-              type="button"
-              onClick={handleRemoveImage}
-              className="opacity-0 group-hover:opacity-100 bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition-opacity"
-            >
-              <Trash2 size={16} />
-            </button>
-          </div>
-        </div>
-      ) : (
+      <div className="relative">
         <div
-          className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
-            isDragging
-              ? 'border-diplomatic-500 bg-diplomatic-50'
-              : 'border-gray-300 hover:border-diplomatic-400'
-          } ${isUploading ? 'opacity-50' : ''}`}
+          className={cn(
+            'border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all duration-200',
+            isDragging ? 'border-blue-500 bg-blue-50 scale-[1.01]' : 'border-gray-300 hover:border-gray-400',
+            isUploading && 'opacity-70 pointer-events-none'
+          )}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
+          onClick={() => !isUploading && fileInputRef.current?.click()}
+          aria-disabled={isUploading}
         >
+          {isUploading ? (
+            <div className="flex flex-col items-center justify-center space-y-3">
+              <Loader2 className="h-8 w-8 text-blue-500 animate-spin" />
+              <div className="text-sm font-medium text-gray-700">Uploading image...</div>
+              <div className="w-full bg-gray-200 rounded-full h-2.5">
+                <div 
+                  className="bg-blue-600 h-2.5 rounded-full transition-all duration-300 ease-out"
+                  style={{ width: `${uploadProgress}%` }}
+                />
+              </div>
+              <div className="text-xs text-gray-500">{Math.round(uploadProgress)}% complete</div>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center space-y-2">
+              <Upload className="h-10 w-10 text-gray-400 mb-2" />
+              <div className="text-sm text-gray-600">
+                <span className="font-medium text-blue-600 hover:text-blue-700">Click to upload</span> or drag and drop
+              </div>
+              <div className="text-xs text-gray-500">
+                PNG, JPG, WebP, AVIF up to 5MB
+              </div>
+              <div className="text-xs text-gray-400 mt-1">
+                Recommended: 800x450px (16:9)
+              </div>
+            </div>
+          )}
           <input
             ref={fileInputRef}
             type="file"
-            accept="image/*"
-            onChange={handleFileSelect}
             className="hidden"
+            accept="image/jpeg, image/png, image/webp, image/avif"
+            onChange={handleFileSelect}
+            disabled={isUploading}
           />
-          
-          {isUploading ? (
-            <div className="space-y-3">
-              <div className="w-12 h-12 mx-auto bg-diplomatic-100 rounded-full flex items-center justify-center">
-                <Upload className="w-6 h-6 text-diplomatic-600 animate-pulse" />
+        </div>
+      </div>
+
+      {currentImageUrl && (
+        <div className="mt-4 relative group">
+          <div className="relative aspect-video bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
+            {isImageLoading && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Loader2 className="h-8 w-8 text-gray-400 animate-spin" />
               </div>
-              <p className="text-sm text-gray-600">Uploading image...</p>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="bg-diplomatic-600 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${uploadProgress}%` }}
-                ></div>
+            )}
+            {!imageError ? (
+              <>
+                <img
+                  src={currentImageUrl}
+                  alt="Committee preview"
+                  className={cn(
+                    'w-full h-full object-cover transition-opacity duration-300',
+                    isImageLoading ? 'opacity-0' : 'opacity-100'
+                  )}
+                  onLoad={() => {
+                    setIsImageLoading(false);
+                    setImageError(false);
+                  }}
+                  onError={() => {
+                    setIsImageLoading(false);
+                    setImageError(true);
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onImageRemove();
+                  }}
+                  className="absolute top-2 right-2 p-2 bg-white/90 hover:bg-white text-red-500 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm"
+                  aria-label="Remove image"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </>
+            ) : (
+              <div className="h-full flex flex-col items-center justify-center p-4 text-center bg-red-50">
+                <X className="h-8 w-8 text-red-400 mb-2" />
+                <p className="text-sm text-red-600">Failed to load image</p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsImageLoading(true);
+                    setImageError(false);
+                  }}
+                  className="mt-2 text-xs text-blue-600 hover:text-blue-700 font-medium"
+                >
+                  Retry
+                </button>
               </div>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              <div className="w-12 h-12 mx-auto bg-gray-100 rounded-full flex items-center justify-center">
-                <ImageIcon className="w-6 h-6 text-gray-400" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-gray-700">
-                  Drop an image here, or{' '}
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="text-diplomatic-600 hover:text-diplomatic-800 underline"
-                  >
-                    browse files
-                  </button>
-                </p>
-                <p className="text-xs text-gray-500 mt-1">
-                  PNG, JPG up to 5MB
-                </p>
-              </div>
+            )}
+          </div>
+          {!isImageLoading && !imageError && (
+            <div className="mt-1 text-xs text-gray-500 text-right">
+              Click to change or drag a new image
             </div>
           )}
         </div>

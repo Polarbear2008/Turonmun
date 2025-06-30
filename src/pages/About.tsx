@@ -5,7 +5,6 @@ import { Badge } from '@/components/ui/badge';
 import { CustomButton } from '@/components/ui/custom-button';
 import AboutMission from '@/components/about/AboutMission';
 import AboutTimeline from '@/components/about/AboutTimeline';
-import AboutTeam from '@/components/about/AboutTeam';
 import AboutSeasons from '@/components/about/AboutSeasons';
 import AboutGallery from '@/components/about/AboutGallery';
 import AboutTestimonials from '@/components/about/AboutTestimonials';
@@ -80,16 +79,6 @@ export default function About() {
         transition={{ duration: 0.6 }}
       >
         <AboutTimeline />
-      </motion.div>
-
-      {/* Team Component */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
-      >
-        <AboutTeam />
       </motion.div>
 
       {/* Gallery Component */}
