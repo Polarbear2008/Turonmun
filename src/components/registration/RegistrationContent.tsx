@@ -4,6 +4,7 @@ import RegistrationSteps from './RegistrationSteps';
 import FeeCalculator from './FeeCalculator';
 import PersonalInfoStep from './PersonalInfoStep';
 import PreferencesStep from './PreferencesStep';
+import EssayStep from './CommitteePreferencesStep';
 import AdditionalInfoStep from './AdditionalInfoStep';
 import ConfirmationStep from './ConfirmationStep';
 
@@ -59,7 +60,7 @@ const RegistrationContent: React.FC<RegistrationContentProps> = ({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <FeeCalculator hasIELTS={formData.hasIELTS} hasSAT={formData.hasSAT} />
+          <FeeCalculator discountEligibility={formData.discountEligibility} />
         </motion.div>
       </motion.div>
       
@@ -99,6 +100,15 @@ const RegistrationContent: React.FC<RegistrationContentProps> = ({
           )}
           
           {step === 3 && (
+            <EssayStep 
+              formData={formData} 
+              handleChange={handleChange} 
+              nextStep={nextStep} 
+              prevStep={prevStep} 
+            />
+          )}
+          
+          {step === 4 && (
             <AdditionalInfoStep 
               formData={formData} 
               handleChange={handleChange} 
@@ -109,7 +119,7 @@ const RegistrationContent: React.FC<RegistrationContentProps> = ({
             />
           )}
           
-          {step === 4 && (
+          {step === 5 && (
             <ConfirmationStep fee={fee} />
           )}
         </motion.div>

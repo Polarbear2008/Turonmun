@@ -26,7 +26,7 @@ interface ScheduleDay {
 const scheduleData: ScheduleDay[] = [
   {
     day: 'Day 1',
-    date: 'April 2, 2025',
+    date: 'July 28, 2025',
     events: [
       { 
         time: '08:00 - 09:30', 

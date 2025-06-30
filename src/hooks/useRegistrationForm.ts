@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { sendRegistrationToGoogleSheets } from '../utils/googleSheetsIntegration';
 import { useToast } from './use-toast';
@@ -7,13 +6,31 @@ import { supabase } from '@/integrations/supabase/client';
 interface RegistrationFormData {
   fullName: string;
   email: string;
+  telegramUsername: string;
   institution: string;
-  country: string;
+  dateOfBirth: string;
+  countryAndCity: string;
+  phone: string;
+  photo: File | null;
   experience: string;
+  previousMUNs: string;
+  portfolioLink: string;
+  uniqueDelegateTrait: string;
+  issueInterest: string;
+  type1SelectedPrompt: string;
+  type1InsightResponse: string;
+  type2SelectedPrompt: string;
+  type2PoliticalResponse: string;
   committeePreference1: string;
   committeePreference2: string;
   committeePreference3: string;
   motivation: string;
+  feeAgreement: string;
+  discountEligibility: string[];
+  proofDocument: File | null;
+  cityOfDeparture: string;
+  specialNotes: string;
+  finalConfirmation: boolean;
   dietaryRestrictions: string;
   hasIELTS: boolean;
   hasSAT: boolean;
@@ -30,13 +47,29 @@ interface FeeCalculation {
 interface ApplicationData {
   full_name: string;
   email: string;
+  telegram_username: string;
   institution: string;
+  date_of_birth: string;
   country: string;
+  phone: string;
   experience: string;
+  previous_muns: string;
+  portfolio_link: string;
+  unique_delegate_trait: string;
+  issue_interest: string;
+  type1_selected_prompt: string;
+  type1_insight_response: string;
+  type2_selected_prompt: string;
+  type2_political_response: string;
   committee_preference1: string;
   committee_preference2: string;
   committee_preference3: string;
   motivation: string;
+  fee_agreement: string;
+  discount_eligibility: string;
+  city_of_departure: string;
+  special_notes: string;
+  final_confirmation: boolean;
   dietary_restrictions: string;
   has_ielts: boolean;
   has_sat: boolean;
@@ -49,13 +82,31 @@ export const useRegistrationForm = () => {
   const [formData, setFormData] = useState<RegistrationFormData>({
     fullName: '',
     email: '',
+    telegramUsername: '',
     institution: '',
-    country: '',
-    experience: 'beginner',
+    dateOfBirth: '',
+    countryAndCity: '',
+    phone: '',
+    photo: null,
+    experience: '',
+    previousMUNs: '',
+    portfolioLink: '',
+    uniqueDelegateTrait: '',
+    issueInterest: '',
+    type1SelectedPrompt: '',
+    type1InsightResponse: '',
+    type2SelectedPrompt: '',
+    type2PoliticalResponse: '',
     committeePreference1: '',
     committeePreference2: '',
     committeePreference3: '',
     motivation: '',
+    feeAgreement: '',
+    discountEligibility: [],
+    proofDocument: null,
+    cityOfDeparture: '',
+    specialNotes: '',
+    finalConfirmation: false,
     dietaryRestrictions: '',
     hasIELTS: false,
     hasSAT: false,
@@ -65,11 +116,11 @@ export const useRegistrationForm = () => {
 
   // Calculate registration fee based on discount eligibility
   const calculateFee = (): FeeCalculation => {
-    let baseFee = 79000;
+    let baseFee = 69000; // Updated base fee as per the image
     let discount = 0;
     
-    if (formData.hasIELTS) discount += 10000;
-    if (formData.hasSAT) discount += 10000;
+    if (formData.discountEligibility.includes('IELTS')) discount += 10000;
+    if (formData.discountEligibility.includes('SAT')) discount += 10000;
     
     return {
       originalFee: baseFee,
@@ -81,11 +132,37 @@ export const useRegistrationForm = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     const isCheckbox = type === 'checkbox';
+    const isFile = type === 'file';
     
-    setFormData(prev => ({
-      ...prev,
-      [name]: isCheckbox ? (e.target as HTMLInputElement).checked : value
-    }));
+    if (isFile) {
+      const fileInput = e.target as HTMLInputElement;
+      const file = fileInput.files?.[0] || null;
+      setFormData(prev => ({
+        ...prev,
+        [name]: file
+      }));
+    } else if (name === 'discountEligibility') {
+      // Handle multi-select checkboxes for discount eligibility
+      const checkbox = e.target as HTMLInputElement;
+      setFormData(prev => {
+        if (checkbox.checked) {
+          return {
+            ...prev,
+            discountEligibility: [...prev.discountEligibility, value]
+          };
+        } else {
+          return {
+            ...prev,
+            discountEligibility: prev.discountEligibility.filter(item => item !== value)
+          };
+        }
+      });
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: isCheckbox ? (e.target as HTMLInputElement).checked : value
+      }));
+    }
   };
 
   const nextStep = () => {
@@ -120,13 +197,29 @@ export const useRegistrationForm = () => {
       const applicationData: ApplicationData = {
         full_name: formData.fullName,
         email: formData.email,
+        telegram_username: formData.telegramUsername,
         institution: formData.institution,
-        country: formData.country,
+        date_of_birth: formData.dateOfBirth,
+        country: formData.countryAndCity,
+        phone: formData.phone,
         experience: formData.experience,
+        previous_muns: formData.previousMUNs,
+        portfolio_link: formData.portfolioLink,
+        unique_delegate_trait: formData.uniqueDelegateTrait,
+        issue_interest: formData.issueInterest,
+        type1_selected_prompt: formData.type1SelectedPrompt,
+        type1_insight_response: formData.type1InsightResponse,
+        type2_selected_prompt: formData.type2SelectedPrompt,
+        type2_political_response: formData.type2PoliticalResponse,
         committee_preference1: formData.committeePreference1,
         committee_preference2: formData.committeePreference2,
         committee_preference3: formData.committeePreference3,
         motivation: formData.motivation,
+        fee_agreement: formData.feeAgreement,
+        discount_eligibility: formData.discountEligibility.join(', '),
+        city_of_departure: formData.cityOfDeparture,
+        special_notes: formData.specialNotes,
+        final_confirmation: formData.finalConfirmation,
         dietary_restrictions: formData.dietaryRestrictions,
         has_ielts: formData.hasIELTS,
         has_sat: formData.hasSAT,

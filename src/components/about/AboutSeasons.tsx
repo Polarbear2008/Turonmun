@@ -50,7 +50,7 @@ const seasons = [
     name: "Season Four",
     description: "Our upcoming season with more opportunities for young diplomats to excel.",
     highlights: [
-      "April 2, 2025",
+      "July 28, 2025",
       "4 committees",
       "Application Deadline: March 23, 2025",
       "Location: Presidential School in Fergana",

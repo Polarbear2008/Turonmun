@@ -310,7 +310,7 @@ const Hero = () => {
                     className="flex items-center text-sm sm:text-base text-white"
                   >
                     <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-gold-400 mr-2.5" />
-                    <span>April 2, 2025</span>
+                    <span>July 28, 2025</span>
                   </motion.div>
                   
                   <motion.div 

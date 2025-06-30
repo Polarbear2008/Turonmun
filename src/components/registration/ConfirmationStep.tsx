@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { CircleCheck } from 'lucide-react';
 import FeatureCard from '../FeatureCard';
@@ -137,7 +136,10 @@ const ConfirmationStep: React.FC<ConfirmationStepProps> = ({ fee }) => {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="/resources" className="btn-outline">
+            <a 
+              href="/resources" 
+              className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg border border-gray-300 bg-white px-6 py-3 text-sm font-medium text-gray-700 shadow-sm transition-all hover:-translate-y-0.5 hover:bg-gray-50 hover:border-gray-400 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-diplomatic-300 focus-visible:ring-offset-2"
+            >
               Explore Resources
             </a>
             <a href="/committees" className="btn-primary">

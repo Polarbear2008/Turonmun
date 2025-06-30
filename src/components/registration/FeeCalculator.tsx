@@ -1,19 +1,17 @@
-
 import React from 'react';
 import { Award, BadgeCheck } from 'lucide-react';
 
 interface FeeCalculatorProps {
-  hasIELTS: boolean;
-  hasSAT: boolean;
+  discountEligibility: string[];
 }
 
-const FeeCalculator: React.FC<FeeCalculatorProps> = ({ hasIELTS, hasSAT }) => {
+const FeeCalculator: React.FC<FeeCalculatorProps> = ({ discountEligibility }) => {
   const calculateFee = () => {
-    let baseFee = 79000;
+    let baseFee = 69000;
     let discount = 0;
     
-    if (hasIELTS) discount += 10000;
-    if (hasSAT) discount += 10000;
+    if (discountEligibility.includes('IELTS')) discount += 10000;
+    if (discountEligibility.includes('SAT')) discount += 10000;
     
     return {
       originalFee: baseFee,
@@ -34,17 +32,20 @@ const FeeCalculator: React.FC<FeeCalculatorProps> = ({ hasIELTS, hasSAT }) => {
         Base Fee: <span className="font-bold">{fee.originalFee.toLocaleString()} UZS</span>
       </p>
       <p className="text-sm text-neutral-600 mb-3">
-        Qualify for discounts with IELTS or SAT test scores!
+        Qualify for discounts with IELTS 6.5+ or SAT 1350+ test scores!
       </p>
       
       <div className="flex flex-col space-y-2 bg-neutral-50 p-3 rounded-lg mb-3">
         <div className="flex items-center text-sm text-neutral-700">
           <BadgeCheck className="w-4 h-4 text-green-600 mr-2" />
-          <span>IELTS Score: 10,000 UZS discount</span>
+          <span>IELTS 6.5+: 10,000 UZS discount</span>
         </div>
         <div className="flex items-center text-sm text-neutral-700">
           <BadgeCheck className="w-4 h-4 text-green-600 mr-2" />
-          <span>SAT Score: 10,000 UZS discount</span>
+          <span>SAT 1350+: 10,000 UZS discount</span>
+        </div>
+        <div className="text-xs text-neutral-500 mt-1">
+          Max discount: 20,000 UZS
         </div>
       </div>
       

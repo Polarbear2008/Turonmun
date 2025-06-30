@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { CircleCheck } from 'lucide-react';
 
@@ -9,13 +8,14 @@ interface RegistrationStepsProps {
 const RegistrationSteps: React.FC<RegistrationStepsProps> = ({ currentStep }) => {
   const steps = [
     { number: 1, label: "Personal Info" },
-    { number: 2, label: "Preferences" },
-    { number: 3, label: "Additional Info" },
-    { number: 4, label: "Confirmation" },
+    { number: 2, label: "Experience" },
+    { number: 3, label: "Essays" },
+    { number: 4, label: "Committees & Details" },
+    { number: 5, label: "Confirmation" },
   ];
 
   return (
-    <div className="max-w-3xl mx-auto mb-10">
+    <div className="max-w-4xl mx-auto mb-10">
       <div className="flex items-center justify-between mb-6">
         {steps.map((step) => (
           <div key={step.number} className="flex flex-col items-center">
@@ -30,7 +30,7 @@ const RegistrationSteps: React.FC<RegistrationStepsProps> = ({ currentStep }) =>
             >
               {currentStep > step.number ? <CircleCheck size={18} /> : step.number}
             </div>
-            <span className="text-xs mt-2 text-neutral-600">
+            <span className="text-xs mt-2 text-neutral-600 text-center">
               {step.label}
             </span>
           </div>
@@ -41,7 +41,7 @@ const RegistrationSteps: React.FC<RegistrationStepsProps> = ({ currentStep }) =>
         <div className="absolute top-0 left-0 w-full h-1 bg-neutral-200 rounded"></div>
         <div 
           className="absolute top-0 left-0 h-1 bg-diplomatic-600 rounded transition-all duration-300"
-          style={{ width: `${(currentStep / 4) * 100}%` }}
+          style={{ width: `${((currentStep - 1) / 4) * 100}%` }}
         ></div>
       </div>
     </div>
