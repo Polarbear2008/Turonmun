@@ -290,8 +290,8 @@ const Hero = () => {
                   className="text-center mb-4 sm:mb-6 relative z-10"
                   variants={transitionVariants.fadeVariants}
                 >
-                  <h2 className="text-xl sm:text-2xl font-display font-bold text-white mb-1 sm:mb-2">Conference Countdown</h2>
-                  <p className="text-sm sm:text-base text-white/70">Mark your calendars for the big event</p>
+                  <h2 className="text-xl sm:text-2xl font-display font-bold text-white mb-1 sm:mb-2">TIME LEFT TO APPLY</h2>
+                  <p className="text-sm sm:text-base text-white/70">This is your moment. Don't miss it</p>
                 </motion.div>
                 
                 <motion.div
