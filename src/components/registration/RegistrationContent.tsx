@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import RegistrationSteps from './RegistrationSteps';
-import FeeCalculator from './FeeCalculator';
 import PersonalInfoStep from './PersonalInfoStep';
 import PreferencesStep from './PreferencesStep';
 import EssayStep from './CommitteePreferencesStep';
@@ -65,15 +64,6 @@ const RegistrationContent: React.FC<RegistrationContentProps> = ({
         <p className="text-lg text-neutral-600 max-w-2xl mx-auto mb-6">
           Begin your journey as a delegate in our prestigious Model United Nations conference. Complete the form below to secure your place.
         </p>
-        
-        {/* Registration Fee Box */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <FeeCalculator discountEligibility={formData.discountEligibility} />
-        </motion.div>
       </motion.div>
       
       {/* Registration steps indicator */}

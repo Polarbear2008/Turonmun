@@ -181,7 +181,7 @@ const Hero = () => {
                 variants={transitionVariants.slideInLeft}
                 className="block text-white"
               >
-                <span className="text-gradient-gold">TuronMUN</span> Season 5
+                <span className="text-gradient-gold">TuronMUN</span> x CAMUMUN
               </motion.span>
               <motion.span 
                 variants={transitionVariants.fadeVariants}

@@ -56,7 +56,7 @@ const EssayStep: React.FC<EssayStepProps> = ({
   return (
     <div className="bg-white rounded-xl shadow-elegant p-8 border border-neutral-100">
       <h2 className="text-2xl font-display font-semibold mb-2">Page 3 — Essay Section</h2>
-      <p className="text-neutral-600 mb-6">Share your thoughts and perspectives through these essay questions</p>
+      <p className="text-red-600 mb-6">Kindly ensure all responses are original; any use of AI will be detected and may adversely affect your performance evaluation.</p>
       
       <div className="space-y-8">
         {/* What aspects of your background, thinking, or presence set you apart from most delegates */}
