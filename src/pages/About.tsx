@@ -43,7 +43,7 @@ export default function About() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <CustomButton variant="primary" size="lg" to="/registration">
+              <CustomButton variant="primary" size="lg" to="/register">
                 Join Our Community
               </CustomButton>
             </motion.div>

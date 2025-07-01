@@ -218,7 +218,7 @@ const Hero = () => {
                 whileTap={{ scale: 0.95 }}
                 className="w-full sm:w-auto"
               >
-                <CustomButton to="/registration" variant="accent" size="lg" className="group w-full sm:w-auto">
+                <CustomButton to="/register" variant="accent" size="lg" className="group w-full sm:w-auto">
                    Register Now
                   <ChevronRight className="transition-transform group-hover:translate-x-1" size={16} />
                 </CustomButton>

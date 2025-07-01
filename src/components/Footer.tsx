@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, Instagram, Facebook, Twitter, ArrowRight } from 'lucide-react';
+import { Mail, Phone, MapPin, Instagram, Send, ArrowRight } from 'lucide-react';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -22,14 +22,11 @@ export default function Footer() {
               Join us for an enriching diplomatic simulation that brings together students from around the world to discuss pressing global issues.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-blue-300 hover:text-white transition-colors" aria-label="Instagram">
+              <a href="https://www.instagram.com/turon.mun/" className="text-blue-300 hover:text-white transition-colors" aria-label="Instagram">
                 <Instagram size={20} />
               </a>
-              <a href="#" className="text-blue-300 hover:text-white transition-colors" aria-label="Facebook">
-                <Facebook size={20} />
-              </a>
-              <a href="#" className="text-blue-300 hover:text-white transition-colors" aria-label="Twitter">
-                <Twitter size={20} />
+              <a href="https://t.me/TuronMUN" className="text-blue-300 hover:text-white transition-colors" aria-label="Telegram">
+                <Send size={20} />
               </a>
             </div>
           </div>
@@ -49,7 +46,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/registration" className="text-blue-200 hover:text-white transition-colors inline-flex items-center">
+                <Link to="/register" className="text-blue-200 hover:text-white transition-colors inline-flex items-center">
                   <ArrowRight size={14} className="mr-2 opacity-70" /> Registration
                 </Link>
               </li>
@@ -111,7 +108,7 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t border-blue-800/50 text-center text-blue-400 text-sm">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p> {currentYear} TuronMUN. All rights reserved.</p>
-            <p className="mt-2 md:mt-0">Designed with Numonov Samandar</p>
+            <p className="mt-2 md:mt-0">Coded & created by Asadbek Abdukhalilov & Numonov Samandar • 2025.</p>
           </div>
         </div>
       </div>

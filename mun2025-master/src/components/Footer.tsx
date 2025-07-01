@@ -130,8 +130,8 @@ export default function Footer() {
         
         <div className="mt-12 pt-8 border-t border-blue-800/50 text-center text-blue-400 text-sm">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p> {currentYear} FPSMUN. All rights reserved.</p>
-            <p className="mt-2 md:mt-0">Designed with Numonov Samandar</p>
+            <p> {currentYear} TuronMUN. All rights reserved.</p>
+            <p className="mt-2 md:mt-0">Coded & created by Asadbek Abdukhalilov & Numonov Samandar • 2025.</p>
           </div>
         </div>
       </div>

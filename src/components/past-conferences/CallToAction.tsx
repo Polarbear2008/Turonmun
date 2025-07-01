@@ -38,7 +38,7 @@ const CallToAction: React.FC<CallToActionProps> = ({ selectedSeason }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.4 }}
           >
-            <CustomButton variant="accent" size="lg" to="/registration">
+            <CustomButton variant="accent" size="lg" to="/register">
               <Sparkles className="mr-2 h-5 w-5" />
               Register Now
             </CustomButton>

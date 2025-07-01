@@ -23,6 +23,7 @@ import Season1 from "./pages/seasons/Season1";
 import Season2 from "./pages/seasons/Season2";
 import Season3 from "./pages/seasons/Season3";
 import Season4 from "./pages/seasons/Season4";
+import RegistrationSelection from "./pages/RegistrationSelection";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -95,10 +96,11 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/about" element={<About />} />
-              <Route path="/event-updates" element={<EventUpdates />} />
-              <Route path="/committees" element={<Committees />} />
-              <Route path="/registration" element={<Registration />} />
-              <Route path="/schedule" element={<Schedule />} />
+                          <Route path="/event-updates" element={<EventUpdates />} />
+            <Route path="/committees" element={<Committees />} />
+            <Route path="/register" element={<RegistrationSelection />} />
+            <Route path="/registration" element={<Registration />} />
+            <Route path="/schedule" element={<Schedule />} />
               <Route path="/resources" element={<Resources />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/past-conferences" element={<PastConferences />} />

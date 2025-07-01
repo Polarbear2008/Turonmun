@@ -147,7 +147,7 @@ export default function CTASection() {
               transition={{ type: "spring", stiffness: 500, damping: 15 }}
             >
               <CustomButton 
-                to="/registration" 
+                to="/register" 
                 variant="accent"
                 size="lg"
                 className="group relative overflow-hidden"

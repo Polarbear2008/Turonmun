@@ -31,7 +31,7 @@ const Committees = () => {
               transition={{ duration: 0.3 }}
               className="mb-12 text-center"
             >
-              <span className="inline-block px-3 py-1 bg-gold-100 text-gold-600 rounded-full text-sm font-medium mb-3">TuronMUN Season 1</span>
+              <span className="inline-block px-3 py-1 bg-gold-100 text-gold-600 rounded-full text-sm font-medium mb-3">TuronMUN x CAMU MUN</span>
               <h1 className="text-4xl md:text-5xl font-display font-bold text-diplomatic-900 mb-6">
                 Our Committees
               </h1>
@@ -92,7 +92,7 @@ const Committees = () => {
                 Register now to secure your place in one of our prestigious committees. Spaces are limited and allocated on a first-come, first-served basis.
               </p>
               <a 
-                href="/registration" 
+                href="/register" 
                 className="btn-primary bg-diplomatic-700 hover:bg-diplomatic-800 transition-colors duration-200"
               >
                 Register as a Delegate
