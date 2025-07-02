@@ -24,7 +24,6 @@ const seasons = [
     highlights: [
       "November 3, 2024",
       "2 committees",
-      "Participation fee: 69,000 UZS",
       "Location: Presidential School in Fergana"
     ],
     icon: Trophy
@@ -39,7 +38,6 @@ const seasons = [
       "5 committees",
       "105 delegates",
       "Location: Presidential School in Fergana",
-      "Participation fee: 69,000 UZS"
     ],
     icon: Flag
   },
@@ -52,8 +50,7 @@ const seasons = [
       "July 18, 2025",
       "4 committees",
       "Application Deadline: March 23, 2025",
-      "Location: Presidential School in Fergana",
-      "Participation fee: 79,000 UZS"
+      "Location: Presidential School in Fergana"
     ],
     icon: Sparkles
   }

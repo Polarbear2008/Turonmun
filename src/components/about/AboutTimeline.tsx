@@ -28,7 +28,6 @@ const timelineEvents = [
     description: 'Expanding our reach with more committees and participants.',
     milestones: [
       '2 committees',
-      'Participation fee: 69,000 UZS',
       'Location: Presidential School in Fergana'
     ]
   },
