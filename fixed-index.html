@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TuronMUN</title>
+    <meta name="description" content="TuronMUN Conference Website" />
+    <meta name="author" content="TuronMUN" />
+    <meta property="og:image" content="/og-image.png" />
+    <link rel="icon" href="/lovable-uploads/9576c345-d8f3-4bc9-861f-a8923821ea97.png" type="image/png" />
+    <script>
+      // Remove any badges as early as possible
+      (function() {
+        function removeBadges() {
+          const badges = document.querySelectorAll('[data-lovable-badge], .lovable-badge, #lovable-badge');
+          badges.forEach(badge => badge.remove());
+          
+          // Also check for fixed position elements at bottom
+          document.querySelectorAll('div').forEach(el => {
+            const style = window.getComputedStyle(el);
+            if (style.position === 'fixed' && style.bottom === '0px' && style.zIndex > 100) {
+              el.remove();
+            }
+          });
+        }
+        
+        // Run immediately
+        removeBadges();
+        
+        // Also run after DOM loads
+        document.addEventListener('DOMContentLoaded', removeBadges);
+        
+        // And periodically check
+        setInterval(removeBadges, 1000);
+      })();
+    </script>
+    <script type="module" crossorigin src="/assets/index-CWrfEn1j.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/js/vendor-qhh-Udzl.js">
+    <link rel="modulepreload" crossorigin href="/assets/js/ui-vendor-BW_z0O7J.js">
+    <link rel="modulepreload" crossorigin href="/assets/js/react-vendor-DZcVbuqu.js">
+    <link rel="modulepreload" crossorigin href="/assets/js/animation-vendor-DOVYj-Oq.js">
+    <link rel="stylesheet" crossorigin href="/assets/css/index-D5IVF7p3.css">
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+  </body>
+</html>
