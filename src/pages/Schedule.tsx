@@ -237,7 +237,11 @@ const Schedule = () => {
                             <h3 className="text-xl font-bold text-diplomatic-900">{day.day}</h3>
                             <div className="flex items-center text-neutral-500 text-sm mt-1">
                               <Calendar size={14} className="mr-1" />
+
                               {day.date.replace('July 18, 2025', 'July 19, 2025')}
+
+                              {day.date}
+ 79c96343516f65ed4e8579dcc53ea0467cebd154
                             </div>
                           </div>
                         </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Calendar, Trophy, Flag, Sparkles } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { CustomButton } from '@/components/ui/custom-button';
@@ -24,7 +24,7 @@ const seasons = [
     highlights: [
       "November 3, 2024",
       "2 committees",
-      "Location: Central Asian University"
+      "Location: Presidential School in Fergana"
     ],
     icon: Trophy
   },
@@ -37,7 +37,7 @@ const seasons = [
       "January 4, 2025",
       "5 committees",
       "105 delegates",
-      "Location: Central Asian University",
+      "Location: Presidential School in Fergana"
     ],
     icon: Flag
   },
@@ -47,10 +47,10 @@ const seasons = [
     name: "Season Four",
     description: "Our upcoming season with more opportunities for young diplomats to excel.",
     highlights: [
-      "July 19, 2025",
+      "July 18, 2025",
       "4 committees",
       "Application Deadline: March 23, 2025",
-      "Location: Central Asian University"
+      "Location: Presidential School in Fergana"
     ],
     icon: Sparkles
   }

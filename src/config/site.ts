@@ -2,6 +2,7 @@ export const siteConfig = {
   title: import.meta.env.VITE_APP_TITLE || 'Turon Model United Nations',
   description: import.meta.env.VITE_APP_DESCRIPTION || 'Official website for FPS Model United Nations conferences',
   url: import.meta.env.VITE_APP_URL || 'https://TuronMUN.uz',
+
   conferenceDate: new Date(import.meta.env.VITE_APP_CONFERENCE_DATE || '2025-07-19T00:00:00'),
   conferenceLocation: import.meta.env.VITE_APP_CONFERENCE_LOCATION || 'Central Asian University',
   registrationOpen: import.meta.env.VITE_APP_REGISTRATION_OPEN === 'true',

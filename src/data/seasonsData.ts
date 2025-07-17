@@ -6,7 +6,7 @@ export const seasonsData = [
     title: "Season One",
     date: "July 28, 2024",
     endDate: "July 30, 2024",
-    location: "Central Asian University, Uzbekistan",
+    location: "Presidential School in Fergana",
     route: "/past-conferences?season=1",
     theme: "The Trembling Dawn",
     description: "Our first season brought together young diplomats from across Uzbekistan for an unforgettable MUN experience.",
@@ -20,7 +20,7 @@ export const seasonsData = [
     patternStyle: "radial",
     statistics: {
       participants: 80,
-      location: "Central Asian University"
+      location: "Fergana Presidential school"
     },
     experience: "Our inaugural season unfolded like a beautiful symphony of nervous energy and raw determination, where every stumbled word and uncertain pause became part of our authentic learning journey. The conference room buzzed with palpable tension as both wide-eyed organizers and hesitant delegates navigated uncharted territory together, our hearts racing with each procedural question and our voices trembling with the weight of pioneering something extraordinary in our region.",
     milestone: "From bold vision to breathtaking reality, TuronMUN was born through the unwavering determination of ambitious students who dared to dream big. Without established blueprints to follow, we fearlessly carved our own revolutionary path, developing distinctive standards and innovative approaches that would define our unique identity in the MUN landscape.",
@@ -48,7 +48,7 @@ export const seasonsData = [
     title: "Season Two",
     date: "November 3, 2023",
     endDate: "November 5, 2023",
-    location: "International Hotel Tashkent, Tashkent, Uzbekistan",
+    location: "Presidential School in Fergana",
     route: "/past-conferences?season=2",
     theme: "The Blossoming Brotherhood",
     description: "Expanding our reach with more committees and participants in our second season.",
@@ -63,7 +63,11 @@ export const seasonsData = [
     statistics: {
       committees: 2,
       fee: "69,000 UZS",
-      location: "Central Asian University"
+
+      location: "Fergana Presidential school"
+
+      
+
     },
     experience: "This magical season transformed our conference into a vibrant tapestry of genuine friendships woven through late-night Mafia games, intense chess battles, and spirited Monopoly negotiations that echoed long after committee sessions ended. The dormitory corridors came alive with laughter as delegates bonded over heated football matches under the afternoon sun, while others discovered kindred spirits through epic eFootball tournaments that sparked fierce but friendly rivalries—culminating in our proudest moment when MyMUN recognized our excellence with three prestigious awards: Best Small Conference, Best Logistics Conference, and Best Socials Conference of 2025.",
     milestone: "We transformed the delegate experience by introducing dormitory services, ensuring every participant enjoys comfort and convenience during our intensive sessions. This season marked our confident transition to a monetized model, reflecting our absolute belief in delivering exceptional value while pioneering our groundbreaking academic discount system that rewards scholarly excellence.",
@@ -91,7 +95,7 @@ export const seasonsData = [
     title: "Season Three",
     date: "January 4, 2024",
     endDate: "January 7, 2024",
-    location: "International Hotel Tashkent, Tashkent, Uzbekistan",
+    location: "Presidential School in Fergana",
     route: "/past-conferences?season=3",
     theme: "The Overwhelming Triumph",
     description: "Our biggest event yet with expanded committees and delegate participation.",
@@ -107,7 +111,11 @@ export const seasonsData = [
       participants: 105,
       committees: 5,
       fee: "69,000 UZS",
-      location: "Central Asian University"
+
+      location: "Fergana Presidential school"
+
+      
+
     },
     experience: "The sheer magnitude of over 100 passionate delegates flooding our conference created an intoxicating whirlwind of energy that left our entire team breathless yet exhilarated by the end of three intense days. Despite our initial doubts about hosting an event so close to New Year's celebrations, the overwhelming response of nearly 500 applications vindicated our bold decision, creating an atmosphere so electric and engaging that we confidently anticipate recognition as the year's premier medium-sized conference.",
     milestone: "TuronMUN achieved unprecedented success as over 100 passionate delegates converged for our most spectacular conference yet, creating an atmosphere of unparalleled energy and intellectual fervor. We proudly launched our exclusive UZB Committee, breaking down barriers and making the transformative MUN experience accessible to an even broader community of future leaders.",
@@ -133,9 +141,9 @@ export const seasonsData = [
     id: "season4",
     year: "2024",
     title: "Season Four",
-    date: "March 15, 2024",
+    date: "July 18, 2025",
     endDate: "March 17, 2024",
-    location: "International Hotel Tashkent, Tashkent, Uzbekistan",
+    location: "Presidential School in Fergana",
     route: "/past-conferences?season=4",
     theme: "The Tightrope Masterpiece",
     description: "A season that challenged us with timing and logistics but delivered exceptional diplomatic experiences.",
@@ -150,7 +158,7 @@ export const seasonsData = [
     statistics: {
       participants: 130,
       committees: 4,
-      location: "Rahimov School in Fergana"
+      location: "Presidential School in Fergana"
     },
     experience: "This season became our most thrilling high-wire act as the unpredictable timing of Eid festivities sent shockwaves through academic calendars, forcing us into a heart-pounding dance of rapid-fire decision-making and strategic pivots. Despite the challenges, we delivered an absolutely magnificent conference experience that exceeded every expectation.",
     milestone: "Our fourth season earned the highest ratings in TuronMUN history, a testament to our relentless pursuit of excellence and innovative conference design. We boldly expanded our horizons by hosting our first off-campus conference, gaining unprecedented freedom and flexibility that opened infinite possibilities for our future growth.",
