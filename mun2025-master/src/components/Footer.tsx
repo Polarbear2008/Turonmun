@@ -131,7 +131,7 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t border-blue-800/50 text-center text-blue-400 text-sm">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p> {currentYear} TuronMUN. All rights reserved.</p>
-            <p className="mt-2 md:mt-0">Coded & created by Asadbek Abdukhalilov & Numonov Samandar • 2025.</p>
+            <p className="mt-2 md:mt-0">Coded & created by <a href="https://t.me/samandar_vibe" target="_blank" rel="noopener" className="underline hover:text-white">Numonov Samandar</a> & Asadbek Abdukhalilov • 2025.</p>
           </div>
         </div>
       </div>
