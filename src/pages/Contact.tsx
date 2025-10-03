@@ -10,33 +10,25 @@ const contactMethods = [
     icon: Mail,
     title: "Email Us",
     description: "Get in touch via email for general inquiries and questions.",
-    value: "munturon@gmail.com",
+    value: "turonmun25@gmail.com",
     action: "Email",
-    link: "mailto:munturon@gmail.com"
+    link: "mailto:turonmun25@gmail.com"
   },
   {
     icon: Phone,
     title: "Call Us",
     description: "Speak directly with our organization team.",
-    value: "+998916611945",
+    value: "+998773694055",
     action: "Call",
-    link: "tel:+998916611945"
-  },
-  {
-    icon: MapPin,
-    title: "Visit Us",
-    description: "Find us at our conference venue.",
-    value: "Central Asian University",
-    action: "Directions",
-    link: "https://maps.google.com/?q=Central+Asian+University"
+    link: "tel:+998773694055"
   },
   {
     icon: Users,
     title: "Social Media",
     description: "Connect with us on social platforms.",
-    value: "Telegram: @TuronMUN",
+    value: "myurls.co/turonmunconference",
     action: "Follow",
-    link: "https://t.me/TuronMUN"
+    link: "https://myurls.co/turonmunconference"
   }
 ];
 
@@ -68,7 +60,7 @@ const Contact = () => {
         {/* Contact Methods */}
         <section className="py-12">
           <div className="container">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {contactMethods.map((method, index) => (
                 <div key={index} className="diplomatic-card flex flex-col">
                   <div className="p-3 rounded-lg bg-diplomatic-100 text-diplomatic-700 w-12 h-12 flex items-center justify-center mb-4">
@@ -192,8 +184,8 @@ const Contact = () => {
                   {/* Fergana Presidential School image */}
                   <div className="aspect-video bg-neutral-100 overflow-hidden">
                     <img 
-                      src="/images/fergana_school.jpg" 
-                      alt="Fergana Presidential School" 
+                      src="https://sasuvkcqdqmmjobmgida.supabase.co/storage/v1/object/public/logo/unnamed.jpg" 
+                      alt="Registan Private School" 
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -201,22 +193,32 @@ const Contact = () => {
                   <div className="p-6">
                     <h3 className="text-xl font-display font-semibold mb-2">Conference Venue</h3>
                     <p className="text-neutral-600 mb-4">
-                      Our MUN conference will be held at the Fergana Presidential School, a modern educational facility designed for academic events and conferences.
+                      Our MUN conference will be held at Registan Private School, a modern educational facility designed for academic events and conferences.
                     </p>
-                    <div className="flex items-start mb-2">
+                    <div className="flex items-start mb-4">
                       <MapPin size={18} className="text-diplomatic-600 mt-1 mr-2" />
-                      <p className="text-neutral-700">
-                        Fergana Presidential School<br />
-                        Fergana, Uzbekistan
-                      </p>
+                      <div>
+                        <p className="text-neutral-700">
+                          Registan Private School<br />
+                          Fergana, Uzbekistan
+                        </p>
+                        <a 
+                          href="https://maps.app.goo.gl/HTEWvVHym8bzBNpw5" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-diplomatic-600 hover:text-diplomatic-700 text-sm font-medium mt-1 inline-block"
+                        >
+                          View on Maps →
+                        </a>
+                      </div>
                     </div>
                     <div className="flex items-center mb-2">
                       <Mail size={18} className="text-diplomatic-600 mr-2" />
-                      <p className="text-neutral-700">munfps@gmail.com</p>
+                      <p className="text-neutral-700">turonmun25@gmail.com</p>
                     </div>
                     <div className="flex items-center">
                       <Phone size={18} className="text-diplomatic-600 mr-2" />
-                      <p className="text-neutral-700">+998916611945</p>
+                      <p className="text-neutral-700">+998773694055</p>
                     </div>
                   </div>
                 </div>
@@ -268,7 +270,7 @@ const Contact = () => {
                 <p className="text-neutral-600 mb-4">
                   Still have questions? Don't hesitate to contact us directly.
                 </p>
-                <a href="mailto:info@munconference.org" className="btn-primary inline-flex items-center gap-2">
+                <a href="mailto:turonmun25@gmail.com" className="btn-primary inline-flex items-center gap-2">
                   <Mail size={16} /> Email Us
                 </a>
               </div>

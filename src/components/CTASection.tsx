@@ -158,7 +158,7 @@ export default function CTASection() {
                   animate={{ x: "200%" }}
                   transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
                 />
-                Register Now
+                Apply Now
               </CustomButton>
             </motion.div>
             

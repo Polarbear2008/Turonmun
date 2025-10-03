@@ -40,7 +40,7 @@ const CallToAction: React.FC<CallToActionProps> = ({ selectedSeason }) => {
           >
             <CustomButton variant="accent" size="lg" to="/register">
               <Sparkles className="mr-2 h-5 w-5" />
-              Register Now
+              Apply Now
             </CustomButton>
           </motion.div>
         </motion.div>

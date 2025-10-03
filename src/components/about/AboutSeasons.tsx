@@ -11,8 +11,8 @@ const seasons = [
     description: "Our first season brought together young diplomats from across Uzbekistan for an unforgettable MUN experience.",
     highlights: [
       "July 28, 2024",
-      "80 delegates participated",
-      "Participants from all over Uzbekistan"
+      "4 committees",
+      "Presidential School in Fergana"
     ],
     icon: Calendar
   },
@@ -20,11 +20,11 @@ const seasons = [
     number: 2,
     year: "2024",
     name: "Season Two",
-    description: "Expanding our reach with more committees and participants in our second season.",
+    description: "A focused season with smaller committees, laying the groundwork for our expansion.",
     highlights: [
-      "November 3, 2024",
+      "November 5, 2024",
       "2 committees",
-      "Location: Presidential School in Fergana"
+      "Presidential School in Fergana"
     ],
     icon: Trophy
   },
@@ -36,8 +36,7 @@ const seasons = [
     highlights: [
       "January 4, 2025",
       "5 committees",
-      "105 delegates",
-      "Location: Presidential School in Fergana"
+      "Presidential School in Fergana"
     ],
     icon: Flag
   },
@@ -47,10 +46,21 @@ const seasons = [
     name: "Season Four",
     description: "Our upcoming season with more opportunities for young diplomats to excel.",
     highlights: [
-      "July 18, 2025",
+      "April 12, 2025",
       "4 committees",
-      "Application Deadline: March 23, 2025",
-      "Location: Presidential School in Fergana"
+      "Rahimov School, Fergana branch"
+    ],
+    icon: Sparkles
+  },
+  {
+    number: 5,
+    year: "2025",
+    name: "TuronMUN x CAMU",
+    description: "In partnership with Central Asian Medical University, this conference expanded our academic collaboration and strengthened the role of youth diplomacy in the region.",
+    highlights: [
+      "July 28, 2025",
+      "6 committees",
+      "Central Asian Medical University"
     ],
     icon: Sparkles
   }

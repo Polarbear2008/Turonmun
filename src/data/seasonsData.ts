@@ -181,6 +181,50 @@ export const seasonsData = [
     ]
   },
   {
+    id: "turonmun-camu",
+    year: "2025",
+    title: "TuronMUN x CAMU",
+    date: "July 28, 2025",
+    endDate: "July 30, 2025",
+    location: "Central Asian Medical University",
+    route: "/past-conferences?season=camu",
+    theme: "The Boundless Convergence",
+    description: "A season that broke boundaries with scale, diversity, and collaboration—uniting voices across disciplines and languages for our most ambitious diplomatic experience yet.",
+    color: "from-gold-500 to-gold-700",
+    accentColor: "bg-gold-600",
+    lightBg: "bg-gold-50",
+    mediumBg: "bg-gold-100",
+    borderColor: "border-gold-300",
+    textColor: "text-gold-900",
+    secondaryTextColor: "text-gold-700",
+    patternStyle: "radial",
+    statistics: {
+      participants: "120+",
+      committees: 6,
+      countries: "Multiple",
+      location: "Central Asian Medical University"
+    },
+    experience: "Marking our anniversary, this season stood as a testament to growth and ambition. With our largest conference yet, a groundbreaking partnership with a medical university, and trilingual debates, it became a true celebration of how far we've come.",
+    milestone: "This historic partnership with Central Asian Medical University marked our most ambitious collaboration yet, expanding our academic reach and strengthening the role of youth diplomacy in the region through unprecedented scale and diversity.",
+    highlights: [
+      "120+ delegates from across the country",
+      "First collaboration with Central Asian Medical Universities",
+      "6 dynamic committees",
+      "Trilingual debates (English, Russian, Uzbek)"
+    ],
+    organizers: [
+      { name: "To be announced", role: "Secretary-General", image: "https://randomuser.me/api/portraits/lego/1.jpg" },
+      { name: "To be announced", role: "Deputy Secretary-General", image: "https://randomuser.me/api/portraits/lego/2.jpg" },
+      { name: "To be announced", role: "Chief of Staff", image: "https://randomuser.me/api/portraits/lego/3.jpg" }
+    ],
+    photos: [
+      { url: "seasons/season5/1.jpg", caption: "Opening Ceremony" },
+      { url: "seasons/season5/2.jpg", caption: "Committee Sessions" },
+      { url: "seasons/season5/3.jpg", caption: "Trilingual Debates" },
+      { url: "seasons/season5/4.jpg", caption: "Partnership Celebration" }
+    ]
+  },
+  {
     id: "season5",
     year: "2025",
     title: "Season Five",

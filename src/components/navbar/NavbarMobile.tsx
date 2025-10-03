@@ -218,7 +218,7 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({
                 onClick={toggleMenu}
               >
                 <Globe size={18} />
-                <span>Register Now</span>
+                <span>Apply Now</span>
               </Link>
             </motion.div>
           </div>

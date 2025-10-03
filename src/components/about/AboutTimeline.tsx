@@ -13,7 +13,7 @@ const timelineEvents = [
     ]
   },
   {
-    year: 'July 19, 2025',
+    year: 'July 1, 2024',
     title: 'Season 1 Registration Opens',
     description: 'Launching our first season with great enthusiasm and participation.',
     milestones: [
@@ -23,12 +23,12 @@ const timelineEvents = [
     ]
   },
   {
-    year: 'November 3, 2024',
+    year: 'November 5, 2024',
     title: 'Season 2',
-    description: 'Expanding our reach with more committees and participants.',
+    description: 'A focused season with smaller committees, laying the groundwork for our expansion.',
     milestones: [
       '2 committees',
-      'Location: Central Asian University'
+      'Location: Presidential School in Fergana'
     ]
   },
   {
@@ -38,7 +38,7 @@ const timelineEvents = [
     milestones: [
       '5 committees',
       '105 delegates',
-      'Location: Central Asian University'
+      'Location: Presidential School in Fergana'
     ]
   },
   {
@@ -70,6 +70,16 @@ const timelineEvents = [
       'Transition from FPSMUN to TuronMUN',
       'New vision for the future',
       'Continued commitment to excellence in MUN'
+    ]
+  },
+  {
+    year: 'July 28, 2025',
+    title: 'United Celebration',
+    description: 'Celebrating our anniversary with a special collaboration at Central Asian Medical University.',
+    milestones: [
+      'First joint MUN with a medical university',
+      'Celebrating TuronMUN\'s anniversary with a special event',
+      '6 vibrant committees in 3 languages'
     ]
   }
 ];

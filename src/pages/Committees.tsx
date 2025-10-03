@@ -89,7 +89,7 @@ const Committees = () => {
             >
               <h3 className="text-2xl font-display font-semibold mb-4">Ready to Join the Deliberation?</h3>
               <p className="mb-6 text-neutral-600">
-                Register now to secure your place in one of our prestigious committees. Spaces are limited and allocated on a first-come, first-served basis.
+                Apply now to secure your place in one of our prestigious committees. Spaces are limited and allocated on a first-come, first-served basis.
               </p>
               <a 
                 href="/register" 

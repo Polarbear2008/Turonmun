@@ -11,7 +11,7 @@ const resourceCategories = [
     icon: Book,
     description: "Essential materials to help you prepare for the conference.",
     resources: [
-      { title: "Rules of Procedure", description: "Complete guide to MUN parliamentary procedures", link: "https://www.nmun.org/assets/documents/nmun-rules.pdf" },
+      { title: "TuronMUN Guide", description: "Complete guide to TuronMUN procedures and preparation", link: "https://sasuvkcqdqmmjobmgida.supabase.co/storage/v1/object/public/logo/TuronMUN%20Guide.pdf" },
       { title: "Position Paper Guide", description: "How to write an effective position paper", link: "https://lmun.ng/wp-content/uploads/2020/01/Position-Guide.pdf" },
       { title: "Research Methodology", description: "Strategies for thorough country research", link: "https://euacademic.org/bookupload/9.pdf" }
     ]
@@ -21,7 +21,7 @@ const resourceCategories = [
     icon: FileText,
     description: "Background guides and topic briefs for all committees.",
     resources: [
-      { title: "UNSC Background Guide", description: "Topics, history, and questions to consider", link: "https://www.nmun.org/assets/documents/conference-archives/germany-2023/nmun-ger23-bgg-sc.pdf" },
+      { title: "TuronMUN Position Paper Structure", description: "Official position paper structure and guidelines", link: "https://sasuvkcqdqmmjobmgida.supabase.co/storage/v1/object/public/logo/TuronMUN%20Position%20Paper%20Structure.pdf" },
       { title: "UNGA Topic Brief", description: "Detailed analysis of UNGA topics", link: "https://media.nti.org/documents/unga.pdf" },
       { title: "WHO Study Guide", description: "Comprehensive guide to WHO topics", link: "https://zumun.ch/wp-content/uploads/2023/04/WHO-Study-Guide-ZuMUN-2023.pdf" }
     ]
@@ -31,7 +31,7 @@ const resourceCategories = [
     icon: Video,
     description: "Visual guides to help you master MUN skills.",
     resources: [
-      { title: "Public Speaking Workshop", description: "Improve your speaking confidence", link: "https://youtu.be/R-t8qqi_vO8?si=IKYMyubKFX1HVLus" },
+      { title: "TuronMUN Tutorial", description: "Complete video guide for TuronMUN preparation", link: "https://youtu.be/88kMFbjjntU" },
       { title: "Negotiation Tactics", description: "Effective strategies for building consensus", link: "https://youtu.be/7bRjWDzRJqE?si=UMkvEC8SNxmm9vjh" },
       { title: "Resolution Drafting", description: "Step-by-step guide to writing resolutions", link: "https://youtu.be/KLoktLNfXRo?si=UL5JHPEuTvF65UKB" }
     ]

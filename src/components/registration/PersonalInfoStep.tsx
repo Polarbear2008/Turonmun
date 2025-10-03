@@ -198,37 +198,7 @@ const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
           </div>
         </div>
 
-        {/* Upload Photo (Optional) */}
-        <div className="form-group">
-          <label htmlFor="photo" className="block text-sm font-medium text-neutral-700 mb-1">
-            📷 Upload Your Photo <span className="text-neutral-500">(Optional)</span>
-          </label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Upload size={18} className="text-neutral-400" />
-            </div>
-            <input
-              type="file"
-              id="photo"
-              name="photo"
-              onChange={(e) => {
-                const file = e.target.files?.[0] || null;
-                if (updatePhotoFile) {
-                  updatePhotoFile(file);
-                }
-              }}
-              accept="image/jpeg,image/jpg,image/png,image/webp"
-              className="pl-10 w-full px-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-diplomatic-300 focus:border-transparent transition-all file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-diplomatic-50 file:text-diplomatic-700 hover:file:bg-diplomatic-100"
-            />
-          </div>
-          <p className="text-xs text-neutral-500 mt-1">For conference badge, headshots preferred, under 5MB (JPG, PNG, WebP)</p>
-          {photoFile && (
-            <p className="text-xs text-green-600 mt-1 flex items-center gap-1">
-              <CheckCircle size={12} />
-              Photo selected: {photoFile.name}
-            </p>
-          )}
-        </div>
+
       </div>
       
       <div className="mt-8 flex justify-end">

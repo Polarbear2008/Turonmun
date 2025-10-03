@@ -119,10 +119,10 @@ export default function PastConferences() {
                     </div>
                     
                     <Link 
-                      to={`/seasons/${index + 1}`} 
+                      to={season.id === "turonmun-camu" ? "/seasons/camu" : `/seasons/${index + 1}`} 
                       className={`inline-flex items-center ${season.accentColor} text-white px-6 py-3 rounded-lg font-medium hover:brightness-110 transition-all group`}
                     >
-                      Explore Season {season.year}
+                      Explore {season.id === "turonmun-camu" ? "TuronMUN x CAMU" : `Season ${season.year}`}
                       <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </Link>
                   </div>

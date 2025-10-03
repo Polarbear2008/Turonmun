@@ -90,16 +90,24 @@ export default function Footer() {
             <h3 className="text-lg font-display font-semibold mb-6 text-white">Important Info</h3>
             <ul className="space-y-3">
               <li>
-                <a href="#" className="text-blue-200 hover:text-white transition-colors">Privacy Policy</a>
+                <Link to="/about" className="text-blue-200 hover:text-white transition-colors inline-flex items-center">
+                  <ArrowRight size={14} className="mr-2 opacity-70" /> About Us
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-blue-200 hover:text-white transition-colors">Terms & Conditions</a>
+                <Link to="/#faq" className="text-blue-200 hover:text-white transition-colors inline-flex items-center">
+                  <ArrowRight size={14} className="mr-2 opacity-70" /> FAQ
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-blue-200 hover:text-white transition-colors">FAQ</a>
+                <a href="http://t.me/ozodjonov_mh" target="_blank" rel="noopener noreferrer" className="text-blue-200 hover:text-white transition-colors inline-flex items-center">
+                  <ArrowRight size={14} className="mr-2 opacity-70" /> Sponsorship
+                </a>
               </li>
               <li>
-                <a href="#" className="text-blue-200 hover:text-white transition-colors">Sponsorship</a>
+                <Link to="/contact" className="text-blue-200 hover:text-white transition-colors inline-flex items-center">
+                  <ArrowRight size={14} className="mr-2 opacity-70" /> Contact Us
+                </Link>
               </li>
             </ul>
           </div>

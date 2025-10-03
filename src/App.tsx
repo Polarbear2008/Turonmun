@@ -25,6 +25,7 @@ import Season1 from "./pages/seasons/Season1";
 import Season2 from "./pages/seasons/Season2";
 import Season3 from "./pages/seasons/Season3";
 import Season4 from "./pages/seasons/Season4";
+import SeasonCAMU from "./pages/seasons/SeasonCAMU";
 import RegistrationSelection from "./pages/RegistrationSelection";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/admin/AdminLogin";
@@ -110,6 +111,7 @@ const App = () => {
               <Route path="/seasons/2" element={<Season2 />} />
               <Route path="/seasons/3" element={<Season3 />} />
               <Route path="/seasons/4" element={<Season4 />} />
+              <Route path="/seasons/camu" element={<SeasonCAMU />} />
               
               <Route path="/admin" element={<AdminLogin />} />
               <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />

@@ -11,8 +11,8 @@ const RegistrationSelection = () => {
     {
       title: "Delegate",
       description: "Active participation",
-      price: "69K UZS",
-      date: "19th July",
+      price: "79K UZS",
+      date: "Deadline: November 29",
       spots: "160 spots",
       available: true,
       route: "/registration",
@@ -22,8 +22,8 @@ const RegistrationSelection = () => {
       title: "Chair",
       description: "Leading the committee",
       price: "FREE",
-      date: "19th July",
-      spots: "8 chairs, 8 co-chairs",
+      date: "Deadline: November 29",
+      spots: "5 chairs, 5 co-chairs",
       available: true,
       route: "https://forms.gle/z8vT7jBW8T97v6hh9",
       location: "Central Asian University"
@@ -31,9 +31,9 @@ const RegistrationSelection = () => {
     {
       title: "Observer",
       description: "Relaxed participation",
-      price: "89K",
-      date: "25th July",
-      spots: "24 spots",
+      price: "89K UZS",
+      date: "Deadline: November 5",
+      spots: "20 spots",
       available: true,
       route: "https://forms.gle/Cq6XkXiKPByFDhSVA"
     }

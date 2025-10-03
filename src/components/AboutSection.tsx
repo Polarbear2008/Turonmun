@@ -80,7 +80,21 @@ export default function AboutSection() {
                   </div>
                   
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 items-center">
-                    {[1, 2, 3].map((num) => (
+                    {/* CAMU Logo */}
+                    <div className="h-24 sm:h-28 flex items-center justify-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5">
+                      <div className="relative w-full h-full">
+                        <img 
+                          src="https://sasuvkcqdqmmjobmgida.supabase.co/storage/v1/object/public/logo/camulogo.jpg" 
+                          alt="Central Asian University MUN" 
+                          className="h-full w-full object-contain object-center p-1 opacity-90 hover:opacity-100 transition-all duration-200"
+                          style={{ filter: 'grayscale(100%)' }}
+                          onMouseOver={(e) => e.currentTarget.style.filter = 'grayscale(0%)'}
+                          onMouseOut={(e) => e.currentTarget.style.filter = 'grayscale(100%)'}
+                        />
+                      </div>
+                    </div>
+                    {/* Other partner logos */}
+                    {[2, 3].map((num) => (
                       <div 
                         key={num}
                         className="h-24 sm:h-28 flex items-center justify-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5"
