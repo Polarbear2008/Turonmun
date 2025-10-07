@@ -49,7 +49,7 @@ const AdminLogin = () => {
       setLoading(true);
       
       // Check for the common admin credentials
-      if (username === 'admin' && password === 'admin123') {
+      if (username === 'admin' && password === 'turonmun2025') {
         // Skip Supabase auth and grant access directly
         localStorage.setItem('TuronMUN_admin_access', 'true');
         toast({
