@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import ApplicationManagementModal from '@/components/admin/ApplicationManagementModal';
+import DeleteAllApplicationsModal from '@/components/admin/DeleteAllApplicationsModal';
 import { supabase, checkAuthState } from '@/integrations/supabase/client';
 import { CheckCircle, XCircle, Clock, User, School, MapPin, Download, Filter, Search, Trash2, Settings } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -52,6 +53,7 @@ const AdminApplications = () => {
   const [authChecked, setAuthChecked] = useState(false);
   const [acceptedEmails, setAcceptedEmails] = useState<string>('');
   const [rejectedEmails, setRejectedEmails] = useState<string>('');
+  const [isDeleteAllModalOpen, setIsDeleteAllModalOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -325,6 +327,40 @@ const AdminApplications = () => {
     }
   };
 
+  const deleteAllApplications = async () => {
+    try {
+      const { error } = await supabase
+        .from('applications')
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all records
+        
+      if (error) throw error;
+      
+      // Clear local state
+      setApplications([]);
+      setFilteredApplications([]);
+      setAcceptedEmails('');
+      setRejectedEmails('');
+      
+      // Close modal if open
+      if (modalApplication) {
+        setModalApplication(null);
+      }
+      
+      toast({
+        title: "All Applications Deleted",
+        description: "All applications have been permanently deleted from the database",
+      });
+    } catch (error) {
+      console.error('Error deleting all applications:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete all applications",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <AdminLayout title="Applications Management">
       {!authChecked || loading ? (
@@ -427,6 +463,15 @@ const AdminApplications = () => {
                         <Download size={14} className="mr-1" />
                         Export Excel
                       </button>
+                      
+                      <button
+                        onClick={() => setIsDeleteAllModalOpen(true)}
+                        disabled={applications.length === 0}
+                        className="bg-red-600 text-white py-2 px-3 rounded-md text-sm flex items-center hover:bg-red-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+                      >
+                        <Trash2 size={14} className="mr-1" />
+                        Delete All
+                      </button>
                     </div>
                   </div>
                   
@@ -528,6 +573,14 @@ const AdminApplications = () => {
               onDelete={deleteApplication}
             />
           )}
+          
+          {/* Delete All Applications Modal */}
+          <DeleteAllApplicationsModal
+            isOpen={isDeleteAllModalOpen}
+            onClose={() => setIsDeleteAllModalOpen(false)}
+            onConfirm={deleteAllApplications}
+            applicationCount={applications.length}
+          />
         </>
       )}
     </AdminLayout>
