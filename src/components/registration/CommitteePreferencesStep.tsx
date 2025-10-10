@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowRight, ArrowLeft, FileText, Lightbulb, Users2, Scale } from 'lucide-react';
+import { CustomButton } from '../ui/custom-button';
 
 interface EssayStepProps {
   formData: {
@@ -55,7 +56,7 @@ const EssayStep: React.FC<EssayStepProps> = ({
 
   return (
     <div className="bg-white rounded-xl shadow-elegant p-8 border border-neutral-100">
-      <h2 className="text-2xl font-display font-semibold mb-2">Page 3 — Essay Section</h2>
+      <h2 className="text-2xl font-display font-semibold mb-2">Page 4 — Essay Section</h2>
       <p className="text-red-600 mb-6">Kindly ensure all responses are original; any use of AI will be detected and may adversely affect your performance evaluation.</p>
       
       <div className="space-y-8">
@@ -245,23 +246,22 @@ const EssayStep: React.FC<EssayStepProps> = ({
       </div>
       
       <div className="mt-8 flex justify-between">
-        <button
-          type="button"
+        <CustomButton 
+          variant="outline" 
           onClick={prevStep}
-          className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm transition-all hover:-translate-y-0.5 hover:bg-gray-50 hover:border-gray-400 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-diplomatic-300 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
         >
-          <ArrowLeft size={16} /> Back
-        </button>
-        <button
-          type="button"
+          <ArrowLeft size={16} className="mr-2" />
+          Back
+        </CustomButton>
+        
+        <CustomButton 
+          variant="primary"
           onClick={nextStep}
           disabled={!isFormValid()}
-          className={`btn-primary flex items-center gap-2 ${
-            !isFormValid() ? 'opacity-50 cursor-not-allowed' : 'hover:bg-diplomatic-700'
-          }`}
         >
-          Next Step <ArrowRight size={16} />
-        </button>
+          Next Step
+          <ArrowRight size={16} className="ml-2" />
+        </CustomButton>
       </div>
     </div>
   );

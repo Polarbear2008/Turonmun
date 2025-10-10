@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertCircle, Loader2, Users, FileText, Upload, MapPin, MessageSquare, DollarSign, Award, CheckCircle } from 'lucide-react';
+import { AlertCircle, Loader2, Upload, DollarSign, Award, CheckCircle } from 'lucide-react';
 import { CustomButton } from '../ui/custom-button';
 
 interface FeeInfo {
@@ -58,7 +58,7 @@ const AdditionalInfoStep: React.FC<AdditionalInfoStepProps> = ({
 
   return (
     <div className="bg-white rounded-xl shadow-elegant p-8 border border-neutral-100">
-      <h2 className="text-2xl font-display font-semibold mb-2">Page 4 — Details</h2>
+      <h2 className="text-2xl font-display font-semibold mb-2">Page 5 — Details</h2>
       <p className="text-neutral-600 mb-6">Complete your registration with final details and confirmations</p>
       
       <div className="space-y-8">
@@ -72,7 +72,7 @@ const AdditionalInfoStep: React.FC<AdditionalInfoStepProps> = ({
           
           <div className="mb-4">
             <p className="text-sm text-neutral-700 mb-3">
-              <strong>The delegate application fee is 69,000 UZS. Are you aware of this and ready to pay upon acceptance?</strong>
+              <strong>The delegate application fee is 79,000 UZS. Are you aware of this and ready to pay upon acceptance?</strong>
             </p>
             
             <div className="space-y-2">

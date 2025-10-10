@@ -9,9 +9,10 @@ const RegistrationSteps: React.FC<RegistrationStepsProps> = ({ currentStep }) =>
   const steps = [
     { number: 1, label: "Personal Info" },
     { number: 2, label: "Experience" },
-    { number: 3, label: "Essays" },
-    { number: 4, label: "Details" },
-    { number: 5, label: "Confirmation" },
+    { number: 3, label: "Committees" },
+    { number: 4, label: "Essays" },
+    { number: 5, label: "Details" },
+    { number: 6, label: "Confirmation" },
   ];
 
   return (
@@ -41,7 +42,7 @@ const RegistrationSteps: React.FC<RegistrationStepsProps> = ({ currentStep }) =>
         <div className="absolute top-0 left-0 w-full h-1 bg-neutral-200 rounded"></div>
         <div 
           className="absolute top-0 left-0 h-1 bg-diplomatic-600 rounded transition-all duration-300"
-          style={{ width: `${((currentStep - 1) / 4) * 100}%` }}
+          style={{ width: `${((currentStep - 1) / 5) * 100}%` }}
         ></div>
       </div>
     </div>
