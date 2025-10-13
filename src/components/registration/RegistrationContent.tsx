@@ -3,7 +3,8 @@ import { motion } from 'framer-motion';
 import RegistrationSteps from './RegistrationSteps';
 import PersonalInfoStep from './PersonalInfoStep';
 import PreferencesStep from './PreferencesStep';
-import EssayStep from './CommitteePreferencesStep';
+import CommitteePreferencesStep from './CommitteePreferencesStep';
+import EssayStep from './EssayStep';
 import AdditionalInfoStep from './AdditionalInfoStep';
 import ConfirmationStep from './ConfirmationStep';
 
@@ -104,7 +105,7 @@ const RegistrationContent: React.FC<RegistrationContentProps> = ({
           )}
           
           {step === 3 && (
-            <EssayStep 
+            <CommitteePreferencesStep 
               formData={formData} 
               handleChange={handleChange} 
               nextStep={nextStep} 
@@ -113,6 +114,15 @@ const RegistrationContent: React.FC<RegistrationContentProps> = ({
           )}
           
           {step === 4 && (
+            <EssayStep 
+              formData={formData} 
+              handleChange={handleChange} 
+              nextStep={nextStep} 
+              prevStep={prevStep} 
+            />
+          )}
+          
+          {step === 5 && (
             <AdditionalInfoStep 
               formData={formData} 
               handleChange={handleChange} 
@@ -127,7 +137,7 @@ const RegistrationContent: React.FC<RegistrationContentProps> = ({
             />
           )}
           
-          {step === 5 && (
+          {step === 6 && (
             <ConfirmationStep fee={fee} />
           )}
         </motion.div>

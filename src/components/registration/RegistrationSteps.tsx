@@ -9,9 +9,10 @@ const RegistrationSteps: React.FC<RegistrationStepsProps> = ({ currentStep }) =>
   const steps = [
     { number: 1, label: "Personal Info" },
     { number: 2, label: "Experience" },
-    { number: 3, label: "Essays" },
-    { number: 4, label: "Details" },
-    { number: 5, label: "Confirmation" },
+    { number: 3, label: "Committees" },
+    { number: 4, label: "Essays" },
+    { number: 5, label: "Details" },
+    { number: 6, label: "Confirmation" },
   ];
 
   return (
@@ -19,14 +20,13 @@ const RegistrationSteps: React.FC<RegistrationStepsProps> = ({ currentStep }) =>
       <div className="flex items-center justify-between mb-6">
         {steps.map((step) => (
           <div key={step.number} className="flex flex-col items-center">
-            <div 
-              className={`w-10 h-10 flex items-center justify-center rounded-full ${
-                currentStep === step.number 
-                  ? 'bg-diplomatic-600 text-white'
-                  : currentStep > step.number 
-                    ? 'bg-green-500 text-white' 
-                    : 'bg-white border border-neutral-200 text-neutral-500'
-              }`}
+            <div
+              className={`w-10 h-10 flex items-center justify-center rounded-full ${currentStep === step.number
+                ? 'bg-diplomatic-600 text-white'
+                : currentStep > step.number
+                  ? 'bg-green-500 text-white'
+                  : 'bg-white border border-neutral-200 text-neutral-500'
+                }`}
             >
               {currentStep > step.number ? <CircleCheck size={18} /> : step.number}
             </div>
@@ -36,12 +36,12 @@ const RegistrationSteps: React.FC<RegistrationStepsProps> = ({ currentStep }) =>
           </div>
         ))}
       </div>
-      
+
       <div className="relative">
         <div className="absolute top-0 left-0 w-full h-1 bg-neutral-200 rounded"></div>
-        <div 
+        <div
           className="absolute top-0 left-0 h-1 bg-diplomatic-600 rounded transition-all duration-300"
-          style={{ width: `${((currentStep - 1) / 4) * 100}%` }}
+          style={{ width: `${((currentStep - 1) / 5) * 100}%` }}
         ></div>
       </div>
     </div>

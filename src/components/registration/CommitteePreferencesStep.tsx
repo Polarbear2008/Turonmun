@@ -1,246 +1,166 @@
 import React from 'react';
-import { ArrowRight, ArrowLeft, FileText, Lightbulb, Users2, Scale } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Users, Trophy, Star } from 'lucide-react';
+import { useCommittees } from '@/hooks/useCommittees';
 
-interface EssayStepProps {
+interface CommitteePreferencesStepProps {
   formData: {
-    uniqueDelegateTrait: string;
-    issueInterest: string;
-    type1SelectedPrompt: string;
-    type1InsightResponse: string;
-    type2SelectedPrompt: string;
-    type2PoliticalResponse: string;
+    committee_preference1: string;
+    committee_preference2: string;
+    committee_preference3: string;
   };
   handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
   nextStep: () => void;
   prevStep: () => void;
 }
 
-const EssayStep: React.FC<EssayStepProps> = ({ 
+const CommitteePreferencesStep: React.FC<CommitteePreferencesStepProps> = ({ 
   formData, 
   handleChange, 
   nextStep, 
   prevStep 
 }) => {
-  const wordCount = (text: string) => {
-    return text.trim().split(/\s+/).filter(word => word.length > 0).length;
-  };
+  const { committees, loading } = useCommittees();
 
   const isFormValid = () => {
     return (
-      formData.uniqueDelegateTrait.trim() !== '' &&
-      formData.issueInterest.trim() !== '' &&
-      formData.type1SelectedPrompt !== '' &&
-      formData.type1InsightResponse.trim() !== '' &&
-      formData.type2SelectedPrompt !== '' &&
-      formData.type2PoliticalResponse.trim() !== ''
+      formData.committee_preference1 !== '' && 
+      formData.committee_preference1 !== 'Not Selected' &&
+      formData.committee_preference2 !== '' && 
+      formData.committee_preference2 !== 'Not Selected' &&
+      formData.committee_preference3 !== '' && 
+      formData.committee_preference3 !== 'Not Selected'
     );
   };
 
-  const getWordCountColor = (text: string, limit: number = 115) => {
-    const count = wordCount(text);
-    if (count === 0) return 'text-gray-400';
-    if (count <= limit) return 'text-green-600';
-    return 'text-red-500';
+  // Get available options for each preference (excluding already selected ones)
+  const getAvailableCommittees = (currentPreference: string, excludePreferences: string[]) => {
+    return committees.filter(committee => 
+      committee.name === currentPreference || 
+      !excludePreferences.includes(committee.name)
+    );
   };
 
-  const type1Prompts = [
-    "A rival delegate launches a sarcastic attack on your country's motives mid-session. You're boiling, but can't strike back — what do you do?",
-    "What's a belief or value you claim to care about — but find hard to practice? Why the gap?"
-  ];
-
-  const type2Prompts = [
-    "You're mediating between two states. One broke international law, but punishing them might destabilize peace. Do you choose justice or stability — and why?",
-    "What's more dangerous: fanatics with no strategy or clever people with no principles?"
-  ];
+  if (loading) {
+    return (
+      <div className="bg-white rounded-xl shadow-elegant p-8 border border-neutral-100">
+        <div className="flex justify-center items-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-diplomatic-600"></div>
+          <span className="ml-3 text-diplomatic-600">Loading committees...</span>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-elegant p-8 border border-neutral-100">
-      <h2 className="text-2xl font-display font-semibold mb-2">Page 3 — Essay Section</h2>
-      <p className="text-red-600 mb-6">Kindly ensure all responses are original; any use of AI will be detected and may adversely affect your performance evaluation.</p>
+      <h2 className="text-2xl font-display font-semibold mb-2">Committee Preferences</h2>
+      <p className="text-neutral-600 mb-6">
+        Select your preferred committees in order of preference. We'll do our best to assign you to your top choice.
+      </p>
       
-      <div className="space-y-8">
-        {/* What aspects of your background, thinking, or presence set you apart from most delegates */}
+      <div className="space-y-6">
+        {/* First Choice */}
         <div className="form-group">
-          <label htmlFor="uniqueDelegateTrait" className="block text-sm font-medium text-neutral-700 mb-1">
-            What aspects of your background, thinking, or presence set you apart from most delegates - and how? <span className="text-red-500">*</span>
+          <label htmlFor="committee_preference1" className="block text-sm font-medium text-neutral-700 mb-1">
+            <div className="flex items-center">
+              <Star className="text-gold-500 mr-2" size={18} />
+              First Choice Committee <span className="text-red-500">*</span>
+            </div>
           </label>
           <div className="relative">
-            <div className="absolute top-3 left-0 pl-3 flex items-start pointer-events-none">
-              <Users2 size={18} className="text-neutral-400" />
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Trophy size={18} className="text-gold-500" />
             </div>
-            <textarea
-              id="uniqueDelegateTrait"
-              name="uniqueDelegateTrait"
-              value={formData.uniqueDelegateTrait}
+            <select
+              id="committee_preference1"
+              name="committee_preference1"
+              value={formData.committee_preference1}
               onChange={handleChange}
-              rows={4}
-              className="pl-10 w-full px-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-diplomatic-300 focus:border-transparent transition-all resize-none"
-              placeholder="Share a trait, habit, or experience that gives you an edge or makes you memorable in MUN."
+              className="pl-10 w-full px-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-diplomatic-300 focus:border-transparent transition-all"
               required
-            />
+            >
+              <option value="">Select your first choice</option>
+              {committees.map((committee) => (
+                <option key={committee.id} value={committee.name}>
+                  {committee.name} ({committee.abbreviation})
+                </option>
+              ))}
+            </select>
           </div>
-          <div className="flex justify-between items-center mt-1">
-            <p className="text-xs text-neutral-500">Share a trait, habit, or experience that gives you an edge or makes you memorable in MUN.</p>
-            <span className={`text-xs font-medium ${getWordCountColor(formData.uniqueDelegateTrait)}`}>
-              {wordCount(formData.uniqueDelegateTrait)}/115 words
-            </span>
-          </div>
+          <p className="text-xs text-neutral-500 mt-1">Your most preferred committee</p>
         </div>
 
-        {/* A topic or issue you're passionate about */}
+        {/* Second Choice */}
         <div className="form-group">
-          <label htmlFor="issueInterest" className="block text-sm font-medium text-neutral-700 mb-1">
-            A topic or issue you're passionate or knowledgeable about <span className="text-red-500">*</span>
+          <label htmlFor="committee_preference2" className="block text-sm font-medium text-neutral-700 mb-1">
+            <div className="flex items-center">
+              <Users className="text-diplomatic-500 mr-2" size={18} />
+              Second Choice Committee <span className="text-red-500">*</span>
+            </div>
           </label>
           <div className="relative">
-            <div className="absolute top-3 left-0 pl-3 flex items-start pointer-events-none">
-              <Lightbulb size={18} className="text-neutral-400" />
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Users size={18} className="text-diplomatic-500" />
             </div>
-            <textarea
-              id="issueInterest"
-              name="issueInterest"
-              value={formData.issueInterest}
+            <select
+              id="committee_preference2"
+              name="committee_preference2"
+              value={formData.committee_preference2}
               onChange={handleChange}
-              rows={4}
-              className="pl-10 w-full px-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-diplomatic-300 focus:border-transparent transition-all resize-none"
-              placeholder="Pick an issue or theme you'd dive into for hours. Tell us why it grips you — even briefly."
+              className="pl-10 w-full px-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-diplomatic-300 focus:border-transparent transition-all"
               required
-            />
+            >
+              <option value="">Select your second choice</option>
+              {getAvailableCommittees(formData.committee_preference2, [formData.committee_preference1]).map((committee) => (
+                <option key={committee.id} value={committee.name}>
+                  {committee.name} ({committee.abbreviation})
+                </option>
+              ))}
+            </select>
           </div>
-          <div className="flex justify-between items-center mt-1">
-            <p className="text-xs text-neutral-500">Pick an issue or theme you'd dive into for hours. Tell us why it grips you — even briefly.</p>
-            <span className={`text-xs font-medium ${getWordCountColor(formData.issueInterest)}`}>
-              {wordCount(formData.issueInterest)}/115 words
-            </span>
-          </div>
+          <p className="text-xs text-neutral-500 mt-1">Your alternative preference</p>
         </div>
 
-        {/* Type I - Personal Insight */}
+        {/* Third Choice */}
         <div className="form-group">
-          <label className="block text-sm font-medium text-neutral-700 mb-1">
-            Type I — Personal Insight <span className="text-red-500">*</span> <span className="text-neutral-500">(choose 1/2)</span>
+          <label htmlFor="committee_preference3" className="block text-sm font-medium text-neutral-700 mb-1">
+            <div className="flex items-center">
+              <Users className="text-neutral-500 mr-2" size={18} />
+              Third Choice Committee <span className="text-red-500">*</span>
+            </div>
           </label>
-          
-          <div className="space-y-3 mb-4">
-            <div className="flex items-start space-x-2">
-              <input
-                type="radio"
-                id="type1prompt1"
-                name="type1SelectedPrompt"
-                value="1"
-                checked={formData.type1SelectedPrompt === "1"}
-                onChange={handleChange}
-                className="mt-1 w-4 h-4 text-diplomatic-600 border-neutral-300 focus:ring-diplomatic-500"
-                required
-              />
-              <label htmlFor="type1prompt1" className="text-sm text-neutral-700 cursor-pointer">
-                <strong>1.</strong> {type1Prompts[0]}
-              </label>
-            </div>
-            
-            <div className="flex items-start space-x-2">
-              <input
-                type="radio"
-                id="type1prompt2"
-                name="type1SelectedPrompt"
-                value="2"
-                checked={formData.type1SelectedPrompt === "2"}
-                onChange={handleChange}
-                className="mt-1 w-4 h-4 text-diplomatic-600 border-neutral-300 focus:ring-diplomatic-500"
-                required
-              />
-              <label htmlFor="type1prompt2" className="text-sm text-neutral-700 cursor-pointer">
-                <strong>2.</strong> {type1Prompts[1]}
-              </label>
-            </div>
-          </div>
-
           <div className="relative">
-            <div className="absolute top-3 left-0 pl-3 flex items-start pointer-events-none">
-              <FileText size={18} className="text-neutral-400" />
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Users size={18} className="text-neutral-500" />
             </div>
-            <textarea
-              id="type1InsightResponse"
-              name="type1InsightResponse"
-              value={formData.type1InsightResponse}
+            <select
+              id="committee_preference3"
+              name="committee_preference3"
+              value={formData.committee_preference3}
               onChange={handleChange}
-              rows={4}
-              className="pl-10 w-full px-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-diplomatic-300 focus:border-transparent transition-all resize-none"
-              placeholder="Write your response to the selected prompt..."
+              className="pl-10 w-full px-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-diplomatic-300 focus:border-transparent transition-all"
               required
-              disabled={!formData.type1SelectedPrompt}
-            />
+            >
+              <option value="">Select your third choice</option>
+              {getAvailableCommittees(formData.committee_preference3, [formData.committee_preference1, formData.committee_preference2]).map((committee) => (
+                <option key={committee.id} value={committee.name}>
+                  {committee.name} ({committee.abbreviation})
+                </option>
+              ))}
+            </select>
           </div>
-          <div className="flex justify-between items-center mt-1">
-            <p className="text-xs text-neutral-500">Choose ONE prompt above and write your response</p>
-            <span className={`text-xs font-medium ${getWordCountColor(formData.type1InsightResponse)}`}>
-              {wordCount(formData.type1InsightResponse)}/115 words
-            </span>
-          </div>
+          <p className="text-xs text-neutral-500 mt-1">Your backup option</p>
         </div>
 
-        {/* Type II - Political Reflection */}
-        <div className="form-group">
-          <label className="block text-sm font-medium text-neutral-700 mb-1">
-            Type II — Political Reflection <span className="text-red-500">*</span> <span className="text-neutral-500">(choose 1/2)</span>
-          </label>
-          
-          <div className="space-y-3 mb-4">
-            <div className="flex items-start space-x-2">
-              <input
-                type="radio"
-                id="type2prompt1"
-                name="type2SelectedPrompt"
-                value="1"
-                checked={formData.type2SelectedPrompt === "1"}
-                onChange={handleChange}
-                className="mt-1 w-4 h-4 text-diplomatic-600 border-neutral-300 focus:ring-diplomatic-500"
-                required
-              />
-              <label htmlFor="type2prompt1" className="text-sm text-neutral-700 cursor-pointer">
-                <strong>1.</strong> {type2Prompts[0]}
-              </label>
-            </div>
-            
-            <div className="flex items-start space-x-2">
-              <input
-                type="radio"
-                id="type2prompt2"
-                name="type2SelectedPrompt"
-                value="2"
-                checked={formData.type2SelectedPrompt === "2"}
-                onChange={handleChange}
-                className="mt-1 w-4 h-4 text-diplomatic-600 border-neutral-300 focus:ring-diplomatic-500"
-                required
-              />
-              <label htmlFor="type2prompt2" className="text-sm text-neutral-700 cursor-pointer">
-                <strong>2.</strong> {type2Prompts[1]}
-              </label>
-            </div>
-          </div>
-
-          <div className="relative">
-            <div className="absolute top-3 left-0 pl-3 flex items-start pointer-events-none">
-              <Scale size={18} className="text-neutral-400" />
-            </div>
-            <textarea
-              id="type2PoliticalResponse"
-              name="type2PoliticalResponse"
-              value={formData.type2PoliticalResponse}
-              onChange={handleChange}
-              rows={4}
-              className="pl-10 w-full px-4 py-3 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-diplomatic-300 focus:border-transparent transition-all resize-none"
-              placeholder="Write your response to the selected prompt..."
-              required
-              disabled={!formData.type2SelectedPrompt}
-            />
-          </div>
-          <div className="flex justify-between items-center mt-1">
-            <p className="text-xs text-neutral-500">Choose ONE prompt above and write your response</p>
-            <span className={`text-xs font-medium ${getWordCountColor(formData.type2PoliticalResponse)}`}>
-              {wordCount(formData.type2PoliticalResponse)}/115 words
-            </span>
-          </div>
+        {/* Committee Information */}
+        <div className="bg-diplomatic-50 border border-diplomatic-200 rounded-lg p-4">
+          <h4 className="font-semibold text-diplomatic-800 mb-2">💡 Committee Selection Tips</h4>
+          <ul className="text-sm text-diplomatic-700 space-y-1">
+            <li>• Choose committees that align with your interests and expertise</li>
+            <li>• Consider the topics and complexity level of each committee</li>
+            <li>• Your preferences help us create balanced and engaging committees</li>
+            <li>• Final assignments depend on availability and application quality</li>
+          </ul>
         </div>
       </div>
       
@@ -267,4 +187,4 @@ const EssayStep: React.FC<EssayStepProps> = ({
   );
 };
 
-export default EssayStep; 
+export default CommitteePreferencesStep; 

@@ -18,10 +18,6 @@ interface RegistrationFormData {
   portfolioLink: string;
   uniqueDelegateTrait: string;
   issueInterest: string;
-  type1SelectedPrompt: string;
-  type1InsightResponse: string;
-  type2SelectedPrompt: string;
-  type2PoliticalResponse: string;
   feeAgreement: string;
   discountEligibility: string[];
   proofDocument: File | null;
@@ -32,7 +28,6 @@ interface RegistrationFormData {
   committee_preference1: string;
   committee_preference2: string;
   committee_preference3: string;
-  motivation: string;
   applicationId: string;
 }
 
@@ -56,10 +51,6 @@ interface ApplicationData {
   portfolio_link: string;
   unique_delegate_trait: string;
   issue_interest: string;
-  type1_selected_prompt: string;
-  type1_insight_response: string;
-  type2_selected_prompt: string;
-  type2_political_response: string;
   fee_agreement: string;
   discount_eligibility: string;
   final_confirmation: boolean;
@@ -69,7 +60,6 @@ interface ApplicationData {
   committee_preference1: string;
   committee_preference2: string;
   committee_preference3: string;
-  motivation: string;
   application_id: string;
   photo_url: string;
   certificate_url: string;
@@ -92,10 +82,6 @@ export const useRegistrationForm = () => {
     portfolioLink: '',
     uniqueDelegateTrait: '',
     issueInterest: '',
-    type1SelectedPrompt: '',
-    type1InsightResponse: '',
-    type2SelectedPrompt: '',
-    type2PoliticalResponse: '',
     feeAgreement: '',
     discountEligibility: [],
     proofDocument: null,
@@ -103,10 +89,9 @@ export const useRegistrationForm = () => {
     hasIELTS: false,
     hasSAT: false,
     agreeToTerms: false,
-    committee_preference1: 'Not Selected',
-    committee_preference2: 'Not Selected',
-    committee_preference3: 'Not Selected',
-    motivation: 'Not provided',
+    committee_preference1: '',
+    committee_preference2: '',
+    committee_preference3: '',
     applicationId: generateApplicationId(),
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -323,19 +308,14 @@ export const useRegistrationForm = () => {
         previous_muns: formData.previousMUNs,
         portfolio_link: formData.portfolioLink,
         
-        // Essay responses (THE MISSING DATA!)
+        // Essay responses
         unique_delegate_trait: formData.uniqueDelegateTrait,
         issue_interest: formData.issueInterest,
-        type1_selected_prompt: formData.type1SelectedPrompt,
-        type1_insight_response: formData.type1InsightResponse,
-        type2_selected_prompt: formData.type2SelectedPrompt,
-        type2_political_response: formData.type2PoliticalResponse,
         
         // Committee preferences
         committee_preference1: formData.committee_preference1 || 'Not Selected',
         committee_preference2: formData.committee_preference2 || 'Not Selected', 
         committee_preference3: formData.committee_preference3 || 'Not Selected',
-        motivation: formData.motivation || 'Not provided',
         
         // Fee and agreement data (THE MISSING DATA!)
         fee_agreement: formData.feeAgreement,
