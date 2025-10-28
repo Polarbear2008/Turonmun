@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { CustomButton } from './ui/custom-button';
 import { transitionVariants } from '@/lib/transition-utils';
 
-const conferenceDate = new Date('2025-10-28T23:59:00');
+const conferenceDate = new Date('2025-10-29T23:59:00');
 const conferenceLocation = 'Registan Private School';
 
 const phrases = [
