@@ -1,7 +1,9 @@
 import React, { memo, useState, useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Globe, ChevronDown, LogIn } from 'lucide-react';
+import { Globe, ChevronDown, LogIn, LogOut } from 'lucide-react';
+import { useAuthState } from '@/hooks/useAuthState';
+import { useAuth } from '@/hooks/useAuth';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -70,6 +72,8 @@ const NavbarDesktop: React.FC<NavbarDesktopProps> = ({ scrolled, isHomePage, nav
   const location = useLocation();
   const navigate = useNavigate();
   const [isNavigating, setIsNavigating] = useState(false);
+  const { user } = useAuthState();
+  const { logout } = useAuth();
 
   // Handle delayed navigation with transition
   const handleNavigation = useCallback((path: string) => {
@@ -83,6 +87,11 @@ const NavbarDesktop: React.FC<NavbarDesktopProps> = ({ scrolled, isHomePage, nav
       setIsNavigating(false);
     }, 300); // Increased delay for smoother transition
   }, [navigate, isNavigating]);
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
+  };
 
   return (
     <div className="hidden md:flex md:items-center md:space-x-6">
@@ -161,30 +170,49 @@ const NavbarDesktop: React.FC<NavbarDesktopProps> = ({ scrolled, isHomePage, nav
       
       {/* Auth Links */}
       <div className="flex items-center gap-2">
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <Link 
-            to="/login" 
-            className="text-white hover:text-gold-400 font-medium py-2 px-3 rounded-md transition-colors flex items-center gap-1"
+        {user ? (
+          // Logged In - Show Logout Button
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            <LogIn size={16} />
-            <span className="hidden sm:inline">Login</span>
-          </Link>
-        </motion.div>
+            <button
+              onClick={handleLogout}
+              className="bg-gold-400 hover:bg-gold-400/90 text-diplomatic-900 font-medium py-2 px-4 rounded-md transition-all duration-300 flex items-center gap-2 shadow-gold"
+            >
+              <LogOut size={16} />
+              <span>Logout</span>
+            </button>
+          </motion.div>
+        ) : (
+          // Not Logged In - Show Login & Signup
+          <>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Link 
+                to="/login" 
+                className="text-white hover:text-gold-400 font-medium py-2 px-3 rounded-md transition-colors flex items-center gap-1"
+              >
+                <LogIn size={16} />
+                <span className="hidden sm:inline">Login</span>
+              </Link>
+            </motion.div>
 
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <Link 
-            to="/signup" 
-            className="bg-gold-400 hover:bg-gold-400/90 text-diplomatic-900 font-medium py-2 px-4 rounded-md transition-all duration-300 flex items-center gap-2 shadow-gold"
-          >
-            <span>Sign Up</span>
-          </Link>
-        </motion.div>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Link 
+                to="/signup" 
+                className="bg-gold-400 hover:bg-gold-400/90 text-diplomatic-900 font-medium py-2 px-4 rounded-md transition-all duration-300 flex items-center gap-2 shadow-gold"
+              >
+                <span>Sign Up</span>
+              </Link>
+            </motion.div>
+          </>
+        )}
       </div>
 
       {/* Register Button */}
