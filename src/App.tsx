@@ -27,6 +27,8 @@ import Season3 from "./pages/seasons/Season3";
 import Season4 from "./pages/seasons/Season4";
 import Season5 from "./pages/seasons/Season5";
 import SeasonCAMU from "./pages/seasons/SeasonCAMU";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import RegistrationSelection from "./pages/RegistrationSelection";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/admin/AdminLogin";
@@ -104,6 +106,8 @@ const App = () => {
               <Route path="/committees" element={<Committees />} />
               <Route path="/register" element={<Registration />} />
               <Route path="/registration" element={<RegistrationSelection />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
               <Route path="/schedule" element={<Schedule />} />
               <Route path="/resources" element={<Resources />} />
               <Route path="/contact" element={<Contact />} />

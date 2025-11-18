@@ -1,7 +1,7 @@
 import React, { memo, useState, useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Globe, ChevronDown } from 'lucide-react';
+import { Globe, ChevronDown, LogIn } from 'lucide-react';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -159,6 +159,34 @@ const NavbarDesktop: React.FC<NavbarDesktopProps> = ({ scrolled, isHomePage, nav
         );
       })}
       
+      {/* Auth Links */}
+      <div className="flex items-center gap-2">
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <Link 
+            to="/login" 
+            className="text-white hover:text-gold-400 font-medium py-2 px-3 rounded-md transition-colors flex items-center gap-1"
+          >
+            <LogIn size={16} />
+            <span className="hidden sm:inline">Login</span>
+          </Link>
+        </motion.div>
+
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <Link 
+            to="/signup" 
+            className="bg-gold-400 hover:bg-gold-400/90 text-diplomatic-900 font-medium py-2 px-4 rounded-md transition-all duration-300 flex items-center gap-2 shadow-gold"
+          >
+            <span>Sign Up</span>
+          </Link>
+        </motion.div>
+      </div>
+
       {/* Register Button */}
       <motion.div
         whileHover={{ scale: 1.05 }}
@@ -166,10 +194,10 @@ const NavbarDesktop: React.FC<NavbarDesktopProps> = ({ scrolled, isHomePage, nav
       >
         <Link 
           to="/register" 
-          className="bg-gold-400 hover:bg-gold-400/90 text-diplomatic-900 font-medium py-2 px-4 rounded-md transition-all duration-300 flex items-center gap-2 shadow-gold"
+          className="bg-diplomatic-700 hover:bg-diplomatic-800 text-white font-medium py-2 px-4 rounded-md transition-all duration-300 flex items-center gap-2 shadow-md"
         >
           <Globe size={16} />
-          <span>Apply Now</span>
+          <span className="hidden sm:inline">Apply Now</span>
         </Link>
       </motion.div>
     </div>

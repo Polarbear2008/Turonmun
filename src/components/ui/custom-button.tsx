@@ -4,13 +4,13 @@ import { Link } from "react-router-dom";
 import { cva, type VariantProps } from "class-variance-authority";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 backdrop-blur-sm will-change-transform [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        primary: "bg-diplomatic-600 text-white hover:bg-diplomatic-700 shadow-md hover:shadow-lg hover:-translate-y-0.5",
+        primary: "bg-gradient-to-r from-diplomatic-600 to-diplomatic-700 text-white ring-1 ring-white/10 shadow-lg shadow-diplomatic-900/20 hover:from-diplomatic-500 hover:to-diplomatic-700 hover:shadow-diplomatic-900/30 hover:-translate-y-0.5",
         secondary: "bg-neutral-100 text-diplomatic-800 hover:bg-neutral-200 border border-neutral-200 shadow-sm hover:shadow-md hover:-translate-y-0.5",
-        accent: "bg-gold-400 text-diplomatic-900 hover:bg-gold-400/90 shadow-md hover:shadow-lg hover:-translate-y-0.5",
+        accent: "bg-gradient-to-r from-gold-400 to-amber-400 text-diplomatic-900 ring-1 ring-white/10 shadow-lg shadow-amber-500/25 hover:from-gold-300 hover:to-amber-400 hover:shadow-amber-500/40 hover:-translate-y-0.5",
         outline: "border border-diplomatic-200 bg-white text-diplomatic-700 hover:bg-diplomatic-50 hover:border-diplomatic-300 shadow-sm hover:shadow-md hover:-translate-y-0.5",
         ghost: "text-diplomatic-700 hover:bg-diplomatic-50 hover:text-diplomatic-800",
         link: "text-diplomatic-600 underline-offset-4 hover:underline hover:text-diplomatic-700 p-0 h-auto",
