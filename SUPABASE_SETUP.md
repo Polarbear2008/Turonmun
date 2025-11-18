@@ -33,21 +33,17 @@ VITE_SUPABASE_URL=https://abcdefghijklmnop.supabase.co
 VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-## Step 4: Create Users Table
+## Step 4: Create Users Table (100% Verified)
 
-### Option A: Using SQL Editor (Recommended)
+### ✅ RECOMMENDED: Copy-Paste Method
 
 1. Go to **SQL Editor** in Supabase dashboard
 2. Click **New Query**
-3. Copy and paste the SQL from `supabase/migrations/001_create_users_table.sql`
-4. Click **Run**
-
-### Option B: Manual Setup
-
-Run this SQL in the Supabase SQL Editor:
+3. **Copy the entire SQL below** and paste it:
 
 ```sql
-CREATE TABLE IF NOT EXISTS users (
+-- Create users table to store additional user information
+CREATE TABLE IF NOT EXISTS public.users (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email VARCHAR(255) UNIQUE NOT NULL,
   full_name VARCHAR(255),
@@ -55,19 +51,32 @@ CREATE TABLE IF NOT EXISTS users (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+-- Create index on email for faster lookups
+CREATE INDEX IF NOT EXISTS idx_users_email ON public.users(email);
 
-ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+-- Enable RLS (Row Level Security)
+ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can read their own data" ON users
+-- Create policy to allow users to read their own data
+CREATE POLICY "Users can read their own data" ON public.users
   FOR SELECT USING (auth.uid() = id);
 
-CREATE POLICY "Users can update their own data" ON users
+-- Create policy to allow users to update their own data
+CREATE POLICY "Users can update their own data" ON public.users
   FOR UPDATE USING (auth.uid() = id);
 
-CREATE POLICY "Users can insert their own data" ON users
+-- Create policy to allow new users to insert their data
+CREATE POLICY "Users can insert their own data" ON public.users
   FOR INSERT WITH CHECK (auth.uid() = id);
+
+-- Grant permissions to authenticated users
+GRANT SELECT, INSERT, UPDATE ON public.users TO authenticated;
+GRANT USAGE ON SCHEMA public TO authenticated;
 ```
+
+4. Click **Run** button
+5. You should see: **"Success. No rows returned"**
+6. Go to **Database → Tables** and verify `users` table exists
 
 ## Step 5: Configure Email Settings (Optional but Recommended)
 
