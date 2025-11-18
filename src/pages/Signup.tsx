@@ -51,10 +51,10 @@ const Signup = () => {
     const result = await signup(formData.email, formData.password, formData.fullName);
 
     if (result.success) {
-      setSuccessMessage('Account created successfully! Check your email to verify your account. Redirecting...');
+      setSuccessMessage('✅ Account created! Check your email for verification link. Once verified, you can log in. Redirecting to login...');
       setTimeout(() => {
         navigate('/login');
-      }, 3000);
+      }, 4000);
     }
   };
 
