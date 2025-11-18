@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Mail, Lock, Eye, EyeOff, ArrowRight, AlertCircle, CheckCircle } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { CustomButton } from '../components/ui/custom-button';
+import { useAuth } from '../hooks/useAuth';
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { login, isLoading, error, setError } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -21,15 +24,21 @@ const Login = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    setError(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      alert('Login functionality coming soon!');
-    }, 1500);
+    setSuccessMessage('');
+
+    const result = await login(formData.email, formData.password);
+
+    if (result.success) {
+      setSuccessMessage('Login successful! Redirecting...');
+      setTimeout(() => {
+        navigate('/');
+      }, 2000);
+    }
   };
 
   const containerVariants = {
@@ -61,6 +70,31 @@ const Login = () => {
               <h1 className="text-4xl font-bold text-diplomatic-900 mb-2">Welcome Back</h1>
               <p className="text-neutral-600">Sign in to your TuronMUN account</p>
             </motion.div>
+
+            {/* Error Message */}
+            {error && (
+              <motion.div
+                variants={itemVariants}
+                className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3 mb-6"
+              >
+                <AlertCircle className="text-red-600 flex-shrink-0 mt-0.5" size={20} />
+                <div>
+                  <p className="text-red-800 font-medium">Login Failed</p>
+                  <p className="text-red-700 text-sm">{error.message}</p>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Success Message */}
+            {successMessage && (
+              <motion.div
+                variants={itemVariants}
+                className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3 mb-6"
+              >
+                <CheckCircle className="text-green-600 flex-shrink-0 mt-0.5" size={20} />
+                <p className="text-green-800">{successMessage}</p>
+              </motion.div>
+            )}
 
             {/* Form Card */}
             <motion.div

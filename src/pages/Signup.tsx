@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Lock, User, Eye, EyeOff, ArrowRight, CheckCircle } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Mail, Lock, User, Eye, EyeOff, ArrowRight, CheckCircle, AlertCircle } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { CustomButton } from '../components/ui/custom-button';
+import { useAuth } from '../hooks/useAuth';
 
 const Signup = () => {
+  const navigate = useNavigate();
+  const { signup, isLoading, error, setError } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     password: '',
     confirmPassword: '',
   });
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -24,19 +27,35 @@ const Signup = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    setError(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSuccessMessage('');
+
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match!');
+      setError({
+        message: 'Passwords do not match!',
+      });
       return;
     }
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      alert('Signup functionality coming soon!');
-    }, 1500);
+
+    if (formData.password.length < 6) {
+      setError({
+        message: 'Password must be at least 6 characters long',
+      });
+      return;
+    }
+
+    const result = await signup(formData.email, formData.password, formData.fullName);
+
+    if (result.success) {
+      setSuccessMessage('Account created successfully! Check your email to verify your account. Redirecting...');
+      setTimeout(() => {
+        navigate('/login');
+      }, 3000);
+    }
   };
 
   const containerVariants = {
@@ -101,6 +120,31 @@ const Signup = () => {
                 <h1 className="text-4xl font-bold text-diplomatic-900 mb-2">Create Account</h1>
                 <p className="text-neutral-600">Join our community of young diplomats</p>
               </div>
+
+              {/* Error Message */}
+              {error && (
+                <motion.div
+                  variants={itemVariants}
+                  className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3 mb-6"
+                >
+                  <AlertCircle className="text-red-600 flex-shrink-0 mt-0.5" size={20} />
+                  <div>
+                    <p className="text-red-800 font-medium">Signup Error</p>
+                    <p className="text-red-700 text-sm">{error.message}</p>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Success Message */}
+              {successMessage && (
+                <motion.div
+                  variants={itemVariants}
+                  className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3 mb-6"
+                >
+                  <CheckCircle className="text-green-600 flex-shrink-0 mt-0.5" size={20} />
+                  <p className="text-green-800">{successMessage}</p>
+                </motion.div>
+              )}
 
               <div className="bg-white rounded-2xl shadow-elegant border border-neutral-100 p-8">
                 <form onSubmit={handleSubmit} className="space-y-5">
