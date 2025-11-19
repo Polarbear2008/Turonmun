@@ -182,11 +182,48 @@ export const useAuth = () => {
     }
   }, []);
 
+  const signInWithGoogle = useCallback(async (): Promise<AuthResponse> => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const { error: googleError } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+
+      if (googleError) {
+        const err: AuthError = {
+          message: googleError.message,
+          code: googleError.name,
+        };
+        setError(err);
+        return { success: false, error: err };
+      }
+
+      return {
+        success: true,
+      };
+    } catch (err: any) {
+      const error: AuthError = {
+        message: err.message || 'An error occurred during Google sign in',
+        code: err.code,
+      };
+      setError(error);
+      return { success: false, error };
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   return {
     signup,
     login,
     logout,
     resetPassword,
+    signInWithGoogle,
     isLoading,
     error,
     setError,
