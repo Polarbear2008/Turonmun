@@ -65,17 +65,26 @@ Copy the HTML code below and paste it into the Supabase email template editor:
             position: relative;
             z-index: 1;
             margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .logo-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
         
         .logo-container img {
-            max-width: 80px;
-            height: 80px;
             width: 80px;
-            display: inline-block;
-            border-radius: 50%;
-            background-color: #ffffff;
-            padding: 8px;
-            box-sizing: border-box;
+            height: 80px;
+            display: block;
+            object-fit: contain;
         }
         
         .email-header h1 {
@@ -278,7 +287,9 @@ Copy the HTML code below and paste it into the Supabase email template editor:
         <div class="email-container">
             <div class="email-header">
                 <div class="logo-container">
-                    <img src="https://turonmun.com/logos/turonmun-logo.jpg" alt="TuronMUN Logo" style="max-width: 80px; height: auto;">
+                    <div class="logo-circle">
+                        <img src="https://turonmun.com/logos/turonmun-logo.jpg" alt="TuronMUN Logo">
+                    </div>
                 </div>
                 <h1>Password Reset</h1>
                 <p>Secure Your Account</p>
