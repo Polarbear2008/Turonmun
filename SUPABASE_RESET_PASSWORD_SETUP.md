@@ -69,8 +69,13 @@ Copy the HTML code below and paste it into the Supabase email template editor:
         
         .logo-container img {
             max-width: 80px;
-            height: auto;
+            height: 80px;
+            width: 80px;
             display: inline-block;
+            border-radius: 50%;
+            background-color: #ffffff;
+            padding: 8px;
+            box-sizing: border-box;
         }
         
         .email-header h1 {

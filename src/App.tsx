@@ -30,6 +30,7 @@ import SeasonCAMU from "./pages/seasons/SeasonCAMU";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ResetPassword from "./pages/ResetPassword";
+import ResetPasswordChange from "./pages/ResetPasswordChange";
 import AuthCallback from "./pages/AuthCallback";
 import RegistrationSelection from "./pages/RegistrationSelection";
 import NotFound from "./pages/NotFound";
@@ -111,6 +112,7 @@ const App = () => {
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/reset-password-change" element={<ResetPasswordChange />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/schedule" element={<Schedule />} />
               <Route path="/resources" element={<Resources />} />
