@@ -259,7 +259,7 @@ Copy the HTML code below and paste it into the Supabase email template editor:
         <div class="email-container">
             <div class="email-header">
                 <div class="logo-container">
-                    <img src="https://turonmun.com/logos/turonmun-logo.jpg" alt="TuronMUN Logo">
+                    <img src="https://turonmun.com/logos/turonmun-logo.jpg" alt="TuronMUN Logo" style="max-width: 80px; height: auto;">
                 </div>
                 <h1>Welcome to TuronMUN</h1>
                 <p>Shaping Tomorrow's Leaders</p>
@@ -369,9 +369,9 @@ The template uses these Supabase variables:
 - **Light Background**: `#f8f9fb` (neutral light)
 
 ### Change Logo
-The logo is now correctly configured:
+The logo is now correctly configured with absolute URL:
 ```html
-<img src="https://turonmun.com/logos/turonmun-logo.jpg" alt="TuronMUN Logo">
+<img src="https://turonmun.com/logos/turonmun-logo.jpg" alt="TuronMUN Logo" style="max-width: 80px; height: auto;">
 ```
 
 **Logo Location**: `public/logos/turonmun-logo.jpg`
