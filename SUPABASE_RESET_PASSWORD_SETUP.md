@@ -65,8 +65,8 @@ Copy the HTML code below and paste it into the Supabase email template editor:
             position: relative;
             z-index: 1;
             margin-bottom: 20px;
-            display: flex;
-            justify-content: center;
+            text-align: center;
+            width: 100%;
         }
         
         .logo-circle {
@@ -74,10 +74,11 @@ Copy the HTML code below and paste it into the Supabase email template editor:
             height: 100px;
             border-radius: 50%;
             background-color: #ffffff;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
+            margin: 0 auto;
+            overflow: hidden;
         }
         
         .logo-container img {
