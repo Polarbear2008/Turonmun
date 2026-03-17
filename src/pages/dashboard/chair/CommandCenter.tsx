@@ -193,60 +193,137 @@ export default function CommandCenter() {
         </div>
       </motion.div>
 
+      {/* ─── Roll Call Interface (Overlay/Partial) ──────────────── */}
+      <AnimatePresence>
+        {session.current_mode === 'roll_call' && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="glass-card p-8 border-gold-400/30 bg-gold-400/5 backdrop-blur-xl relative overflow-hidden"
+          >
+            <div className="absolute top-0 right-0 p-8 opacity-5">
+              <Users size={180} className="text-gold-400" />
+            </div>
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-8">
+                <div>
+                  <h3 className="text-gold-400 text-xl font-display font-black uppercase tracking-widest mb-1">Roll Call</h3>
+                  <p className="text-white/40 text-xs">Establish quorum and record attendance for today's session.</p>
+                </div>
+                <div className="flex gap-4">
+                  <div className="text-center">
+                    <p className="text-emerald-400 text-2xl font-black">{attendance.filter(a => a.status === 'present').length}</p>
+                    <p className="text-white/30 text-[9px] font-bold uppercase tracking-widest">Present</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-gold-400 text-2xl font-black">{Math.ceil(applications.length / 2)}</p>
+                    <p className="text-white/30 text-[9px] font-bold uppercase tracking-widest">Quorum</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 max-h-[40vh] overflow-y-auto pr-4 custom-scrollbar">
+                {applications.map((app: Tables<'applications'>) => {
+                  const att = attendance.find(a => a.application_id === app.id);
+                  return (
+                    <div
+                      key={app.id}
+                      className={`p-3 rounded-xl border transition-all cursor-pointer ${
+                        att?.status === 'present'
+                          ? 'bg-emerald-500/10 border-emerald-500/30 ring-1 ring-emerald-500/20'
+                          : 'bg-white/5 border-white/10 hover:border-white/20'
+                      }`}
+                      onClick={() => markAttendance(app.id, att?.status === 'present' ? 'absent' : 'present')}
+                    >
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-[10px] text-white/30 font-bold uppercase truncate max-w-[80%]">{app.country}</span>
+                        {att?.status === 'present' && <Check className="h-3 w-3 text-emerald-400" />}
+                      </div>
+                      <p className={`text-xs font-bold truncate ${att?.status === 'present' ? 'text-white' : 'text-white/40'}`}>
+                        {app.full_name}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="mt-8 flex justify-center">
+                <button
+                  onClick={() => setMode('gsl')}
+                  className="bg-gold-400 hover:bg-gold-500 text-diplomatic-950 px-10 py-3 rounded-xl font-black uppercase tracking-widest text-xs shadow-lg transition-all"
+                >
+                  Confirm & Start Session
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
         {/* ─── Timer Panel ─────────────────────────────── */}
         <motion.div variants={itemVariants} className="lg:col-span-5">
-          <div className="glass-card p-8 border border-white/15 relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-6 opacity-5">
-              <Timer size={140} className="text-white" />
-            </div>
-
+          <div className="glass-card p-8 border border-white/15 relative overflow-hidden h-full flex flex-col justify-center">
             <div className="relative z-10">
-              <h3 className="text-white/40 text-[10px] font-bold uppercase tracking-[0.2em] mb-6">Session Timer</h3>
+              <h3 className="text-white/40 text-[10px] font-bold uppercase tracking-[0.2em] mb-12 text-center">Session Timer</h3>
 
-              {/* Timer Display */}
-              <div className="text-center mb-8">
-                <div className={`text-7xl font-mono font-black ${timerColor} transition-colors tracking-tight`}>
-                  {formatTime(session.timer_remaining)}
+              {/* Enhanced Circular Timer Effect */}
+              <div className="relative w-64 h-64 mx-auto mb-12">
+                <svg className="w-full h-full transform -rotate-90">
+                  <circle
+                    cx="128"
+                    cy="128"
+                    r="120"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    fill="transparent"
+                    className="text-white/5"
+                  />
+                  <motion.circle
+                    cx="128"
+                    cy="128"
+                    r="120"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    fill="transparent"
+                    strokeDasharray="754"
+                    animate={{ strokeDashoffset: 754 - (754 * timerPercent) / 100 }}
+                    transition={{ duration: 1, ease: "linear" }}
+                    className={timerColor}
+                  />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span className={`text-6xl font-mono font-black ${timerColor} tracking-tighter`}>
+                    {formatTime(session.timer_remaining)}
+                  </span>
+                  <span className="text-white/20 text-[10px] font-bold uppercase tracking-widest mt-1">
+                    {session.timer_running ? 'Running' : 'Paused'}
+                  </span>
                 </div>
-                {session.timer_duration > 0 && (
-                  <div className="mt-4 h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                    <motion.div
-                      className={`h-full rounded-full ${
-                        session.timer_remaining <= 10
-                          ? 'bg-red-400'
-                          : session.timer_remaining <= 30
-                            ? 'bg-amber-400'
-                            : 'bg-emerald-400'
-                      }`}
-                      animate={{ width: `${timerPercent}%` }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  </div>
-                )}
               </div>
 
               {/* Timer Controls */}
-              <div className="flex items-center justify-center gap-3 mb-6">
+              <div className="flex items-center justify-center gap-4 mb-8">
                 {!session.timer_running ? (
                   <motion.button
                     onClick={resumeTimer}
-                    className="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center hover:bg-emerald-500/30 transition-all"
+                    className="w-16 h-16 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center hover:bg-emerald-500/30 transition-all shadow-[0_0_20px_rgba(16,185,129,0.1)]"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                   >
-                    <Play className="h-6 w-6 ml-0.5" />
+                    <Play className="h-8 w-8 ml-1" />
                   </motion.button>
                 ) : (
                   <motion.button
                     onClick={pauseTimer}
-                    className="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center hover:bg-amber-500/30 transition-all"
+                    className="w-16 h-16 rounded-2xl bg-amber-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center hover:bg-amber-500/30 transition-all shadow-[0_0_20px_rgba(245,158,11,0.1)]"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                   >
-                    <Pause className="h-6 w-6" />
+                    <Pause className="h-8 w-8" />
                   </motion.button>
                 )}
                 <motion.button
@@ -255,403 +332,262 @@ export default function CommandCenter() {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                 >
-                  <RotateCcw className="h-5 w-5" />
+                  <RotateCcw className="h-6 w-6" />
                 </motion.button>
               </div>
 
-              {/* Quick Timer Presets */}
-              <div className="space-y-3">
-                <p className="text-white/30 text-[9px] font-bold uppercase tracking-widest text-center">Quick Set</p>
-                <div className="flex flex-wrap justify-center gap-2">
-                  {[30, 60, 90, 120, 180, 300, 600].map(sec => (
-                    <button
-                      key={sec}
-                      onClick={() => startTimer(sec)}
-                      className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10 text-xs font-bold transition-all"
-                    >
-                      {sec >= 60 ? `${sec / 60}m` : `${sec}s`}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Custom Timer */}
-                <div className="flex items-center justify-center gap-2 mt-3">
-                  <input
-                    type="number"
-                    min={0}
-                    max={60}
-                    value={customMinutes}
-                    onChange={(e) => setCustomMinutes(parseInt(e.target.value) || 0)}
-                    className="w-14 glass-panel px-2 py-1.5 text-white text-center border-white/10 rounded-lg text-sm"
-                  />
-                  <span className="text-white/30 text-xs">m</span>
-                  <input
-                    type="number"
-                    min={0}
-                    max={59}
-                    value={customSeconds}
-                    onChange={(e) => setCustomSeconds(parseInt(e.target.value) || 0)}
-                    className="w-14 glass-panel px-2 py-1.5 text-white text-center border-white/10 rounded-lg text-sm"
-                  />
-                  <span className="text-white/30 text-xs">s</span>
+              {/* Presets Grid */}
+              <div className="grid grid-cols-4 gap-2">
+                {[30, 60, 90, 180].map(sec => (
                   <button
-                    onClick={() => startTimer(customMinutes * 60 + customSeconds)}
-                    className="px-3 py-1.5 bg-gold-400/20 text-gold-400 border border-gold-400/30 rounded-lg text-xs font-bold hover:bg-gold-400/30 transition-all"
+                    key={sec}
+                    onClick={() => startTimer(sec)}
+                    className="py-2 rounded-lg bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10 text-xs font-bold transition-all"
                   >
-                    Set
+                    {sec >= 60 ? `${sec / 60}m` : `${sec}s`}
                   </button>
-                </div>
+                ))}
               </div>
             </div>
           </div>
         </motion.div>
 
-        {/* ─── Speakers List Panel ─────────────────────── */}
+        {/* ─── Speakers & Yields Panel ─────────────────────── */}
         <motion.div variants={itemVariants} className="lg:col-span-7">
-          <div className="glass-card p-6 border border-white/15 relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-6 opacity-5">
-              <Mic size={120} className="text-white" />
+          <div className="glass-card p-6 border border-white/15 h-full flex flex-col">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-white/40 text-[10px] font-bold uppercase tracking-[0.2em]">
+                Live Podium
+              </h3>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setShowAddSpeaker(!showAddSpeaker)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-gold-400/20 border border-gold-400/30 text-gold-400 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-gold-400/30 transition-all"
+                >
+                  <UserPlus className="h-3.5 w-3.5" />
+                  Add Speaker
+                </button>
+                <button
+                  onClick={nextSpeaker}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-500/30 transition-all"
+                >
+                  <SkipForward className="h-3.5 w-3.5" />
+                  Next
+                </button>
+              </div>
             </div>
 
-            <div className="relative z-10">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-white/40 text-[10px] font-bold uppercase tracking-[0.2em]">
-                  Speakers List
-                  <span className="text-gold-400 ml-2">{waitingSpeakers.length} waiting</span>
-                </h3>
-                <div className="flex gap-2">
-                  <motion.button
-                    onClick={() => setShowAddSpeaker(!showAddSpeaker)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-gold-400/20 border border-gold-400/30 text-gold-400 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-gold-400/30 transition-all"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <UserPlus className="h-3.5 w-3.5" />
-                    Add
-                  </motion.button>
-                  <motion.button
-                    onClick={nextSpeaker}
-                    disabled={waitingSpeakers.length === 0}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-500/30 transition-all disabled:opacity-30"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <SkipForward className="h-3.5 w-3.5" />
-                    Next
-                  </motion.button>
+            {/* Current Speaker & Yields */}
+            {currentSpeaker ? (
+              <div className="mb-6">
+                <div className="glass-panel p-6 rounded-2xl border-emerald-500/30 bg-emerald-500/5 mb-4 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 p-4 opacity-10">
+                    <Mic size={80} className="text-emerald-400 animate-pulse" />
+                  </div>
+                  <div className="flex items-center gap-4 relative z-10">
+                    <div className="w-16 h-16 rounded-2xl bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30">
+                      <Mic className="h-8 w-8 text-emerald-400" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-emerald-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-1">Now Speaking</p>
+                      <h4 className="text-white text-xl font-bold">{currentSpeaker.delegate_name}</h4>
+                      <p className="text-white/40 text-sm">{currentSpeaker.delegate_country}</p>
+                    </div>
+                  </div>
+
+                  {/* Yield Controls */}
+                  <div className="mt-8 pt-6 border-t border-white/5">
+                    <p className="text-white/30 text-[9px] font-bold uppercase tracking-[0.2em] mb-3 text-center">Speaker Yielding Options</p>
+                    <div className="grid grid-cols-3 gap-3">
+                      <button
+                        onClick={() => yieldTo('chair')}
+                        className={`py-2.5 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${
+                          session.yield_type === 'chair'
+                            ? 'bg-gold-400 text-diplomatic-950 border-gold-500 shadow-lg'
+                            : 'bg-white/5 border-white/10 text-white/60 hover:bg-white/10'
+                        }`}
+                      >
+                        Yield to Chair
+                      </button>
+                      <button
+                        onClick={() => yieldTo('questions')}
+                        className={`py-2.5 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${
+                          session.yield_type === 'questions'
+                            ? 'bg-emerald-400 text-diplomatic-950 border-emerald-500 shadow-lg'
+                            : 'bg-white/5 border-white/10 text-white/60 hover:bg-white/10'
+                        }`}
+                      >
+                        Points/Quest.
+                      </button>
+                      <button
+                        onClick={() => yieldTo('delegate')}
+                        className={`py-2.5 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${
+                          session.yield_type === 'delegate'
+                            ? 'bg-diplomatic-400 text-white border-diplomatic-500 shadow-lg'
+                            : 'bg-white/5 border-white/10 text-white/60 hover:bg-white/10'
+                        }`}
+                      >
+                        Yield Delegate
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
+            ) : (
+              <div className="flex-1 flex flex-col items-center justify-center py-12 border-2 border-dashed border-white/5 rounded-2xl mb-6">
+                <MicOff className="h-12 w-12 text-white/10 mb-4" />
+                <p className="text-white/20 text-xs font-bold uppercase tracking-widest">Podium is empty</p>
+              </div>
+            )}
 
-              {/* Add Speaker Form */}
-              <AnimatePresence>
-                {showAddSpeaker && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="glass-panel p-4 rounded-xl border-white/10 mb-4 space-y-3">
-                      <p className="text-white/50 text-xs font-bold uppercase tracking-widest">Select Delegate</p>
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="number"
-                          min={10}
-                          max={300}
-                          value={speakerTime}
-                          onChange={(e) => setSpeakerTime(parseInt(e.target.value) || 60)}
-                          className="w-20 glass-panel px-2 py-1.5 text-white text-center border-white/10 rounded-lg text-sm"
-                        />
-                        <span className="text-white/30 text-xs">sec per speaker</span>
-                      </div>
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto">
-                        {applications.map((app: Tables<'applications'>) => (
-                          <button
-                            key={app.id}
-                            onClick={() => {
-                              addSpeaker(app.id, app.full_name, app.country, speakerTime);
-                              setShowAddSpeaker(false);
-                            }}
-                            className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 text-xs font-medium text-left transition-all truncate"
-                          >
-                            <span className="text-gold-400/80 text-[10px] block">{app.country}</span>
-                            {app.full_name}
-                          </button>
-                        ))}
-                      </div>
+            {/* Queue Management */}
+            <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+              <h5 className="text-white/20 text-[9px] font-bold uppercase tracking-widest mb-4">Speaker Queue ({waitingSpeakers.length})</h5>
+              <div className="space-y-2">
+                {waitingSpeakers.map((s, i) => (
+                  <div key={s.id} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5 group hover:border-white/15 transition-all">
+                    <span className="w-6 text-[10px] font-black text-white/20">{i + 1}</span>
+                    <div className="flex-1">
+                      <p className="text-white font-bold text-sm truncate">{s.delegate_name}</p>
+                      <p className="text-white/30 text-[10px] uppercase font-bold">{s.delegate_country}</p>
                     </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* Current Speaker */}
-              {currentSpeaker && (
-                <div className="glass-panel p-5 rounded-2xl border-emerald-500/20 bg-emerald-500/5 mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30">
-                      <Mic className="h-5 w-5 text-emerald-400 animate-pulse" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-emerald-400 text-[10px] font-bold uppercase tracking-widest">Now Speaking</p>
-                      <p className="text-white font-bold truncate">{currentSpeaker.delegate_name}</p>
-                      <p className="text-white/40 text-xs">{currentSpeaker.delegate_country}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-emerald-400 font-mono font-bold text-lg">
-                        {formatTime(session.timer_remaining)}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Queue */}
-              <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
-                {waitingSpeakers.length === 0 && !currentSpeaker && (
-                  <div className="text-center py-8">
-                    <MicOff className="h-8 w-8 text-white/10 mx-auto mb-3" />
-                    <p className="text-white/30 text-xs uppercase tracking-widest font-bold">No speakers in queue</p>
-                  </div>
-                )}
-                {waitingSpeakers.map((speaker, index) => (
-                  <motion.div
-                    key={speaker.id}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                    className="flex items-center gap-3 glass-panel p-3 rounded-xl border-white/5 bg-white/5 hover:bg-white/10 transition-all group"
-                  >
-                    <div className="w-7 h-7 rounded-lg bg-white/5 flex items-center justify-center text-white/30 text-xs font-bold border border-white/10">
-                      {index + 1}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-white font-medium text-sm truncate">{speaker.delegate_name}</p>
-                      <p className="text-white/30 text-[10px] uppercase tracking-wider">{speaker.delegate_country}</p>
-                    </div>
-                    <span className="text-white/20 text-xs font-mono">{formatTime(speaker.speaking_time)}</span>
+                    <span className="text-emerald-400/50 font-mono text-xs">{formatTime(s.speaking_time)}</span>
                     <button
-                      onClick={() => removeSpeaker(speaker.id)}
-                      className="opacity-0 group-hover:opacity-100 text-red-400/60 hover:text-red-400 transition-all p-1"
+                      onClick={() => removeSpeaker(s.id)}
+                      className="opacity-0 group-hover:opacity-100 p-1 text-red-400/40 hover:text-red-400 transition-all"
                     >
-                      <X className="h-3.5 w-3.5" />
+                      <X className="h-4 w-4" />
                     </button>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
-
-              {/* Done speakers count */}
-              {doneSpeakers.length > 0 && (
-                <div className="mt-4 pt-3 border-t border-white/5">
-                  <p className="text-white/20 text-[10px] font-bold uppercase tracking-widest">
-                    {doneSpeakers.length} delegate{doneSpeakers.length !== 1 ? 's' : ''} have spoken
-                  </p>
-                </div>
-              )}
             </div>
           </div>
         </motion.div>
       </div>
 
-      {/* ─── Motions Panel ─────────────────────────────── */}
-      <motion.div variants={itemVariants}>
-        <div className="glass-card p-6 border border-white/15 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-6 opacity-5">
-            <Gavel size={120} className="text-white" />
-          </div>
-
-          <div className="relative z-10">
+      {/* ─── Bottom Grid: Motions & Logs ──────────────────── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        {/* Motions Panel */}
+        <motion.div variants={itemVariants} className="lg:col-span-8">
+          <div className="glass-card p-6 border border-white/15 min-h-[400px]">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-white/40 text-[10px] font-bold uppercase tracking-[0.2em]">
-                Motions & Voting
-              </h3>
-              <motion.button
+              <h3 className="text-white/40 text-[10px] font-bold uppercase tracking-[0.2em]">Motions & Voting</h3>
+              <button
                 onClick={() => setShowNewMotion(!showNewMotion)}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-diplomatic-400/20 border border-diplomatic-400/30 text-diplomatic-400 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-diplomatic-400/30 transition-all"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                className="bg-diplomatic-400/20 text-diplomatic-400 border border-diplomatic-400/30 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest"
               >
-                <Gavel className="h-3.5 w-3.5" />
-                {showNewMotion ? 'Cancel' : 'New Motion'}
-              </motion.button>
+                {showNewMotion ? 'Close Form' : 'New Motion'}
+              </button>
             </div>
 
-            {/* New Motion Form (for chair to enter on behalf of delegate) */}
+            {/* Voting Phase High-Impact UI */}
             <AnimatePresence>
-              {showNewMotion && (
+              {activeMotion?.status === 'voting' && (
                 <motion.div
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: 'auto', opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  className="overflow-hidden"
+                  className="mb-8"
                 >
-                  <div className="glass-panel p-5 rounded-xl border-white/10 mb-6 space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-white/40 text-[10px] font-bold uppercase tracking-widest block mb-1.5">Motion Type</label>
-                        <select
-                          value={motionType}
-                          onChange={(e) => setMotionType(e.target.value as MotionType)}
-                          className="w-full glass-panel px-3 py-2 text-white border-white/10 rounded-lg text-sm"
-                        >
-                          {(Object.keys(MOTION_TYPE_LABELS) as MotionType[]).map(type => (
-                            <option key={type} value={type}>{MOTION_TYPE_LABELS[type]}</option>
-                          ))}
-                        </select>
+                  <div className="glass-panel p-8 rounded-3xl border-gold-400/30 bg-gold-400/5 shadow-[0_0_50px_rgba(247,163,28,0.05)]">
+                    <div className="flex flex-col md:flex-row gap-8 items-center">
+                      <div className="flex-1 text-center md:text-left">
+                        <span className="inline-block px-3 py-1 rounded-full bg-gold-400/20 text-gold-400 text-[10px] font-black uppercase tracking-widest mb-4 animate-pulse">
+                          Active Voting Procedure
+                        </span>
+                        <h4 className="text-white text-2xl font-display font-black mb-2">{activeMotion.description}</h4>
+                        <p className="text-white/40 text-sm">Proposed by {activeMotion.proposer_name} ({activeMotion.proposer_country})</p>
                       </div>
-                      <div>
-                        <label className="text-white/40 text-[10px] font-bold uppercase tracking-widest block mb-1.5">Description</label>
-                        <input
-                          type="text"
-                          value={motionDesc}
-                          onChange={(e) => setMotionDesc(e.target.value)}
-                          placeholder="e.g. Topic: Climate Change"
-                          className="w-full glass-panel px-3 py-2 text-white placeholder-white/20 border-white/10 rounded-lg text-sm"
-                        />
-                      </div>
-                    </div>
-                    {(motionType === 'moderated_caucus' || motionType === 'unmoderated_caucus') && (
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="text-white/40 text-[10px] font-bold uppercase tracking-widest block mb-1.5">Speaking Time (sec)</label>
-                          <input
-                            type="number"
-                            value={motionSpeakingTime}
-                            onChange={(e) => setMotionSpeakingTime(parseInt(e.target.value) || 60)}
-                            className="w-full glass-panel px-3 py-2 text-white border-white/10 rounded-lg text-sm"
-                          />
+                      
+                      <div className="grid grid-cols-3 gap-4 min-w-[300px]">
+                        <div className="text-center">
+                          <p className="text-4xl font-black text-emerald-400 mb-1">{votes.filter(v => v.vote === 'for').length}</p>
+                          <p className="text-white/30 text-[9px] font-bold uppercase tracking-widest">In Favor</p>
                         </div>
-                        <div>
-                          <label className="text-white/40 text-[10px] font-bold uppercase tracking-widest block mb-1.5">Total Time (sec)</label>
-                          <input
-                            type="number"
-                            value={motionTotalTime}
-                            onChange={(e) => setMotionTotalTime(parseInt(e.target.value) || 600)}
-                            className="w-full glass-panel px-3 py-2 text-white border-white/10 rounded-lg text-sm"
-                          />
+                        <div className="text-center">
+                          <p className="text-4xl font-black text-red-400 mb-1">{votes.filter(v => v.vote === 'against').length}</p>
+                          <p className="text-white/30 text-[9px] font-bold uppercase tracking-widest">Opposed</p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-4xl font-black text-white/40 mb-1">{votes.filter(v => v.vote === 'abstain').length}</p>
+                          <p className="text-white/30 text-[9px] font-bold uppercase tracking-widest">Abstain</p>
                         </div>
                       </div>
-                    )}
 
-                    <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest">Select Proposer</p>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 max-h-32 overflow-y-auto">
-                      {applications.map((app: Tables<'applications'>) => (
-                        <button
-                          key={app.id}
-                          onClick={async () => {
-                            if (!session) return;
-                            const { supabase } = await import('@/integrations/supabase/client');
-                            await (supabase.from('motions') as any).insert({
-                              session_id: session.id,
-                              proposed_by: app.id,
-                              proposer_name: app.full_name,
-                              proposer_country: app.country,
-                              motion_type: motionType,
-                              description: motionDesc || MOTION_TYPE_LABELS[motionType],
-                              speaking_time: motionSpeakingTime || null,
-                              total_time: motionTotalTime || null,
-                            });
-                            setShowNewMotion(false);
-                            setMotionDesc('');
-                          }}
-                          className="px-2 py-2 rounded-lg bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10 text-xs text-left transition-all truncate"
-                        >
-                          <span className="text-gold-400/80 text-[10px] block">{app.country}</span>
-                          {app.full_name}
-                        </button>
-                      ))}
+                      <button
+                        onClick={() => closeVoting(activeMotion.id)}
+                        className="bg-white text-diplomatic-950 px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl hover:scale-105 transition-all"
+                      >
+                        Finalize Result
+                      </button>
                     </div>
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* Active Motion - Voting */}
-            {activeMotion && activeMotion.status === 'voting' && (
-              <div className="glass-panel p-6 rounded-2xl border-gold-400/20 bg-gold-400/5 mb-4">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-xl bg-gold-400/20 flex items-center justify-center border border-gold-400/30">
-                    <Vote className="h-5 w-5 text-gold-400" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-gold-400 text-[10px] font-bold uppercase tracking-widest">Voting In Progress</p>
-                    <p className="text-white font-bold">{activeMotion.description}</p>
-                    <p className="text-white/40 text-xs">Proposed by {activeMotion.proposer_name} ({activeMotion.proposer_country})</p>
-                  </div>
-                </div>
-
-                {/* Vote Counts */}
-                <div className="grid grid-cols-3 gap-3 mb-4">
-                  <div className="glass-panel p-3 rounded-xl border-emerald-500/20 bg-emerald-500/5 text-center">
-                    <p className="text-emerald-400 text-2xl font-bold">{votes.filter(v => v.vote === 'for').length}</p>
-                    <p className="text-emerald-400/60 text-[10px] font-bold uppercase tracking-widest">For</p>
-                  </div>
-                  <div className="glass-panel p-3 rounded-xl border-red-500/20 bg-red-500/5 text-center">
-                    <p className="text-red-400 text-2xl font-bold">{votes.filter(v => v.vote === 'against').length}</p>
-                    <p className="text-red-400/60 text-[10px] font-bold uppercase tracking-widest">Against</p>
-                  </div>
-                  <div className="glass-panel p-3 rounded-xl border-white/10 bg-white/5 text-center">
-                    <p className="text-white/60 text-2xl font-bold">{votes.filter(v => v.vote === 'abstain').length}</p>
-                    <p className="text-white/30 text-[10px] font-bold uppercase tracking-widest">Abstain</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <p className="text-white/30 text-xs">{votes.length} / {applications.length} delegates voted</p>
-                  <motion.button
-                    onClick={() => closeVoting(activeMotion.id)}
-                    className="px-4 py-2 bg-gold-400 text-diplomatic-950 rounded-lg text-xs font-bold uppercase tracking-widest shadow-[0_2px_10px_rgba(247,163,28,0.3)]"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    Close Voting
-                  </motion.button>
-                </div>
-              </div>
-            )}
-
-            {/* Motions History */}
-            <div className="space-y-2 max-h-[300px] overflow-y-auto">
-              {motions.length === 0 && (
-                <div className="text-center py-6">
-                  <Gavel className="h-8 w-8 text-white/10 mx-auto mb-3" />
-                  <p className="text-white/30 text-xs uppercase tracking-widest font-bold">No motions yet</p>
-                </div>
-              )}
-              {motions.filter(m => m.id !== activeMotion?.id || activeMotion?.status !== 'voting').map((m) => (
-                <div
-                  key={m.id}
-                  className="flex items-center gap-3 glass-panel p-3 rounded-xl border-white/5 bg-white/5"
-                >
-                  <div className={`w-2 h-2 rounded-full ${
-                    m.status === 'passed' ? 'bg-emerald-400' :
+            <div className="space-y-3 prose-white max-h-[400px] overflow-y-auto pr-4 custom-scrollbar">
+              {motions.map(m => (
+                <div key={m.id} className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5">
+                  <div className={`w-3 h-3 rounded-full ${
+                    m.status === 'passed' ? 'bg-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.3)]' :
                     m.status === 'failed' ? 'bg-red-400' :
-                    m.status === 'voting' ? 'bg-gold-400 animate-pulse' :
-                    'bg-white/20'
+                    m.status === 'voting' ? 'bg-gold-400 animate-pulse' : 'bg-white/20'
                   }`} />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-white/80 text-sm font-medium truncate">{m.description}</p>
-                    <p className="text-white/30 text-[10px] uppercase tracking-wider">
+                  <div className="flex-1">
+                    <p className="text-white font-bold text-sm mb-0.5">{m.description}</p>
+                    <p className="text-white/30 text-[10px] font-bold uppercase tracking-widest">
                       {MOTION_TYPE_LABELS[m.motion_type]} • {m.proposer_country}
                     </p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    {m.status === 'passed' && <span className="text-emerald-400 text-xs font-bold">PASSED ({m.votes_for}-{m.votes_against}-{m.votes_abstain})</span>}
-                    {m.status === 'failed' && <span className="text-red-400 text-xs font-bold">FAILED ({m.votes_for}-{m.votes_against}-{m.votes_abstain})</span>}
-                    {(m.status === 'proposed' || m.status === 'seconded') && (
-                      <button
-                        onClick={() => openVoting(m.id)}
-                        className="px-3 py-1 bg-gold-400/20 text-gold-400 border border-gold-400/30 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-gold-400/30 transition-all"
-                      >
-                        Open Vote
-                      </button>
-                    )}
-                  </div>
+                  {m.status === 'proposed' && (
+                    <button
+                      onClick={() => openVoting(m.id)}
+                      className="px-4 py-2 bg-gold-400/20 text-gold-400 border border-gold-400/30 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-gold-400 shadow-sm transition-all"
+                    >
+                      Open Vote
+                    </button>
+                  )}
+                  {(m.status === 'passed' || m.status === 'failed') && (
+                    <div className="text-right">
+                      <p className={`text-xs font-black uppercase ${m.status === 'passed' ? 'text-emerald-400' : 'text-red-400'}`}>
+                        {m.status}
+                      </p>
+                      <p className="text-[10px] text-white/20 font-mono">
+                        {m.votes_for}-{m.votes_against}-{m.votes_abstain}
+                      </p>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+
+        {/* Real-time Session Log */}
+        <motion.div variants={itemVariants} className="lg:col-span-4">
+          <div className="glass-card p-6 border border-white/15 h-full flex flex-col">
+            <h3 className="text-white/40 text-[10px] font-bold uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+              <Activity className="h-3 w-3" />
+              Session Activity
+            </h3>
+            <div className="flex-1 space-y-4 overflow-y-auto pr-2 custom-scrollbar max-h-[500px]">
+              {logs.map((log, i) => (
+                <div key={log.id} className="relative pl-5 pb-4 last:pb-0 border-l border-white/5">
+                  <div className="absolute left-[-4.5px] top-0 w-2 h-2 rounded-full bg-white/20" />
+                  <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest mb-1">
+                    {new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                  </p>
+                  <p className="text-white/70 text-xs leading-relaxed">{log.message}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+
+      </div>
     </motion.div>
   );
 }

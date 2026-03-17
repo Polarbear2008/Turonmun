@@ -236,6 +236,306 @@ export type Database = {
         }
         Relationships: []
       }
+      committee_sessions: {
+        Row: {
+          id: string
+          committee_id: string
+          status: string
+          current_mode: string
+          timer_duration: number | null
+          timer_remaining: number | null
+          timer_running: boolean | null
+          timer_started_at: string | null
+          current_speaker_id: string | null
+          current_topic: string | null
+          yield_type: string | null
+          yield_target_id: string | null
+          created_by: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          committee_id: string
+          status?: string
+          current_mode?: string
+          timer_duration?: number | null
+          timer_remaining?: number | null
+          timer_running?: boolean | null
+          timer_started_at?: string | null
+          current_speaker_id?: string | null
+          current_topic?: string | null
+          yield_type?: string | null
+          yield_target_id?: string | null
+          created_by?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          committee_id?: string
+          status?: string
+          current_mode?: string
+          timer_duration?: number | null
+          timer_remaining?: number | null
+          timer_running?: boolean | null
+          timer_started_at?: string | null
+          current_speaker_id?: string | null
+          current_topic?: string | null
+          yield_type?: string | null
+          yield_target_id?: string | null
+          created_by?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "committee_sessions_committee_id_fkey"
+            columns: ["committee_id"]
+            isOneToOne: false
+            referencedRelation: "committees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "committee_sessions_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      speakers_list: {
+        Row: {
+          id: string
+          session_id: string
+          application_id: string
+          delegate_name: string
+          delegate_country: string | null
+          status: string
+          position: number
+          speaking_time: number
+          time_used: number
+          added_at: string | null
+          spoke_at: string | null
+        }
+        Insert: {
+          id?: string
+          session_id: string
+          application_id: string
+          delegate_name: string
+          delegate_country?: string | null
+          status?: string
+          position?: number
+          speaking_time?: number
+          time_used?: number
+          added_at?: string | null
+          spoke_at?: string | null
+        }
+        Update: {
+          id?: string
+          session_id?: string
+          application_id?: string
+          delegate_name?: string
+          delegate_country?: string | null
+          status?: string
+          position?: number
+          speaking_time?: number
+          time_used?: number
+          added_at?: string | null
+          spoke_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "speakers_list_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "committee_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "speakers_list_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "applications"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      motions: {
+        Row: {
+          id: string
+          session_id: string
+          proposed_by: string | null
+          proposer_name: string
+          proposer_country: string | null
+          motion_type: string
+          description: string
+          speaking_time: number | null
+          total_time: number | null
+          status: string
+          seconded_by: string | null
+          votes_for: number | null
+          votes_against: number | null
+          votes_abstain: number | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          session_id: string
+          proposed_by?: string | null
+          proposer_name: string
+          proposer_country?: string | null
+          motion_type: string
+          description: string
+          speaking_time?: number | null
+          total_time?: number | null
+          status?: string
+          seconded_by?: string | null
+          votes_for?: number | null
+          votes_against?: number | null
+          votes_abstain?: number | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          session_id?: string
+          proposed_by?: string | null
+          proposer_name?: string
+          proposer_country?: string | null
+          motion_type?: string
+          description?: string
+          speaking_time?: number | null
+          total_time?: number | null
+          status?: string
+          seconded_by?: string | null
+          votes_for?: number | null
+          votes_against?: number | null
+          votes_abstain?: number | null
+          created_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "motions_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "committee_sessions"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      votes: {
+        Row: {
+          id: string
+          motion_id: string
+          application_id: string
+          vote: string
+          voted_at: string | null
+        }
+        Insert: {
+          id?: string
+          motion_id: string
+          application_id: string
+          vote: string
+          voted_at?: string | null
+        }
+        Update: {
+          id?: string
+          motion_id?: string
+          application_id?: string
+          vote?: string
+          voted_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "votes_motion_id_fkey"
+            columns: ["motion_id"]
+            isOneToOne: false
+            referencedRelation: "motions"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      attendance: {
+        Row: {
+          id: string
+          session_id: string
+          application_id: string
+          status: string
+          is_voting: boolean
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          session_id: string
+          application_id: string
+          status?: string
+          is_voting?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          session_id?: string
+          application_id?: string
+          status?: string
+          is_voting?: boolean
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "committee_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attendance_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "applications"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      session_logs: {
+        Row: {
+          id: string
+          session_id: string
+          event_type: string
+          message: string
+          event_data: Json | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          session_id: string
+          event_type: string
+          message: string
+          event_data?: Json | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          session_id?: string
+          event_type?: string
+          message?: string
+          event_data?: Json | null
+          created_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_logs_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "committee_sessions"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       contact_messages: {
         Row: {
           id: string

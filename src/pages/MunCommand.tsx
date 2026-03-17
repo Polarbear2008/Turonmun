@@ -16,11 +16,11 @@ import {
   Check,
   Minus,
   Vote,
-  Zap,
-  Users,
-  Trash2,
   Plus,
   ChevronRight,
+  Activity,
+  CheckCircle2,
+  Clock,
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -47,6 +47,14 @@ interface MotionEntry {
   votesAgainst: number;
   votesAbstain: number;
 }
+
+interface SessionLog {
+  id: string;
+  time: string;
+  message: string;
+}
+
+type YieldType = 'chair' | 'questions' | 'delegate' | 'none';
 
 const MODE_LABELS: Record<SessionMode, string> = {
   gsl: 'General Speakers List',
@@ -95,12 +103,12 @@ export default function MunCommand() {
   const [newCountry, setNewCountry] = useState('');
   const [speakerTime, setSpeakerTime] = useState(60);
 
-  // Motions
-  const [motions, setMotions] = useState<MotionEntry[]>([]);
-  const [showNewMotion, setShowNewMotion] = useState(false);
-  const [motionDesc, setMotionDesc] = useState('');
-  const [motionProposer, setMotionProposer] = useState('');
   const [motionCountry, setMotionCountry] = useState('');
+
+  // Yields & Logs (Local)
+  const [yieldType, setYieldType] = useState<YieldType>('none');
+  const [logs, setLogs] = useState<SessionLog[]>([]);
+  const [attendance, setAttendance] = useState<Record<string, 'present' | 'absent' | 'not_set'>>({});
 
   // ─── Timer logic ────────────────────────────────────────
   useEffect(() => {
@@ -123,10 +131,33 @@ export default function MunCommand() {
     setTimerDuration(secs);
     setTimerRemaining(secs);
     setTimerRunning(true);
+    addLog(`Timer started for ${secs} seconds`);
   };
-  const pauseTimer = () => setTimerRunning(false);
-  const resumeTimer = () => { if (timerRemaining > 0) setTimerRunning(true); };
-  const resetTimer = () => { setTimerRunning(false); setTimerDuration(0); setTimerRemaining(0); };
+  const pauseTimer = () => {
+    setTimerRunning(false);
+    addLog('Timer paused');
+  };
+  const resumeTimer = () => { 
+    if (timerRemaining > 0) {
+      setTimerRunning(true);
+      addLog('Timer resumed');
+    }
+  };
+  const resetTimer = () => { 
+    setTimerRunning(false); 
+    setTimerDuration(0); 
+    setTimerRemaining(0); 
+    addLog('Timer reset');
+  };
+
+  // ─── Logs & Helpers ─────────────────────────────────────
+  const addLog = (msg: string) => {
+    setLogs(prev => [{
+      id: uid(),
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      message: msg
+    }, ...prev]);
+  };
 
   // ─── Speakers ───────────────────────────────────────────
   const addSpeaker = () => {
@@ -150,6 +181,8 @@ export default function MunCommand() {
       if (nextIdx >= 0) {
         updated[nextIdx] = { ...updated[nextIdx], status: 'speaking' };
         startTimer(updated[nextIdx].speakingTime);
+        setYieldType('none');
+        addLog(`Now speaking: ${updated[nextIdx].name} (${updated[nextIdx].country})`);
       }
       return updated;
     });
@@ -157,6 +190,19 @@ export default function MunCommand() {
 
   const removeSpeaker = (id: string) => {
     setSpeakers(prev => prev.filter(s => s.id !== id));
+    addLog('Removed speaker from queue');
+  };
+
+  const yieldTo = (target: YieldType) => {
+    setYieldType(target);
+    addLog(`Speaker yielded to ${target}`);
+  };
+
+  const toggleAttendance = (id: string) => {
+    setAttendance(prev => ({
+      ...prev,
+      [id]: prev[id] === 'present' ? 'absent' : 'present'
+    }));
   };
 
   // ─── Motions ────────────────────────────────────────────
@@ -343,55 +389,91 @@ export default function MunCommand() {
 
             {/* ═══ Timer Panel ═══ */}
             <motion.div variants={itemVariants} className="lg:col-span-5">
-              <div className="glass-card p-6 md:p-8 border border-white/15 relative overflow-hidden">
+              <div className="glass-card p-8 border border-white/15 relative overflow-hidden flex flex-col items-center">
                 <div className="absolute top-0 right-0 p-6 opacity-5">
                   <Timer size={140} className="text-white" />
                 </div>
-                <div className="relative z-10">
-                  <h3 className="text-white/40 text-[10px] font-bold uppercase tracking-[0.2em] mb-6">Session Timer</h3>
+                <div className="relative z-10 w-full">
+                  <h3 className="text-white/40 text-[10px] font-bold uppercase tracking-[0.2em] mb-10 text-center">Session Timer</h3>
 
-                  <div className="text-center mb-8">
-                    <div className={`text-6xl md:text-7xl font-mono font-black ${timerColor} transition-colors tracking-tight`}>
-                      {formatTime(timerRemaining)}
+                  <div className="relative w-56 h-56 mx-auto mb-10">
+                    <svg className="w-full h-full transform -rotate-90">
+                      <circle
+                        cx="112"
+                        cy="112"
+                        r="104"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                        fill="transparent"
+                        className="text-white/5"
+                      />
+                      <motion.circle
+                        cx="112"
+                        cy="112"
+                        r="104"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                        fill="transparent"
+                        strokeDasharray="653"
+                        animate={{ strokeDashoffset: 653 - (653 * timerPercent) / 100 }}
+                        transition={{ duration: 1, ease: "linear" }}
+                        className={timerColor}
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                      <span className={`text-5xl font-mono font-black ${timerColor} tracking-tighter`}>
+                        {formatTime(timerRemaining)}
+                      </span>
+                      <span className="text-white/20 text-[10px] font-bold uppercase tracking-widest mt-2">
+                        {timerRunning ? 'Running' : 'Paused'}
+                      </span>
                     </div>
-                    {timerDuration > 0 && (
-                      <div className="mt-4 h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                        <motion.div
-                          className={`h-full rounded-full ${timerBarColor}`}
-                          animate={{ width: `${timerPercent}%` }}
-                          transition={{ duration: 0.3 }}
-                        />
-                      </div>
-                    )}
                   </div>
 
                   {/* Controls */}
-                  <div className="flex items-center justify-center gap-3 mb-6">
+                  <div className="flex items-center justify-center gap-4 mb-10">
                     {!timerRunning ? (
-                      <motion.button onClick={resumeTimer} className="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center hover:bg-emerald-500/30 transition-all" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                        <Play className="h-6 w-6 ml-0.5" />
+                      <motion.button onClick={resumeTimer} className="w-16 h-16 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center hover:bg-emerald-500/30 transition-all shadow-[0_4px_20px_rgba(16,185,129,0.2)]" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                        <Play className="h-8 w-8 ml-1" />
                       </motion.button>
                     ) : (
-                      <motion.button onClick={pauseTimer} className="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center hover:bg-amber-500/30 transition-all" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                        <Pause className="h-6 w-6" />
+                      <motion.button onClick={pauseTimer} className="w-16 h-16 rounded-2xl bg-amber-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center hover:bg-amber-500/30 transition-all shadow-[0_4px_20px_rgba(245,158,11,0.2)]" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                        <Pause className="h-8 w-8" />
                       </motion.button>
                     )}
-                    <motion.button onClick={resetTimer} className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 text-white/50 flex items-center justify-center hover:bg-white/10 transition-all" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                      <RotateCcw className="h-5 w-5" />
+                    <motion.button onClick={resetTimer} className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 text-white/50 flex items-center justify-center hover:bg-white/10 transition-all" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                      <RotateCcw className="h-6 w-6" />
                     </motion.button>
                   </div>
 
-                  {/* Presets */}
-                  <div className="space-y-3">
-                    <p className="text-white/30 text-[9px] font-bold uppercase tracking-widest text-center">Quick Set</p>
-                    <div className="flex flex-wrap justify-center gap-2">
-                      {[30, 60, 90, 120, 180, 300, 600].map(sec => (
-                        <button key={sec} onClick={() => startTimer(sec)} className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10 text-xs font-bold transition-all">
-                          {sec >= 60 ? `${sec / 60}m` : `${sec}s`}
-                        </button>
-                      ))}
-                    </div>
+                  {/* Quick Presets */}
+                  <div className="grid grid-cols-4 gap-2 px-4">
+                    {[30, 45, 60, 90, 120, 180, 300, 600].map(sec => (
+                      <button key={sec} onClick={() => startTimer(sec)} className="px-2 py-2 rounded-lg bg-white/5 border border-white/10 text-white/40 hover:text-white hover:bg-emerald-500/20 hover:border-emerald-500/30 text-[10px] font-bold transition-all">
+                        {sec >= 60 ? `${sec / 60}m` : `${sec}s`}
+                      </button>
+                    ))}
                   </div>
+                </div>
+              </div>
+
+              {/* Session Activity Log (Standalone version) */}
+              <div className="glass-card mt-6 p-6 border border-white/10">
+                <h3 className="text-white/40 text-[9px] font-bold uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                  <Activity className="h-3 w-3" />
+                  Recent Activity
+                </h3>
+                <div className="space-y-3 h-48 overflow-y-auto pr-2 custom-scrollbar">
+                  {logs.length === 0 ? (
+                    <p className="text-white/10 text-xs text-center py-12 italic">Session activity will appear here...</p>
+                  ) : (
+                    logs.map(log => (
+                      <div key={log.id} className="flex gap-3 text-xs">
+                        <span className="text-white/20 font-mono shrink-0">{log.time}</span>
+                        <span className="text-white/60">{log.message}</span>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -426,34 +508,75 @@ export default function MunCommand() {
                     </div>
                   </div>
 
+                  {/* Mode-Specific Overlays */}
+                  {mode === 'roll_call' && (
+                    <div className="glass-panel p-8 rounded-2xl border-gold-400/30 bg-gold-400/5 mb-6 text-center">
+                      <Users size={60} className="text-gold-400 mx-auto mb-4 animate-pulse" />
+                      <h4 className="text-white text-xl font-black uppercase tracking-widest mb-2 font-display">Roll Call Mode</h4>
+                      <p className="text-white/40 text-sm mb-6 max-w-sm mx-auto">Establish quorum by marking delegate attendance. Delegates can be added below.</p>
+                      <div className="flex flex-wrap justify-center gap-2">
+                        {waitingSpeakers.map(s => (
+                          <button
+                            key={s.id}
+                            onClick={() => toggleAttendance(s.id)}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
+                              attendance[s.id] === 'present'
+                                ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-400'
+                                : 'bg-white/5 border-white/10 text-white/30'
+                            }`}
+                          >
+                            {attendance[s.id] === 'present' ? <Check className="h-3.5 w-3.5" /> : <Minus className="h-3.5 w-3.5" />}
+                            {s.country}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Add Speaker Form */}
                   <AnimatePresence>
                     {showAddSpeaker && (
                       <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-                        <div className="glass-panel p-4 rounded-xl border-white/10 mb-4 space-y-3">
-                          <div className="grid grid-cols-2 gap-2">
-                            <input
-                              type="text"
-                              placeholder="Delegate name"
-                              value={newName}
-                              onChange={e => setNewName(e.target.value)}
-                              onKeyDown={e => e.key === 'Enter' && addSpeaker()}
-                              className="glass-panel px-3 py-2 text-white placeholder-white/20 border-white/10 rounded-lg text-sm"
-                            />
-                            <input
-                              type="text"
-                              placeholder="Country"
-                              value={newCountry}
-                              onChange={e => setNewCountry(e.target.value)}
-                              onKeyDown={e => e.key === 'Enter' && addSpeaker()}
-                              className="glass-panel px-3 py-2 text-white placeholder-white/20 border-white/10 rounded-lg text-sm"
-                            />
+                        <div className="glass-panel p-5 rounded-2xl border-white/10 mb-6 space-y-4 bg-white/5">
+                          <div className="grid grid-cols-2 gap-3">
+                            <div className="space-y-1">
+                              <label className="text-[10px] font-black uppercase tracking-widest text-white/30 ml-1">Delegate Name</label>
+                              <input
+                                type="text"
+                                placeholder="e.g. John Doe"
+                                value={newName}
+                                onChange={e => setNewName(e.target.value)}
+                                onKeyDown={e => e.key === 'Enter' && addSpeaker()}
+                                className="w-full glass-panel px-4 py-2.5 text-white placeholder-white/10 border-white/10 rounded-xl text-sm"
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <label className="text-[10px] font-black uppercase tracking-widest text-white/30 ml-1">Country</label>
+                              <input
+                                type="text"
+                                placeholder="e.g. USA"
+                                value={newCountry}
+                                onChange={e => setNewCountry(e.target.value)}
+                                onKeyDown={e => e.key === 'Enter' && addSpeaker()}
+                                className="w-full glass-panel px-4 py-2.5 text-white placeholder-white/10 border-white/10 rounded-xl text-sm"
+                              />
+                            </div>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <input type="number" min={10} max={600} value={speakerTime} onChange={e => setSpeakerTime(parseInt(e.target.value) || 60)} className="w-20 glass-panel px-2 py-1.5 text-white text-center border-white/10 rounded-lg text-sm" />
-                            <span className="text-white/30 text-xs">sec</span>
-                            <button onClick={addSpeaker} className="ml-auto px-4 py-1.5 bg-gold-400/20 text-gold-400 border border-gold-400/30 rounded-lg text-xs font-bold hover:bg-gold-400/30 transition-all">
-                              <Plus className="h-3.5 w-3.5 inline mr-1" />Add
+                          <div className="flex items-center justify-between gap-4">
+                            <div className="flex items-center gap-2">
+                              <span className="text-[10px] font-black uppercase tracking-widest text-white/30">Time limit:</span>
+                              <input 
+                                type="number" 
+                                min={10} 
+                                max={600} 
+                                value={speakerTime} 
+                                onChange={e => setSpeakerTime(parseInt(e.target.value) || 60)} 
+                                className="w-20 glass-panel px-3 py-1.5 text-white font-bold text-center border-white/10 rounded-lg text-sm" 
+                              />
+                              <span className="text-white/20 text-[10px] font-bold">SECONDS</span>
+                            </div>
+                            <button onClick={addSpeaker} className="px-6 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-emerald-500/30 transition-all">
+                              Add Delegate
                             </button>
                           </div>
                         </div>
@@ -463,17 +586,43 @@ export default function MunCommand() {
 
                   {/* Current Speaker */}
                   {currentSpeaker && (
-                    <div className="glass-panel p-5 rounded-2xl border-emerald-500/20 bg-emerald-500/5 mb-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30">
-                          <Mic className="h-5 w-5 text-emerald-400 animate-pulse" />
+                    <div className="glass-panel p-6 rounded-2xl border-emerald-500/20 bg-emerald-500/5 mb-6 relative overflow-hidden group">
+                      <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <Mic size={60} className="text-emerald-400" />
+                      </div>
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+                        <div className="flex items-center gap-4">
+                          <div className="w-16 h-16 rounded-2xl bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30">
+                            <Mic className="h-8 w-8 text-emerald-400 animate-pulse" />
+                          </div>
+                          <div>
+                            <p className="text-emerald-400 text-[10px] font-bold uppercase tracking-widest mb-1">Floor is open</p>
+                            <p className="text-white font-black text-xl">{currentSpeaker.name}</p>
+                            <p className="text-white/40 text-sm font-medium">{currentSpeaker.country}</p>
+                          </div>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-emerald-400 text-[10px] font-bold uppercase tracking-widest">Now Speaking</p>
-                          <p className="text-white font-bold truncate">{currentSpeaker.name}</p>
-                          <p className="text-white/40 text-xs">{currentSpeaker.country}</p>
+
+                        {/* Yield Controls */}
+                        <div className="flex flex-wrap gap-2">
+                          {(['chair', 'questions', 'delegate'] as YieldType[]).map(type => (
+                            <button
+                              key={type}
+                              onClick={() => yieldTo(type)}
+                              className={`px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+                                yieldType === type
+                                  ? 'bg-gold-400 border-gold-400 text-diplomatic-950 shadow-[0_0_15px_rgba(247,163,28,0.3)]'
+                                  : 'bg-white/5 border-white/10 text-white/40 hover:text-white hover:bg-white/10'
+                              }`}
+                            >
+                              Yield to {type}
+                            </button>
+                          ))}
+                          {yieldType !== 'none' && (
+                            <button onClick={() => yieldTo('none')} className="p-2 text-white/20 hover:text-red-400 transition-colors">
+                              <X className="h-4 w-4" />
+                            </button>
+                          )}
                         </div>
-                        <p className="text-emerald-400 font-mono font-bold text-lg">{formatTime(timerRemaining)}</p>
                       </div>
                     </div>
                   )}
@@ -550,46 +699,53 @@ export default function MunCommand() {
                   )}
                 </AnimatePresence>
 
-                {/* Active Voting */}
-                {votingMotion && (
-                  <div className="glass-panel p-6 rounded-2xl border-gold-400/20 bg-gold-400/5 mb-4">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 rounded-xl bg-gold-400/20 flex items-center justify-center border border-gold-400/30">
-                        <Vote className="h-5 w-5 text-gold-400" />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-gold-400 text-[10px] font-bold uppercase tracking-widest">Voting In Progress</p>
-                        <p className="text-white font-bold">{votingMotion.description}</p>
-                        <p className="text-white/40 text-xs">{votingMotion.proposerName} ({votingMotion.proposerCountry})</p>
-                      </div>
-                    </div>
+                    {/* Active Voting UI */}
+                    {votingMotion && (
+                      <div className="glass-panel p-8 rounded-3xl border-gold-400/30 bg-gold-400/5 mb-8 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
+                          <Vote size={120} className="text-gold-400" />
+                        </div>
+                        <div className="relative z-10">
+                          <div className="flex items-center gap-4 mb-8">
+                            <div className="w-14 h-14 rounded-2xl bg-gold-400/20 flex items-center justify-center border border-gold-400/30">
+                              <Vote className="h-7 w-7 text-gold-400 shadow-[0_0_15px_rgba(247,163,28,0.3)]" />
+                            </div>
+                            <div>
+                              <p className="text-gold-400 text-xs font-black uppercase tracking-widest mb-1">Voting Procedure</p>
+                              <h4 className="text-white text-2xl font-black tracking-tight">{votingMotion.description}</h4>
+                              <p className="text-white/40 text-sm font-medium">Proposed by {votingMotion.proposerName} ({votingMotion.proposerCountry})</p>
+                            </div>
+                          </div>
 
-                    {/* Vote Buttons */}
-                    <div className="grid grid-cols-3 gap-3 mb-4">
-                      <motion.button onClick={() => addVote(votingMotion.id, 'for')} className="glass-panel p-3 rounded-xl border-emerald-500/20 bg-emerald-500/5 text-center hover:bg-emerald-500/10 transition-all" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                        <Check className="h-5 w-5 text-emerald-400 mx-auto mb-1" />
-                        <p className="text-emerald-400 text-2xl font-bold">{votingMotion.votesFor}</p>
-                        <p className="text-emerald-400/60 text-[10px] font-bold uppercase tracking-widest">For</p>
-                      </motion.button>
-                      <motion.button onClick={() => addVote(votingMotion.id, 'against')} className="glass-panel p-3 rounded-xl border-red-500/20 bg-red-500/5 text-center hover:bg-red-500/10 transition-all" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                        <X className="h-5 w-5 text-red-400 mx-auto mb-1" />
-                        <p className="text-red-400 text-2xl font-bold">{votingMotion.votesAgainst}</p>
-                        <p className="text-red-400/60 text-[10px] font-bold uppercase tracking-widest">Against</p>
-                      </motion.button>
-                      <motion.button onClick={() => addVote(votingMotion.id, 'abstain')} className="glass-panel p-3 rounded-xl border-white/10 bg-white/5 text-center hover:bg-white/10 transition-all" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                        <Minus className="h-5 w-5 text-white/40 mx-auto mb-1" />
-                        <p className="text-white/60 text-2xl font-bold">{votingMotion.votesAbstain}</p>
-                        <p className="text-white/30 text-[10px] font-bold uppercase tracking-widest">Abstain</p>
-                      </motion.button>
-                    </div>
+                          <div className="grid grid-cols-3 gap-4 mb-8">
+                            <motion.button onClick={() => addVote(votingMotion.id, 'for')} className="glass-card p-6 border-emerald-500/20 bg-emerald-500/5 text-center flex flex-col items-center gap-2 hover:bg-emerald-500/10 transition-all" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                              <CheckCircle2 className="h-8 w-8 text-emerald-400" />
+                              <span className="text-3xl font-black text-white">{votingMotion.votesFor}</span>
+                              <span className="text-emerald-400/60 text-[10px] font-black uppercase tracking-[0.2em]">In Favor</span>
+                            </motion.button>
+                            <motion.button onClick={() => addVote(votingMotion.id, 'against')} className="glass-card p-6 border-red-500/20 bg-red-500/5 text-center flex flex-col items-center gap-2 hover:bg-red-500/10 transition-all" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                              <X className="h-8 w-8 text-red-400" />
+                              <span className="text-3xl font-black text-white">{votingMotion.votesAgainst}</span>
+                              <span className="text-red-400/60 text-[10px] font-black uppercase tracking-[0.2em]">Against</span>
+                            </motion.button>
+                            <motion.button onClick={() => addVote(votingMotion.id, 'abstain')} className="glass-card p-6 border-white/10 bg-white/5 text-center flex flex-col items-center gap-2 hover:bg-white/10 transition-all" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                              <Minus className="h-8 w-8 text-white/40" />
+                              <span className="text-3xl font-black text-white">{votingMotion.votesAbstain}</span>
+                              <span className="text-white/30 text-[10px] font-black uppercase tracking-[0.2em]">Abstain</span>
+                            </motion.button>
+                          </div>
 
-                    <div className="text-right">
-                      <motion.button onClick={() => closeVoting(votingMotion.id)} className="px-4 py-2 bg-gold-400 text-diplomatic-950 rounded-lg text-xs font-bold uppercase tracking-widest shadow-[0_2px_10px_rgba(247,163,28,0.3)]" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                        Close Voting
-                      </motion.button>
-                    </div>
-                  </div>
-                )}
+                          <div className="flex justify-between items-center">
+                            <div className="text-white/20 text-[10px] font-black uppercase tracking-[0.2em]">
+                              Total Votes: {votingMotion.votesFor + votingMotion.votesAgainst + votingMotion.votesAbstain}
+                            </div>
+                            <motion.button onClick={() => closeVoting(votingMotion.id)} className="px-8 py-3 bg-gold-400 text-diplomatic-950 rounded-xl font-black uppercase tracking-widest text-xs shadow-[0_10px_30px_rgba(247,163,28,0.2)]" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                              End Procedure
+                            </motion.button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
                 {/* Motions list */}
                 <div className="space-y-2 max-h-[300px] overflow-y-auto">

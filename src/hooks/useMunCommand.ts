@@ -9,6 +9,11 @@ import type {
   SessionStatus,
   MotionType,
   VoteChoice,
+  YieldType,
+  Attendance,
+  AttendanceStatus,
+  SessionLog,
+  EventType,
 } from '@/types/munCommand';
 
 interface UseMunCommandOptions {
@@ -21,6 +26,8 @@ export function useMunCommand({ committeeId, isChair = false }: UseMunCommandOpt
   const [speakers, setSpeakers] = useState<SpeakerEntry[]>([]);
   const [motions, setMotions] = useState<Motion[]>([]);
   const [votes, setVotes] = useState<Vote[]>([]);
+  const [attendance, setAttendance] = useState<Attendance[]>([]);
+  const [logs, setLogs] = useState<SessionLog[]>([]);
   const [loading, setLoading] = useState(true);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -64,6 +71,24 @@ export function useMunCommand({ committeeId, isChair = false }: UseMunCommandOpt
     setVotes((data || []) as Vote[]);
   }, []);
 
+  const loadAttendance = useCallback(async (sessionId: string) => {
+    const { data } = await (supabase
+      .from('attendance') as any)
+      .select('*')
+      .eq('session_id', sessionId);
+    setAttendance((data || []) as Attendance[]);
+  }, []);
+
+  const loadLogs = useCallback(async (sessionId: string) => {
+    const { data } = await (supabase
+      .from('session_logs') as any)
+      .select('*')
+      .eq('session_id', sessionId)
+      .order('created_at', { ascending: false })
+      .limit(50);
+    setLogs((data || []) as SessionLog[]);
+  }, []);
+
   // ─── Initial load + realtime subscriptions ───────────────
   useEffect(() => {
     let mounted = true;
@@ -72,8 +97,12 @@ export function useMunCommand({ committeeId, isChair = false }: UseMunCommandOpt
       setLoading(true);
       const sess = await loadSession();
       if (sess && mounted) {
-        await loadSpeakers(sess.id);
-        await loadMotions(sess.id);
+        await Promise.all([
+          loadSpeakers(sess.id),
+          loadMotions(sess.id),
+          loadAttendance(sess.id),
+          loadLogs(sess.id)
+        ]);
       }
       if (mounted) setLoading(false);
     };
@@ -110,9 +139,22 @@ export function useMunCommand({ committeeId, isChair = false }: UseMunCommandOpt
         schema: 'public',
         table: 'votes',
       }, () => {
-        // Find the currently voting motion and reload its votes
         const votingMotion = motions.find(m => m.status === 'voting');
         if (votingMotion) loadVotes(votingMotion.id);
+      })
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'attendance',
+      }, () => {
+        if (session?.id) loadAttendance(session.id);
+      })
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'session_logs',
+      }, () => {
+        if (session?.id) loadLogs(session.id);
       })
       .subscribe();
 
@@ -179,16 +221,26 @@ export function useMunCommand({ committeeId, isChair = false }: UseMunCommandOpt
 
   const setMode = useCallback(async (mode: SessionMode) => {
     await updateSession({ current_mode: mode });
+    await logEvent('mode_changed', `Session mode changed to ${mode.replace('_', ' ')}`);
   }, [updateSession]);
+
+  const logEvent = useCallback(async (type: EventType, message: string, data: any = {}) => {
+    if (!session) return;
+    await (supabase.from('session_logs') as any).insert({
+      session_id: session.id,
+      event_type: type,
+      message,
+      event_data: data
+    });
+  }, [session]);
 
   const startTimer = useCallback(async (durationSeconds: number) => {
     await updateSession({
-      timer_duration: durationSeconds,
-      timer_remaining: durationSeconds,
       timer_running: true,
       timer_started_at: new Date().toISOString(),
     });
-  }, [updateSession]);
+    await logEvent('timer_started', `Timer set for ${durationSeconds} seconds`);
+  }, [updateSession, logEvent]);
 
   const pauseTimer = useCallback(async () => {
     await updateSession({ timer_running: false });
@@ -248,7 +300,14 @@ export function useMunCommand({ committeeId, isChair = false }: UseMunCommandOpt
         .eq('id', next.id);
       // Start the speaker's timer
       await startTimer(next.speaking_time);
-      await updateSession({ current_speaker_id: next.id });
+      await updateSession({ 
+        current_speaker_id: next.id,
+        yield_type: 'none',
+        yield_target_id: null 
+      });
+      await logEvent('speaker_started', `${next.delegate_name} (${next.delegate_country}) is now speaking`);
+    } else {
+      await updateSession({ current_speaker_id: null });
     }
     // Reload
     await loadSpeakers(session.id);
@@ -262,6 +321,43 @@ export function useMunCommand({ committeeId, isChair = false }: UseMunCommandOpt
   const requestFloor = useCallback(async (applicationId: string, name: string, country: string) => {
     await addSpeaker(applicationId, name, country);
   }, [addSpeaker]);
+
+  const yieldTo = useCallback(async (type: YieldType, targetId: string | null = null) => {
+    if (!session) return;
+    await updateSession({
+      yield_type: type,
+      yield_target_id: targetId
+    });
+    
+    let msg = `Speaker yielded to ${type}`;
+    if (type === 'delegate' && targetId) {
+      msg = `Speaker yielded to another delegate`;
+    }
+    await logEvent('yield', msg, { type, targetId });
+    
+    if (type === 'chair') {
+      await pauseTimer();
+    }
+  }, [session, updateSession, logEvent, pauseTimer]);
+
+  // ─── Attendance Actions ─────────────────────────────────
+
+  const markAttendance = useCallback(async (applicationId: string, status: AttendanceStatus) => {
+    if (!session) return;
+    await (supabase.from('attendance') as any).upsert({
+      session_id: session.id,
+      application_id: applicationId,
+      status,
+      updated_at: new Date().toISOString()
+    });
+  }, [session]);
+
+  const toggleVotingPower = useCallback(async (applicationId: string, canVote: boolean) => {
+    if (!session) return;
+    await (supabase.from('attendance') as any).update({
+      is_voting: canVote
+    }).eq('session_id', session.id).eq('application_id', applicationId);
+  }, [session]);
 
   // ─── Motion Actions ─────────────────────────────────────
 
@@ -291,8 +387,9 @@ export function useMunCommand({ committeeId, isChair = false }: UseMunCommandOpt
       .single();
     if (!error && data) {
       setMotions(prev => [data as Motion, ...prev]);
+      await logEvent('motion_proposed', `New motion by ${proposerCountry}: ${description}`);
     }
-  }, [session]);
+  }, [session, logEvent]);
 
   const secondMotion = useCallback(async (motionId: string, applicationId: string) => {
     await (supabase.from('motions') as any)
@@ -306,8 +403,9 @@ export function useMunCommand({ committeeId, isChair = false }: UseMunCommandOpt
       .update({ status: 'voting' })
       .eq('id', motionId);
     await updateSession({ current_mode: 'voting' });
+    await logEvent('voting_opened', `Voting opened for: ${motions.find(m => m.id === motionId)?.description}`);
     if (session) await loadMotions(session.id);
-  }, [session, loadMotions, updateSession]);
+  }, [session, loadMotions, updateSession, logEvent, motions]);
 
   const castVote = useCallback(async (motionId: string, applicationId: string, choice: VoteChoice) => {
     await (supabase.from('votes') as any)
@@ -342,8 +440,9 @@ export function useMunCommand({ committeeId, isChair = false }: UseMunCommandOpt
       .eq('id', motionId);
 
     await updateSession({ current_mode: 'gsl' });
+    await logEvent(passed ? 'motion_passed' : 'motion_failed', `Motion ${passed ? 'PASSED' : 'FAILED'} (${votesFor}-${votesAgainst}-${votesAbstain})`);
     if (session) await loadMotions(session.id);
-  }, [session, loadMotions, updateSession]);
+  }, [session, loadMotions, updateSession, logEvent]);
 
   // ─── Derived state ──────────────────────────────────────
 
@@ -363,11 +462,14 @@ export function useMunCommand({ committeeId, isChair = false }: UseMunCommandOpt
     waitingSpeakers,
     doneSpeakers,
     activeMotion,
+    attendance,
+    logs,
 
     // Session actions
     createSession,
     updateSession,
     setMode,
+    logEvent,
 
     // Timer
     startTimer,
@@ -380,6 +482,11 @@ export function useMunCommand({ committeeId, isChair = false }: UseMunCommandOpt
     nextSpeaker,
     removeSpeaker,
     requestFloor,
+    yieldTo,
+
+    // Attendance
+    markAttendance,
+    toggleVotingPower,
 
     // Motions & Voting
     proposeMotion,
