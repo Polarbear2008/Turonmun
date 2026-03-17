@@ -19,7 +19,8 @@ import {
   Star,
   Home,
   LogOut,
-  Bell
+  Bell,
+  Gavel
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import type { Tables } from '@/integrations/supabase/types';
@@ -48,6 +49,7 @@ interface ChairSidebarItem {
 
 const chairSidebarItems: ChairSidebarItem[] = [
   { id: 'overview', label: 'Overview', icon: Home, path: '/chair-dashboard' },
+  { id: 'command', label: 'MUN Command', icon: Gavel, path: '/chair-dashboard/command' },
   { id: 'papers', label: 'Position Papers', icon: FileText, path: '/chair-dashboard/papers' },
   { id: 'schedule', label: 'Schedule', icon: Calendar, path: '/chair-dashboard/schedule' },
   { id: 'delegates', label: 'Delegates', icon: Users, path: '/chair-dashboard/delegates' },

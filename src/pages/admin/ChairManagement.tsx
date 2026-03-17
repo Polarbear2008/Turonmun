@@ -133,12 +133,15 @@ const ChairManagement = () => {
     }
     setUserSearchLoading(true);
     try {
+      // Uses the search_users_for_admin function that searches both
+      // auth.users AND applications tables
       const { data } = await supabase
-        .from('users')
-        .select('id, full_name, email')
-        .or(`full_name.ilike.%${query}%,email.ilike.%${query}%`)
-        .limit(8);
-      setUserSearchResults(data || []);
+        .rpc('search_users_for_admin', { search_query: query });
+      setUserSearchResults((data || []).map((u: any) => ({
+        id: u.id,
+        full_name: u.full_name || u.email,
+        email: u.email,
+      })));
     } catch {
       setUserSearchResults([]);
     } finally {

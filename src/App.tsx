@@ -35,6 +35,7 @@ import ResetPasswordChange from "./pages/ResetPasswordChange";
 import AuthCallback from "./pages/AuthCallback";
 import RegistrationSelection from "./pages/RegistrationSelection";
 import NotFound from "./pages/NotFound";
+import MunCommand from "./pages/MunCommand";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminCommittees from "./pages/admin/AdminCommittees";
@@ -62,7 +63,9 @@ import ChairAnnouncements from "./pages/dashboard/chair/Announcements";
 import ChairPositionPapers from "./pages/dashboard/chair/PositionPapers";
 import ChairSchedule from "./pages/dashboard/chair/Schedule";
 import ChairDelegates from "./pages/dashboard/chair/Delegates";
+import CommandCenter from "./pages/dashboard/chair/CommandCenter";
 import ChairRoute from "./components/chair/ChairRoute";
+import LiveSession from "./pages/dashboard/LiveSession";
 import SplashScreen from "./components/ui/SplashScreen";
 
 const queryClient = new QueryClient({
@@ -150,6 +153,7 @@ const App = () => {
               <Route path="/seasons/4" element={<Season4 />} />
               <Route path="/seasons/Season5" element={<Season5 />} />
               <Route path="/seasons/camu" element={<SeasonCAMU />} />
+              <Route path="/mun-command" element={<MunCommand />} />
 
               <Route path="/admin" element={<AdminLogin />} />
               <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
@@ -175,6 +179,7 @@ const App = () => {
                 <Route path="papers" element={<ChairPositionPapers />} />
                 <Route path="schedule" element={<ChairSchedule />} />
                 <Route path="delegates" element={<ChairDelegates />} />
+                <Route path="command" element={<CommandCenter />} />
               </Route>
 
               {/* Dashboard Routes */}
@@ -182,6 +187,7 @@ const App = () => {
                 <Route index element={<Overview />} />
                 <Route path="application" element={<MyApplication />} />
                 <Route path="committee" element={<MyCommittee />} />
+                <Route path="live" element={<LiveSession />} />
               </Route>
 
               <Route path="*" element={<NotFound />} />
