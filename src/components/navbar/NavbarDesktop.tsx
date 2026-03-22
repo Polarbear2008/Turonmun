@@ -256,19 +256,6 @@ const NavbarDesktop: React.FC<NavbarDesktopProps> = ({ scrolled, isHomePage, nav
           </>
         )}
 
-        {/* Apply Now Button - Always visible */}
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <Link
-            to="/register"
-            className="bg-diplomatic-700 hover:bg-diplomatic-800 text-white text-sm font-medium h-10 px-6 rounded-md transition-all duration-300 flex items-center gap-2 shadow-lg border border-diplomatic-600 hover:-translate-y-0.5"
-          >
-            <Globe size={16} />
-            <span className="hidden sm:inline">Apply Now</span>
-          </Link>
-        </motion.div>
       </div>
     </div>
   );

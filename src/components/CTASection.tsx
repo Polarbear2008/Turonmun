@@ -147,7 +147,7 @@ export default function CTASection() {
               transition={{ type: "spring", stiffness: 500, damping: 15 }}
             >
               <CustomButton 
-                to="/register" 
+                to="/about" 
                 variant="accent"
                 size="lg"
                 className="group relative overflow-hidden"
@@ -158,7 +158,7 @@ export default function CTASection() {
                   animate={{ x: "200%" }}
                   transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
                 />
-                Apply Now
+                Learn More
               </CustomButton>
             </motion.div>
             

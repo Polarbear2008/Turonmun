@@ -277,20 +277,6 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({
                 </motion.div>
               )}
 
-              {/* Apply Now - Always Visible */}
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <Link
-                  to="/register"
-                  className="bg-gold-400 hover:bg-gold-400/90 text-diplomatic-900 font-medium py-3 px-4 rounded-md transition-all duration-300 w-full flex justify-center items-center gap-2 shadow-gold"
-                  onClick={toggleMenu}
-                >
-                  <Globe size={18} />
-                  <span>Apply Now</span>
-                </Link>
-              </motion.div>
             </div>
           </div>
         </motion.div>

@@ -221,8 +221,8 @@ const Hero = () => {
                 whileTap={{ scale: 0.95 }}
                 className="w-full sm:w-auto"
               >
-                <CustomButton to="/register" variant="accent" size="lg" className="group w-full sm:w-auto">
-                  Apply Now
+                <CustomButton to="/about" variant="accent" size="lg" className="group w-full sm:w-auto">
+                  Learn More
                   <ChevronRight className="transition-transform group-hover:translate-x-1" size={16} />
                 </CustomButton>
               </motion.div>
@@ -341,8 +341,8 @@ const Hero = () => {
                   className="text-center mb-4 sm:mb-6 relative z-10"
                   variants={transitionVariants.fadeVariants}
                 >
-                  <h2 className="text-xl sm:text-2xl font-display font-bold text-white mb-1 sm:mb-2">TIME LEFT TO APPLY</h2>
-                  <p className="text-sm sm:text-base text-white/70">This is your moment. Don't miss it</p>
+                  <h2 className="text-xl sm:text-2xl font-display font-bold text-white mb-1 sm:mb-2">REGISTRATION CLOSED</h2>
+                  <p className="text-sm sm:text-base text-white/70">The application deadline has passed</p>
                 </motion.div>
 
                 <motion.div
