@@ -21,7 +21,7 @@ const Login = () => {
   });
 
   const handleGoogleLogin = async () => {
-    const result = await signInWithGoogle();
+    const result = await signInWithGoogle(redirectTo);
     if (!result.success) {
       console.error('Google login failed:', result.error);
     }

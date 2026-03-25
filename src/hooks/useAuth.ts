@@ -207,15 +207,20 @@ export const useAuth = () => {
     }
   }, []);
 
-  const signInWithGoogle = useCallback(async (): Promise<AuthResponse> => {
+  const signInWithGoogle = useCallback(async (next?: string): Promise<AuthResponse> => {
     setIsLoading(true);
     setError(null);
+    
+    const callbackUrl = new URL(`${window.location.origin}/auth/callback`);
+    if (next) {
+      callbackUrl.searchParams.set('next', next);
+    }
 
     try {
       const { error: googleError } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: callbackUrl.toString(),
         },
       });
 

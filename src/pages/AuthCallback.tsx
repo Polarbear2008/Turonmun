@@ -34,11 +34,17 @@ const AuthCallback = () => {
             console.error('Error upserting user data:', insertError);
           }
 
+          // Get the next redirect path
+          const url = new URL(window.location.href);
+          const next = url.searchParams.get('next');
+
           // Subdomain-aware redirection
           const hostname = window.location.hostname;
           const isSubdomain = hostname.startsWith('admin.') || hostname.startsWith('chair.');
           
-          if (isSubdomain) {
+          if (next) {
+            navigate(next);
+          } else if (isSubdomain) {
             navigate('/dashboard');
           } else {
             navigate('/');

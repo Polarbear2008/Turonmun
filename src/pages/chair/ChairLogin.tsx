@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { Shield } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 const ChairLogin = () => {
     const [email, setEmail] = useState('');
@@ -10,6 +11,7 @@ const ChairLogin = () => {
     const [loading, setLoading] = useState(false);
     const { toast } = useToast();
     const navigate = useNavigate();
+    const { signInWithGoogle, isLoading: authLoading } = useAuth();
 
     // If a session already exists, verify chair role and redirect
     useEffect(() => {
@@ -150,13 +152,10 @@ const ChairLogin = () => {
                         onClick={async () => {
                             try {
                                 setLoading(true);
-                                const { error } = await supabase.auth.signInWithOAuth({
-                                    provider: 'google',
-                                    options: {
-                                        redirectTo: `${window.location.origin}/auth/callback`,
-                                    },
-                                });
-                                if (error) throw error;
+                                const result = await signInWithGoogle('/dashboard');
+                                if (!result.success && result.error) {
+                                    throw result.error;
+                                }
                             } catch (error: any) {
                                 toast({
                                     title: 'Login Failed',
@@ -167,7 +166,7 @@ const ChairLogin = () => {
                             }
                         }}
                         className="w-full flex items-center justify-center gap-3 px-4 py-2 border border-neutral-300 rounded-md hover:bg-neutral-50 transition-colors disabled:opacity-70 font-medium text-neutral-700"
-                        disabled={loading}
+                        disabled={loading || authLoading}
                     >
                         <svg className="w-5 h-5" viewBox="0 0 24 24">
                             <path
