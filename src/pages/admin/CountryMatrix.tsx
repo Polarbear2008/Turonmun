@@ -66,7 +66,7 @@ const COMMON_COUNTRIES = [
   'Ghana', 'Greece', 'India', 'Indonesia', 'Iran',
   'Iraq', 'Ireland', 'Israel', 'Italy', 'Japan',
   'Jordan', 'Kenya', 'Mexico', 'Morocco', 'Netherlands',
-  'New Zealand', 'Nigeria', 'Norway', 'Pakistan', 'Philippines',
+  'New Zealand', 'Nigeria', 'Norway', 'Pakistan', 'Palestine', 'Philippines',
   'Poland', 'Portugal', 'Qatar', 'Russia', 'Saudi Arabia',
   'Singapore', 'South Africa', 'South Korea', 'Spain', 'Sweden',
   'Switzerland', 'Syria', 'Thailand', 'Turkey', 'Ukraine',
@@ -221,8 +221,7 @@ const CountryMatrix = () => {
           application_id: delegateId,
           committee_id: committeeId,
           country_name: country,
-          country_code: getCountryCode(country).toUpperCase(),
-          assigned_at: new Date().toISOString()
+          country_code: getCountryCode(country).toUpperCase()
         })
         .select()
         .single();

@@ -38,6 +38,7 @@ export const countryToCode: { [key: string]: string } = {
   'Nigeria': 'ng',
   'Norway': 'no',
   'Pakistan': 'pk',
+  'Palestine': 'ps',
   'Philippines': 'ph',
   'Poland': 'pl',
   'Portugal': 'pt',
