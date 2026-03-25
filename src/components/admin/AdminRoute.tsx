@@ -16,16 +16,7 @@ const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // Check for common admin access first
-        const hasCommonAdminAccess = localStorage.getItem('TuronMUN_admin_access') === 'true';
-        
-        if (hasCommonAdminAccess) {
-          setIsAuthenticated(true);
-          setLoading(false);
-          return;
-        }
-        
-        // If not common admin, check Supabase session
+        // Check Supabase session
         const { data: { session } } = await supabase.auth.getSession();
         
         if (!session) {
@@ -60,10 +51,7 @@ const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
     };
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
-      const hasCommonAdminAccess = localStorage.getItem('TuronMUN_admin_access') === 'true';
-      if (!hasCommonAdminAccess) {
-        checkAuth();
-      }
+      checkAuth();
     });
 
     checkAuth();

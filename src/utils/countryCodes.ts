@@ -30,6 +30,7 @@ export const countryToCode: { [key: string]: string } = {
   'Italy': 'it',
   'Japan': 'jp',
   'Jordan': 'jo',
+  'Kazakhstan': 'kz',
   'Kenya': 'ke',
   'Mexico': 'mx',
   'Morocco': 'ma',

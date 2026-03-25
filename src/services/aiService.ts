@@ -1,72 +1,34 @@
+import { supabase } from '@/integrations/supabase/client';
+
 interface AIResponse {
   response: string;
 }
 
 class AIService {
-  private apiKey: string | undefined;
-
   constructor() {
-    // For Vite, we need to handle API keys differently
-    // In production, this should be handled by a backend service
-    this.apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+    // API logic moved to secure backend (Supabase Edge Functions)
   }
 
   async sendMessage(message: string, context?: string): Promise<string> {
-    // Use real AI responses if API key is available, otherwise use demo responses
-    if (!this.apiKey) {
-      return this.getDemoResponse(message);
-    }
-
     try {
-      const systemPrompt = `You are an AI assistant for Turon Model United Nations (TuronMUN). You are helpful, professional, and knowledgeable about:
-      - Model United Nations procedures and rules
-      - TuronMUN conference details (dates, venues, committees)
-      - Registration processes and requirements
-      - Committee information and topics
-      - Position paper guidelines
-      - Conference logistics and schedules
-      - General MUN best practices
-
-      Be conversational and friendly. Keep responses concise but informative. If you don't know specific information about TuronMUN, be honest and suggest contacting the organizing team at admin@turonmun.com.
-
-      Current context: ${context || 'general MUN assistance'}`;
-
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'gpt-3.5-turbo',
-          messages: [
-            {
-              role: 'system',
-              content: systemPrompt
-            },
-            {
-              role: 'user',
-              content: message
-            }
-          ],
-          max_tokens: 500,
-          temperature: 0.7,
-          presence_penalty: 0.3,
-          frequency_penalty: 0.3
-        })
+      // Call Supabase Edge Function securely instead of frontend API fetch
+      const { data, error } = await supabase.functions.invoke('ai-assistant', {
+        body: { message, context }
       });
 
-      if (!response.ok) {
-        throw new Error('OpenAI API request failed');
+      if (error) {
+        console.error('Edge Function Error:', error);
+        // Fallback to demo response if backend is unavailable
+        return this.getDemoResponse(message);
       }
 
-      const data = await response.json();
-      return data.choices?.[0]?.message?.content || 'I apologize, but I couldn\'t generate a response. Please try again.';
+      return data?.reply || this.getDemoResponse(message);
     } catch (error) {
       console.error('AI Service Error:', error);
-      return 'I\'m having trouble connecting right now. Please try again later or contact admin@turonmun.com for immediate assistance.';
+      return this.getDemoResponse(message);
     }
   }
+
 
   private getDemoResponse(message: string): string {
     const lowerMessage = message.toLowerCase();

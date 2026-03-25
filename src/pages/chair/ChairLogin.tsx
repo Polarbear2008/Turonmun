@@ -22,8 +22,12 @@ const ChairLogin = () => {
                     .eq('email', session.user.email)
                     .single();
 
-                // Only redirect if they ARE a chair
-                if (!error && adminData?.role === 'chair') {
+                // Roles that are allowed to access the chair dashboard
+                const allowedRoles = ['chair', 'co-chair', 'co_chair', 'director', 'superadmin'];
+                const userRole = (adminData as any)?.role?.toLowerCase();
+                
+                // Only redirect if they have an allowed role
+                if (!error && userRole && allowedRoles.includes(userRole)) {
                     navigate('/chair-dashboard');
                 }
                 // If not a chair, just stay on login page (don't sign out)
@@ -58,11 +62,16 @@ const ChairLogin = () => {
                     .eq('id', data.user.id)
                     .single();
 
-                if (adminError || adminData?.role !== 'chair') {
+                // Roles that are allowed to access the chair dashboard (case-insensitive check)
+                const allowedRoles = ['chair', 'co-chair', 'co_chair', 'director', 'superadmin'];
+                const userRole = (adminData as any)?.role?.toLowerCase();
+
+                if (adminError || !userRole || !allowedRoles.includes(userRole)) {
+                    console.error('Access Denied details:', { adminError, role: userRole, email: data.user.email });
                     await supabase.auth.signOut();
                     toast({
                         title: 'Access Denied',
-                        description: "You don't have permission to access the Chair Dashboard.",
+                        description: `Role "${userRole || 'not found'}" does not have permission for the Chair Dashboard.`,
                         variant: 'destructive',
                     });
                     return;

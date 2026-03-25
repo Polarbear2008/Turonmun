@@ -42,6 +42,7 @@ export default function CommitteeCard({
       <div className="relative w-full h-full overflow-hidden">
         <AnimatePresence>
           <motion.div 
+            key="main-content"
             className="relative w-full"
             animate={{ 
               height: isHovered ? '160px' : '100%',
@@ -111,6 +112,7 @@ export default function CommitteeCard({
           <AnimatePresence>
             {isHovered && (
               <motion.div 
+                key="hover-details"
                 className="p-5 flex flex-col flex-grow"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}

@@ -353,7 +353,7 @@ const Registration = () => {
           fee_agreement: formData.feeAgreement,
           final_confirmation: formData.finalConfirmation,
           payment_amount: fee.finalFee,
-          status: 'pending',
+          // Removed status payload to rely on secure database defaults
           photo_url: photoUrl,
           ielts_certificate_url: ieltsUrl,
           sat_certificate_url: satUrl,

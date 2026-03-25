@@ -43,9 +43,11 @@ export default function ChairRoute({ children }: ChairRouteProps) {
           return;
         }
 
-        // Allow access if user is chair or superadmin
-        const isChairOrAdmin = adminUser.role === 'chair' || adminUser.role === 'superadmin';
-        setIsChair(isChairOrAdmin);
+        // Allow access if user is chair, co-chair, director or superadmin
+        const allowedRoles = ['chair', 'co-chair', 'co_chair', 'director', 'superadmin'];
+        const userRole = (adminUser as any)?.role?.toLowerCase();
+        const isChairOrAdmin = userRole && allowedRoles.includes(userRole);
+        setIsChair(!!isChairOrAdmin);
         setLoading(false);
       } catch (error) {
         console.error('Error checking chair role:', error);

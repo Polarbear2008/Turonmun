@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PlusCircle, X, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { supabase, signInAsAdmin } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/client';
 import type { CommitteeFormData } from './types';
 import ImageUpload from './ImageUpload';
 
@@ -74,20 +74,7 @@ const CommitteeForm = ({
       return;
     }
     
-    // Check if authenticated
-    if (!isAuthenticated) {
-      const { success } = await signInAsAdmin();
-      if (!success) {
-        toast({
-          title: "Authentication Error",
-          description: "You must be logged in as admin to perform this action",
-          variant: "destructive",
-        });
-        return;
-      }
-      setIsAuthenticated(true);
-    }
-    
+    // Relying on AdminRoute and standard session for authentication
     try {
       setIsSubmitting(true);
       

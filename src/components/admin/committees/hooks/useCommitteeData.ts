@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { supabase, signInAsAdmin, checkAuthState } from '@/integrations/supabase/client';
+import { supabase, checkAuthState } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import type { Committee, CommitteeFormData, initialFormState } from '../types';
 
@@ -18,17 +18,12 @@ export const useCommitteeData = () => {
       const { isAuthenticated } = await checkAuthState();
 
       if (!isAuthenticated) {
-        // Try to sign in
-        const { success } = await signInAsAdmin();
-        setIsAuthenticated(success);
-
-        if (!success) {
-          toast({
-            title: "Authentication Error",
-            description: "Could not authenticate as admin. Some features may be limited.",
-            variant: "destructive",
-          });
-        }
+        setIsAuthenticated(false);
+        toast({
+          title: "Authentication Error",
+          description: "You are not authenticated as admin. Some features may be limited.",
+          variant: "destructive",
+        });
       } else {
         setIsAuthenticated(true);
       }

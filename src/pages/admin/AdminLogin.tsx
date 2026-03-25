@@ -48,19 +48,7 @@ const AdminLogin = () => {
     try {
       setLoading(true);
 
-      // Check for the common admin credentials
-      if (username === 'admin' && password === 'turonmun2025') {
-        // Skip Supabase auth and grant access directly
-        localStorage.setItem('TuronMUN_admin_access', 'true');
-        toast({
-          title: "Login Successful",
-          description: "Welcome to the admin dashboard",
-        });
-        navigate('/admin/dashboard');
-        return;
-      }
-
-      // Otherwise, proceed with Supabase auth for regular admin users
+      // Proceed with Supabase auth for regular admin users
       const { data, error } = await supabase.auth.signInWithPassword({
         email: username, // Use username as email for Supabase auth
         password,

@@ -2,12 +2,10 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const SUPABASE_URL = "https://sasuvkcqdqmmjobmgida.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNhc3V2a2NxZHFtbWpvYm1naWRhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA1MjkwNTEsImV4cCI6MjA2NjEwNTA1MX0.ZbjusSyiN3kBTVM10Ws_nKoqvblBQFvy8kZE6U3IqoQ";
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "";
+const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
 
-// Hardcoded admin credentials for demo purposes (in a real app, this would use proper auth)
-const ADMIN_EMAIL = "admin";
-const ADMIN_PASSWORD = "admin123";
+// We rely on actual Supabase session logic for authentication
 
 // Configure Supabase client with additional options for better reliability
 export const supabase = createClient<Database>(
@@ -33,23 +31,7 @@ export const supabase = createClient<Database>(
 );
 
 // Helper function to sign in as admin (simplified for demo)
-export const signInAsAdmin = async () => {
-  // For now, we'll use a simple token-based approach
-  // In production, you'd want proper email/password authentication
-  try {
-    // Store admin session in localStorage for demo purposes
-    localStorage.setItem('admin_session', JSON.stringify({
-      user: { email: ADMIN_EMAIL, role: 'admin' },
-      authenticated: true,
-      timestamp: Date.now()
-    }));
-    
-    return { success: true, message: 'Signed in as admin' };
-  } catch (error: any) {
-    console.error('Admin authentication error:', error.message);
-    return { success: false, message: error.message };
-  }
-};
+// Removed due to security risk. Admins should use standard login flows.
 
 // Helper function to check if Supabase connection is working
 export const checkSupabaseConnection = async () => {
@@ -66,24 +48,7 @@ export const checkSupabaseConnection = async () => {
 // Helper function to check current auth state
 export const checkAuthState = async () => {
   try {
-    // 1. Check for legacy/demo admin session
-    const adminSession = localStorage.getItem('admin_session');
-    if (adminSession) {
-      const session = JSON.parse(adminSession);
-      // Check if session is not expired (24 hours)
-      const isExpired = Date.now() - session.timestamp > 24 * 60 * 60 * 1000;
-      if (!isExpired && session.authenticated) {
-        return { isAuthenticated: true, user: session.user };
-      }
-    }
-
-    // 2. Check for common admin password access
-    const hasCommonAdminAccess = localStorage.getItem('TuronMUN_admin_access') === 'true';
-    if (hasCommonAdminAccess) {
-      return { isAuthenticated: true, user: { email: 'admin@turonmun.com', role: 'admin' } };
-    }
-
-    // 3. Check for real Supabase session
+    // Check for real Supabase session
     const { data: { session }, error } = await supabase.auth.getSession();
     if (session && !error) {
       return { isAuthenticated: true, user: session.user };

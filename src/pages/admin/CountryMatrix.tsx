@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { getCountryCode } from '@/utils/countryCodes';
+import { COMMON_COUNTRIES } from '@/data/countries';
 
 interface Committee {
   id: string;
@@ -57,21 +58,7 @@ interface CountryAvailability {
   };
 }
 
-// Extended list of countries commonly used in MUN conferences
-const COMMON_COUNTRIES = [
-  'Afghanistan', 'Albania', 'Algeria', 'Argentina', 'Australia',
-  'Austria', 'Bangladesh', 'Belgium', 'Brazil', 'Canada',
-  'Chile', 'China', 'Colombia', 'Cuba', 'Denmark',
-  'Egypt', 'Ethiopia', 'Finland', 'France', 'Germany',
-  'Ghana', 'Greece', 'India', 'Indonesia', 'Iran',
-  'Iraq', 'Ireland', 'Israel', 'Italy', 'Japan',
-  'Jordan', 'Kenya', 'Mexico', 'Morocco', 'Netherlands',
-  'New Zealand', 'Nigeria', 'Norway', 'Pakistan', 'Palestine', 'Philippines',
-  'Poland', 'Portugal', 'Qatar', 'Russia', 'Saudi Arabia',
-  'Singapore', 'South Africa', 'South Korea', 'Spain', 'Sweden',
-  'Switzerland', 'Syria', 'Thailand', 'Turkey', 'Ukraine',
-  'United Arab Emirates', 'United Kingdom', 'United States', 'Venezuela', 'Vietnam'
-];
+// Shared country list moved to @/data/countries.ts
 
 const CountryMatrix = () => {
   const { toast } = useToast();
@@ -113,17 +100,34 @@ const CountryMatrix = () => {
       if (delegatesError) throw delegatesError;
       setDelegates(delegatesData || []);
 
-      // Fetch country assignments
+      // 3. Fetch custom managed countries from database
+      const { data: managedData, error: managedError } = await (supabase
+        .from('matrix_countries') as any)
+        .select('country_name');
+        
+      if (managedError) {
+        console.error('Error fetching managed countries:', managedError);
+        // We don't throw yet to allow assigned countries to still load
+      }
+
+      const managedCountriesList = managedData?.map((m: any) => m.country_name) || [];
+
+      // 4. Fetch assignments to see which countries are already assigned
       const { data: assignmentsData, error: assignmentsError } = await supabase
         .from('country_assignments')
         .select('*');
 
+      if (committeesError) throw committeesError;
+      if (delegatesError) throw delegatesError;
       if (assignmentsError) throw assignmentsError;
 
-      // Get all unique countries from assignments and combine with current selection
-      const assignedCountries = Array.from(new Set(assignmentsData?.map((a: any) => a.country) || []));
-      // Ensure we don't lose currently selected countries, but also include any from assignments
-      const allCountries = Array.from(new Set([...selectedCountries, ...assignedCountries])).sort();
+      // Combine all sources: COMMON_COUNTRIES + managed + assigned
+      const assignedCountriesList = assignmentsData?.map((a: any) => a.country || a.country_name).filter(Boolean) || [];
+      const allCountries = Array.from(new Set([
+        ...COMMON_COUNTRIES,
+        ...managedCountriesList,
+        ...assignedCountriesList
+      ])).sort();
 
       setSelectedCountries(allCountries);
 
@@ -153,7 +157,7 @@ const CountryMatrix = () => {
 
       committeesData.forEach(committee => {
         const assignment = assignmentsData.find(
-          a => a.country === country && a.committee_id === committee.id
+          a => (a.country === country || a.country_name === country) && a.committee_id === committee.id
         );
 
         const delegate = assignment
@@ -207,22 +211,35 @@ const CountryMatrix = () => {
         return;
       }
 
-      // Delete any existing assignment for this country+committee slot first
-      await (supabase.from('country_assignments') as any)
-        .delete()
-        .eq('country', country)
-        .eq('committee_id', committeeId);
+      // Delete any existing assignment for this country+committee slot first (fail-safe)
+      // We do separate calls to avoid failing if one column is missing
+      try {
+        await (supabase.from('country_assignments') as any)
+          .delete()
+          .eq('country', country)
+          .eq('committee_id', committeeId);
+      } catch (e) {}
+
+      try {
+        await (supabase.from('country_assignments') as any)
+          .delete()
+          .eq('country_name', country)
+          .eq('committee_id', committeeId);
+      } catch (e) {}
 
       // Now insert the new assignment and get the data back
+      // Providing all potential column names to ensure compatibility with different schema versions
+      const insertData: any = {
+        application_id: delegateId,
+        committee_id: committeeId,
+        country: country,
+        country_name: country,
+        country_code: getCountryCode(country).toUpperCase()
+      };
+
       const { data, error } = await (supabase
         .from('country_assignments') as any)
-        .insert({
-          country: country,
-          application_id: delegateId,
-          committee_id: committeeId,
-          country_name: country,
-          country_code: getCountryCode(country).toUpperCase()
-        })
+        .insert(insertData)
         .select()
         .single();
 
@@ -278,15 +295,24 @@ const CountryMatrix = () => {
       const assignment = matrix.find(m => m.country === country)?.committees[committeeId];
       if (!assignment?.assignmentId) return;
 
-      // Since assignmentId might be a temporary mock ID from assignCountry() bypassing .select(),
+      // Since assignmentId might be a temporary mock ID from assignCountry(),
       // we must delete by country and committee_id instead of just id.
-      const { error } = await supabase
-        .from('country_assignments')
-        .delete()
-        .eq('committee_id', committeeId)
-        .eq('country', country);
+      // Use separate calls for fail-safety if columns are missing.
+      try {
+        await supabase
+          .from('country_assignments')
+          .delete()
+          .eq('committee_id', committeeId)
+          .eq('country', country);
+      } catch (e) {}
 
-      if (error) throw error;
+      try {
+        await supabase
+          .from('country_assignments')
+          .delete()
+          .eq('committee_id', committeeId)
+          .eq('country_name', country);
+      } catch (e) {}
 
       // Also remove assigned_committee_id from the application
       // We don't throw on error because RLS might block this specific update
@@ -332,9 +358,9 @@ const CountryMatrix = () => {
     }
   };
 
-  const deleteCountry = (countryToDelete: string) => {
+  const deleteCountry = async (countryName: string) => {
     // Check if there are active assignments
-    const hasAssignments = matrix.find(m => m.country === countryToDelete && Object.values(m.committees).some(c => c.assigned));
+    const hasAssignments = matrix.find(m => m.country === countryName && Object.values(m.committees).some(c => c.assigned));
 
     if (hasAssignments) {
       toast({
@@ -343,6 +369,25 @@ const CountryMatrix = () => {
         variant: "destructive",
       });
       return;
+    }
+    const countryToDelete = countryName;
+    
+    // 1. Update database
+    if (!COMMON_COUNTRIES.includes(countryToDelete)) {
+      const { error } = await (supabase
+        .from('matrix_countries') as any)
+        .delete()
+        .eq('country_name', countryToDelete);
+      
+      if (error) {
+        console.error('Error removing country from database:', error);
+        toast({
+          title: "Delete Failed",
+          description: "Could not remove country from database.",
+          variant: "destructive"
+        });
+        return;
+      }
     }
 
     const updatedCountries = selectedCountries.filter(c => c !== countryToDelete);
@@ -358,7 +403,7 @@ const CountryMatrix = () => {
     });
   };
 
-  const addCustomCountry = () => {
+  const addCustomCountry = async () => {
     if (!newCountry.trim()) return;
 
     if (selectedCountries.includes(newCountry.trim())) {
@@ -370,12 +415,31 @@ const CountryMatrix = () => {
       return;
     }
 
-    const updatedCountries = [...selectedCountries, newCountry.trim()];
+    const countryToAdd = newCountry.trim();
+
+    // 1. Store in database
+    if (!COMMON_COUNTRIES.includes(countryToAdd)) {
+      const { error } = await (supabase
+        .from('matrix_countries') as any)
+        .insert({ country_name: countryToAdd });
+      
+      if (error && error.code !== '23505') {
+        console.error('Could not save to matrix_countries table:', error);
+        toast({
+          title: "Database Error",
+          description: "Failed to save country to database. Please ensure you have run the migration.",
+          variant: "destructive"
+        });
+        return;
+      }
+    }
+
+    const updatedCountries = Array.from(new Set([...selectedCountries, countryToAdd])).sort();
     setSelectedCountries(updatedCountries);
 
     // Add to matrix
     const newCountryData: CountryAvailability = {
-      country: newCountry.trim(),
+      country: countryToAdd,
       committees: {}
     };
 
@@ -637,7 +701,7 @@ const CountryMatrix = () => {
                         return (
                           <td key={committee.id} className="px-4 py-4 text-center">
                             <div className="flex flex-col items-center gap-2">
-                              {slot.assigned ? (
+                              {slot?.assigned ? (
                                 <div className="w-full">
                                   <div className="flex items-center justify-center gap-2 px-3 py-2 bg-purple-50 border border-purple-200 rounded-lg">
                                     <Lock className="h-4 w-4 text-purple-600" />

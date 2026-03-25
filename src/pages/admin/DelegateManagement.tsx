@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { supabase } from '@/integrations/supabase/client';
 import { getCountryCode } from '@/utils/countryCodes';
+import { COMMON_COUNTRIES } from '@/data/countries';
 import { useToast } from '@/hooks/use-toast';
 import {
   Search,
@@ -25,21 +26,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { useNavigate } from 'react-router-dom';
 
-// Shared country list (same as CountryMatrix)
-const COMMON_COUNTRIES = [
-  'Afghanistan', 'Albania', 'Algeria', 'Argentina', 'Australia',
-  'Austria', 'Bangladesh', 'Belgium', 'Brazil', 'Canada',
-  'Chile', 'China', 'Colombia', 'Cuba', 'Denmark',
-  'Egypt', 'Ethiopia', 'Finland', 'France', 'Germany',
-  'Ghana', 'Greece', 'India', 'Indonesia', 'Iran',
-  'Iraq', 'Ireland', 'Israel', 'Italy', 'Japan',
-  'Jordan', 'Kenya', 'Mexico', 'Morocco', 'Netherlands',
-  'New Zealand', 'Nigeria', 'Norway', 'Pakistan', 'Palestine', 'Philippines',
-  'Poland', 'Portugal', 'Qatar', 'Russia', 'Saudi Arabia',
-  'Singapore', 'South Africa', 'South Korea', 'Spain', 'Sweden',
-  'Switzerland', 'Syria', 'Thailand', 'Turkey', 'Ukraine',
-  'United Arab Emirates', 'United Kingdom', 'United States', 'Venezuela', 'Vietnam'
-];
+// Shared country list moved to @/data/countries.ts
 
 interface Delegate {
   id: string;
@@ -74,6 +61,7 @@ const DelegateManagement = () => {
   const [paymentFilter, setPaymentFilter] = useState('all');
   const [selectedDelegates, setSelectedDelegates] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
+  const [managedCountries, setManagedCountries] = useState<string[]>([]);
 
   // Assignment modal state
   const [assignModal, setAssignModal] = useState<{
@@ -107,6 +95,13 @@ const DelegateManagement = () => {
         .from('country_assignments') as any)
         .select('*, committees(name)');
 
+      // Fetch managed countries
+      const { data: managedData } = await (supabase
+        .from('matrix_countries') as any)
+        .select('country_name');
+
+      setManagedCountries(managedData?.map((m: any) => m.country_name) || []);
+
       // Map database records to Delegate interface
       const mappedDelegates: Delegate[] = (data || []).map(app => {
         // Parse notes to extract grade, emergency contact, etc.
@@ -128,7 +123,7 @@ const DelegateManagement = () => {
           committee_preference_3: app.committee_preference3,
           country_preference: app.country,
           assigned_committee: assignment?.committees?.name,
-          assigned_country: assignment?.country_name,
+          assigned_country: assignment?.country || assignment?.country_name,
           application_status: (app.status || 'pending') as any,
           payment_status: (app.payment_status || 'pending') as any,
           documents_submitted: !!(app.has_ielts || app.has_sat),
@@ -360,6 +355,7 @@ const DelegateManagement = () => {
       }
 
       // Insert new assignment into country_assignments table
+      // Providing all potential column names to ensure compatibility with different schema versions
       const { error } = await (supabase
         .from('country_assignments') as any)
         .insert({
@@ -786,7 +782,8 @@ const DelegateManagement = () => {
                   </div>
                   {/* Country list */}
                   <div className="border border-gray-200 rounded-lg max-h-52 overflow-y-auto">
-                    {COMMON_COUNTRIES
+                    {Array.from(new Set([...COMMON_COUNTRIES, ...managedCountries]))
+                      .sort()
                       .filter(c => c.toLowerCase().includes(countrySearch.toLowerCase()))
                       .map(country => (
                         <button
