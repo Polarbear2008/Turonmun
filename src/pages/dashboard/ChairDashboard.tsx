@@ -52,10 +52,10 @@ const isChairSubdomain = window.location.hostname.startsWith('chair.');
 
 const chairSidebarItems: ChairSidebarItem[] = [
   { id: 'overview', label: 'Overview', icon: Home, path: isChairSubdomain ? '/dashboard' : '/chair-dashboard' },
-  { id: 'command', label: 'MUN Command', icon: Gavel, path: isChairSubdomain ? '/dashboard/command' : '/chair-dashboard/command' },
-  { id: 'papers', label: 'Position Papers', icon: FileText, path: isChairSubdomain ? '/dashboard/papers' : '/chair-dashboard/papers' },
-  { id: 'schedule', label: 'Schedule', icon: Calendar, path: isChairSubdomain ? '/dashboard/schedule' : '/chair-dashboard/schedule' },
-  { id: 'delegates', label: 'Delegates', icon: Users, path: isChairSubdomain ? '/dashboard/delegates' : '/chair-dashboard/delegates' },
+  { id: 'command', label: 'MUN Command', icon: Gavel, path: isChairSubdomain ? '/command' : '/chair-dashboard/command' },
+  { id: 'papers', label: 'Position Papers', icon: FileText, path: isChairSubdomain ? '/papers' : '/chair-dashboard/papers' },
+  { id: 'schedule', label: 'Schedule', icon: Calendar, path: isChairSubdomain ? '/schedule' : '/chair-dashboard/schedule' },
+  { id: 'delegates', label: 'Delegates', icon: Users, path: isChairSubdomain ? '/delegates' : '/chair-dashboard/delegates' },
 ];
 
 export default function ChairDashboardLayout() {

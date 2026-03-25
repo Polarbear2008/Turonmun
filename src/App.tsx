@@ -144,13 +144,13 @@ const App = () => {
       return (
         <Routes>
           <Route path="/" element={<ChairLogin />} />
-          <Route path="/dashboard" element={<ChairRoute><ChairDashboardLayout /></ChairRoute>}>
-            <Route index element={<ChairOverview />} />
-            <Route path="announcements" element={<ChairAnnouncements />} />
-            <Route path="papers" element={<ChairPositionPapers />} />
-            <Route path="schedule" element={<ChairSchedule />} />
-            <Route path="delegates" element={<ChairDelegates />} />
-            <Route path="command" element={<CommandCenter />} />
+          <Route element={<ChairRoute><ChairDashboardLayout /></ChairRoute>}>
+            <Route path="/dashboard" element={<ChairOverview />} />
+            <Route path="/announcements" element={<ChairAnnouncements />} />
+            <Route path="/papers" element={<ChairPositionPapers />} />
+            <Route path="/schedule" element={<ChairSchedule />} />
+            <Route path="/delegates" element={<ChairDelegates />} />
+            <Route path="/command" element={<CommandCenter />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
