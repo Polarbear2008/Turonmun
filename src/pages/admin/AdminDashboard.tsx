@@ -107,12 +107,14 @@ const AdminDashboard = () => {
   const pending = applicationsByStatus['pending'] || 0;
   const rejected = applicationsByStatus['rejected'] || 0;
 
+  const isAdminSubdomain = window.location.hostname.startsWith('admin.');
+
   const navCards = [
     {
       title: 'Delegate Management',
       description: 'View, filter, and manage all delegate applications and assignments',
       icon: Users,
-      path: '/admin/delegates',
+      path: isAdminSubdomain ? '/delegates' : '/admin/delegates',
       gradient: 'from-blue-500 to-blue-600',
       badge: counts.applications > 0 ? `${counts.applications} total` : null,
     },
@@ -120,7 +122,7 @@ const AdminDashboard = () => {
       title: 'Committee Management',
       description: 'Create committees, assign chairs, upload background guides',
       icon: Globe,
-      path: '/admin/committees',
+      path: isAdminSubdomain ? '/committees' : '/admin/committees',
       gradient: 'from-indigo-500 to-indigo-600',
       badge: counts.committees > 0 ? `${counts.committees} active` : null,
     },
@@ -128,7 +130,7 @@ const AdminDashboard = () => {
       title: 'Country Matrix',
       description: 'Manage country-committee assignments and availability',
       icon: MapPin,
-      path: '/admin/country-matrix',
+      path: isAdminSubdomain ? '/country-matrix' : '/admin/country-matrix',
       gradient: 'from-teal-500 to-teal-600',
       badge: null,
     },
@@ -136,7 +138,7 @@ const AdminDashboard = () => {
       title: 'Applications',
       description: 'Review, approve, reject and manage incoming applications',
       icon: UserCheck,
-      path: '/admin/applications',
+      path: isAdminSubdomain ? '/applications' : '/admin/applications',
       gradient: 'from-purple-500 to-purple-600',
       badge: pending > 0 ? `${pending} pending` : null,
     },
@@ -144,7 +146,7 @@ const AdminDashboard = () => {
       title: 'Chairperson Panel',
       description: 'Manage chair accounts, roles and permissions',
       icon: Shield,
-      path: '/admin/chairs',
+      path: isAdminSubdomain ? '/chairs' : '/admin/chairs',
       gradient: 'from-orange-500 to-orange-600',
       badge: null,
     },
@@ -152,7 +154,7 @@ const AdminDashboard = () => {
       title: 'Analytics Dashboard',
       description: 'Registration trends, committee balance and demographics',
       icon: BarChart3,
-      path: '/admin/analytics',
+      path: isAdminSubdomain ? '/analytics' : '/admin/analytics',
       gradient: 'from-pink-500 to-rose-500',
       badge: null,
     },
@@ -160,7 +162,7 @@ const AdminDashboard = () => {
       title: 'Messages',
       description: 'Read and respond to contact form submissions',
       icon: Mail,
-      path: '/admin/messages',
+      path: isAdminSubdomain ? '/messages' : '/admin/messages',
       gradient: 'from-red-500 to-red-600',
       badge: counts.unread_messages > 0 ? `${counts.unread_messages} unread` : null,
     },
@@ -168,7 +170,7 @@ const AdminDashboard = () => {
       title: 'Schedule',
       description: 'Manage conference schedule and events',
       icon: Calendar,
-      path: '/admin/schedule',
+      path: isAdminSubdomain ? '/schedule' : '/admin/schedule',
       gradient: 'from-green-500 to-emerald-600',
       badge: null,
     },
@@ -250,7 +252,7 @@ const AdminDashboard = () => {
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-sm font-semibold text-gray-700">Application Status Overview</h3>
-                <Link to="/admin/applications" className="text-xs text-blue-600 hover:underline">View all →</Link>
+                <Link to={isAdminSubdomain ? "/applications" : "/admin/applications"} className="text-xs text-blue-600 hover:underline">View all →</Link>
               </div>
               <div className="flex h-3 w-full rounded-full overflow-hidden gap-0.5">
                 {approved > 0 && <div className="bg-green-500 rounded-l-full" style={{ width: `${(approved / totalApps) * 100}%` }} title={`Approved: ${approved}`} />}
@@ -299,7 +301,7 @@ const AdminDashboard = () => {
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-gray-800">Recent Applications</h3>
-                <Link to="/admin/applications" className="text-xs text-blue-600 hover:underline font-medium">View all →</Link>
+                <Link to={isAdminSubdomain ? "/applications" : "/admin/applications"} className="text-xs text-blue-600 hover:underline font-medium">View all →</Link>
               </div>
               {recentApplications.length > 0 ? (
                 <div className="space-y-3">
@@ -331,7 +333,7 @@ const AdminDashboard = () => {
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-gray-800">Recent Messages</h3>
-                <Link to="/admin/messages" className="text-xs text-blue-600 hover:underline font-medium">View all →</Link>
+                <Link to={isAdminSubdomain ? "/messages" : "/admin/messages"} className="text-xs text-blue-600 hover:underline font-medium">View all →</Link>
               </div>
               {recentMessages.length > 0 ? (
                 <div className="space-y-3">
