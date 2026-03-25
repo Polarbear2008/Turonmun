@@ -56,6 +56,9 @@ export default function CommandCenter() {
     motions,
     activeMotion,
     votes,
+    attendance,
+    markAttendance,
+    logs,
     createSession,
     setMode,
     startTimer,
@@ -68,6 +71,7 @@ export default function CommandCenter() {
     openVoting,
     closeVoting,
     loadVotes,
+    yieldTo,
   } = useMunCommand({ committeeId: committeeId || '', isChair: true });
 
   // Local UI state
