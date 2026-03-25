@@ -7,7 +7,8 @@ if (!rootElement) throw new Error("Root element not found");
 
 createRoot(rootElement).render(<App />);
 
-// Register Service Worker
+// Register Service Worker (Temporarily disabled due to subdomain 503 issues)
+/* 
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js')
@@ -17,5 +18,16 @@ if ('serviceWorker' in navigator) {
             .catch((registrationError) => {
                 console.log('SW registration failed: ', registrationError);
             });
+    });
+}
+*/
+
+// Kill-switch to unregister any existing service workers
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for(let registration of registrations) {
+            registration.unregister();
+            console.log('SW unregistered successfully');
+        }
     });
 }
