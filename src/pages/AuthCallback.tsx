@@ -34,11 +34,25 @@ const AuthCallback = () => {
             console.error('Error upserting user data:', insertError);
           }
 
-          // Redirect to home page
-          navigate('/');
+          // Subdomain-aware redirection
+          const hostname = window.location.hostname;
+          const isSubdomain = hostname.startsWith('admin.') || hostname.startsWith('chair.');
+          
+          if (isSubdomain) {
+            navigate('/dashboard');
+          } else {
+            navigate('/');
+          }
         } else {
           // No session found, redirect to login
-          navigate('/login');
+          const hostname = window.location.hostname;
+          if (hostname.startsWith('admin.')) {
+            navigate('/login');
+          } else if (hostname.startsWith('chair.')) {
+            navigate('/');
+          } else {
+            navigate('/login');
+          }
         }
       } catch (err) {
         console.error('Unexpected error in auth callback:', err);
