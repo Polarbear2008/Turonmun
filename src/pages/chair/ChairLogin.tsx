@@ -28,7 +28,8 @@ const ChairLogin = () => {
                 
                 // Only redirect if they have an allowed role
                 if (!error && userRole && allowedRoles.includes(userRole)) {
-                    navigate('/chair-dashboard');
+                    const isChairSubdomain = window.location.hostname.startsWith('chair.');
+                    navigate(isChairSubdomain ? '/dashboard' : '/chair-dashboard');
                 }
                 // If not a chair, just stay on login page (don't sign out)
             }
@@ -81,7 +82,8 @@ const ChairLogin = () => {
                     title: 'Login Successful',
                     description: 'Welcome to the Chair Dashboard',
                 });
-                navigate('/chair-dashboard');
+                const isChairSubdomain = window.location.hostname.startsWith('chair.');
+                navigate(isChairSubdomain ? '/dashboard' : '/chair-dashboard');
             }
         } catch (err: any) {
             toast({

@@ -69,7 +69,8 @@ const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
     );
   }
 
-  return isAuthenticated ? <>{children}</> : <Navigate to="/admin" replace />;
+  const isAdminSubdomain = window.location.hostname.startsWith('admin.');
+  return isAuthenticated ? <>{children}</> : <Navigate to={isAdminSubdomain ? "/" : "/admin"} replace />;
 };
 
 export default AdminRoute;

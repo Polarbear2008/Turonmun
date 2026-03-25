@@ -71,7 +71,8 @@ export default function ChairRoute({ children }: ChairRouteProps) {
   }
 
   if (!isChair) {
-    return <Navigate to="/chair-login" state={{ from: location }} replace />;
+    const isChairSubdomain = window.location.hostname.startsWith('chair.');
+    return <Navigate to={isChairSubdomain ? "/" : "/chair-login"} state={{ from: location }} replace />;
   }
 
   return <>{children}</>;

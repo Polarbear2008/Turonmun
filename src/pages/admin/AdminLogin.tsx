@@ -25,7 +25,8 @@ const AdminLogin = () => {
           .single();
 
         if (!adminError && adminData) {
-          navigate('/admin/dashboard');
+          const isAdminSubdomain = window.location.hostname.startsWith('admin.');
+          navigate(isAdminSubdomain ? '/dashboard' : '/admin/dashboard');
         }
       }
     };
@@ -76,7 +77,8 @@ const AdminLogin = () => {
             title: "Login Successful",
             description: "Welcome to the admin dashboard",
           });
-          navigate('/admin/dashboard');
+          const isAdminSubdomain = window.location.hostname.startsWith('admin.');
+          navigate(isAdminSubdomain ? '/dashboard' : '/admin/dashboard');
         }
       }
     } catch (error: any) {
