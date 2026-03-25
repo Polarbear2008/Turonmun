@@ -127,7 +127,22 @@ const NavbarDesktop: React.FC<NavbarDesktopProps> = ({ scrolled, isHomePage, nav
     }, 300); // Increased delay for smoother transition
   }, [navigate, isNavigating]);
 
-  const dashboardPath = isChair ? '/chair-dashboard' : '/dashboard';
+  const handleDashboardClick = (e: React.MouseEvent) => {
+    const role = localStorage.getItem('userRole') || 'delegate';
+    const adminRoles = ['superadmin', 'admin'];
+    const chairRoles = ['chair', 'co-chair', 'co_chair', 'director'];
+
+    if (adminRoles.includes(role.toLowerCase())) {
+      e.preventDefault();
+      window.open('https://admin.turonmun.com', '_blank');
+    } else if (chairRoles.includes(role.toLowerCase())) {
+      e.preventDefault();
+      window.open('https://chair.turonmun.com', '_blank');
+    } else {
+      // For delegates, just let the Link handle it normally
+      // But we can also use navigate here if needed
+    }
+  };
 
   return (
     <div className="hidden md:flex md:items-center md:space-x-6">
@@ -214,7 +229,8 @@ const NavbarDesktop: React.FC<NavbarDesktopProps> = ({ scrolled, isHomePage, nav
             whileTap={{ scale: 0.95 }}
           >
             <Link
-              to={dashboardPath}
+              to="/dashboard"
+              onClick={handleDashboardClick}
               className="bg-gold-400 hover:bg-gold-400/90 text-diplomatic-900 text-sm font-medium h-10 px-6 rounded-md transition-all duration-300 flex items-center gap-2 shadow-gold hover:-translate-y-0.5"
             >
               <LogIn size={16} />

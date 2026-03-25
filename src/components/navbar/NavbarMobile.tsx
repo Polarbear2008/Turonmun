@@ -117,7 +117,24 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({
     checkChairRole();
   }, [user?.email]);
 
-  const dashboardPath = isChair ? '/chair-dashboard' : '/dashboard';
+  const handleDashboardClick = (e: React.MouseEvent) => {
+    const role = localStorage.getItem('userRole') || 'delegate';
+    const adminRoles = ['superadmin', 'admin'];
+    const chairRoles = ['chair', 'co-chair', 'co_chair', 'director'];
+
+    if (adminRoles.includes(role.toLowerCase())) {
+      e.preventDefault();
+      toggleMenu();
+      window.open('https://admin.turonmun.com', '_blank');
+    } else if (chairRoles.includes(role.toLowerCase())) {
+      e.preventDefault();
+      toggleMenu();
+      window.open('https://chair.turonmun.com', '_blank');
+    } else {
+      // For delegates, let the Link handle it
+      toggleMenu();
+    }
+  };
 
   const toggleDropdown = (name: string) => {
     setOpenDropdowns(prev =>
@@ -253,9 +270,9 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({
                   whileTap={{ scale: 0.98 }}
                 >
                   <Link
-                    to={dashboardPath}
+                    to="/dashboard"
                     className="bg-diplomatic-600 hover:bg-diplomatic-500 text-white font-medium py-3 px-4 rounded-md transition-all duration-300 w-full flex justify-center items-center gap-2 shadow-md"
-                    onClick={toggleMenu}
+                    onClick={handleDashboardClick}
                   >
                     <User size={18} />
                     <span>Dashboard</span>

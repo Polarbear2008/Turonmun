@@ -183,29 +183,6 @@ const App = () => {
         <Route path="/seasons/camu" element={<SeasonCAMU />} />
         <Route path="/mun-command" element={<MunCommand />} />
 
-        {/* Existing /admin routes kept for fallback */}
-        <Route path="/admin" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-        <Route path="/admin/committees" element={<AdminRoute><AdminCommittees /></AdminRoute>} />
-        <Route path="/admin/schedule" element={<AdminRoute><AdminSchedule /></AdminRoute>} />
-        <Route path="/admin/resources" element={<AdminRoute><AdminResources /></AdminRoute>} />
-        <Route path="/admin/applications" element={<AdminRoute><AdminApplications /></AdminRoute>} />
-        <Route path="/admin/messages" element={<AdminRoute><AdminMessages /></AdminRoute>} />
-        <Route path="/admin/delegates" element={<AdminRoute><DelegateManagement /></AdminRoute>} />
-        <Route path="/admin/country-matrix" element={<AdminRoute><CountryMatrix /></AdminRoute>} />
-        <Route path="/admin/chairs" element={<AdminRoute><ChairManagement /></AdminRoute>} />
-        <Route path="/admin/analytics" element={<AdminRoute><AdminAnalytics /></AdminRoute>} />
-
-        <Route path="/chair-login" element={<ChairLogin />} />
-        <Route path="/chair-dashboard" element={<ChairRoute><ChairDashboardLayout /></ChairRoute>}>
-          <Route index element={<ChairOverview />} />
-          <Route path="announcements" element={<ChairAnnouncements />} />
-          <Route path="papers" element={<ChairPositionPapers />} />
-          <Route path="schedule" element={<ChairSchedule />} />
-          <Route path="delegates" element={<ChairDelegates />} />
-          <Route path="command" element={<CommandCenter />} />
-        </Route>
-
         <Route path="/dashboard" element={<Dashboard />}>
           <Route index element={<Overview />} />
           <Route path="application" element={<MyApplication />} />
