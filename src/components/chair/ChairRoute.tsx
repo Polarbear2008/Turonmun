@@ -70,7 +70,7 @@ export default function ChairRoute({ children }: ChairRouteProps) {
     );
   }
 
-  if (!isChair) {
+  if (!isChair && !loading) {
     const isChairSubdomain = window.location.hostname.startsWith('chair.');
     return <Navigate to={isChairSubdomain ? "/" : "/chair-login"} state={{ from: location }} replace />;
   }

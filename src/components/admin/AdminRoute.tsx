@@ -24,6 +24,8 @@ const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
           setLoading(false);
           return;
         }
+
+        const userId = session.user.id;
         
         // Check if user is an admin
         const { data: adminData, error: adminError } = await supabase
@@ -69,8 +71,12 @@ const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
     );
   }
 
-  const isAdminSubdomain = window.location.hostname.startsWith('admin.');
-  return isAuthenticated ? <>{children}</> : <Navigate to={isAdminSubdomain ? "/" : "/admin"} replace />;
+  if (!isAuthenticated && !loading) {
+     const isAdminSubdomain = window.location.hostname.startsWith('admin.');
+     return <Navigate to={isAdminSubdomain ? "/" : "/admin"} replace />;
+  }
+
+  return <>{children}</>;
 };
 
 export default AdminRoute;
