@@ -112,9 +112,111 @@ const ScrollToTop = () => {
   return null;
 };
 
+import { useSubdomain } from "./hooks/use-subdomain";
+import { Navigate } from "react-router-dom";
+
 const App = () => {
   const { isOpen, closeMessage } = useSecretMessage();
   const [showSplash, setShowSplash] = useState(true);
+  const subdomain = useSubdomain();
+
+  const renderRoutes = () => {
+    if (subdomain === 'admin') {
+      return (
+        <Routes>
+          <Route path="/" element={<AdminLogin />} />
+          <Route path="/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+          <Route path="/committees" element={<AdminRoute><AdminCommittees /></AdminRoute>} />
+          <Route path="/schedule" element={<AdminRoute><AdminSchedule /></AdminRoute>} />
+          <Route path="/resources" element={<AdminRoute><AdminResources /></AdminRoute>} />
+          <Route path="/applications" element={<AdminRoute><AdminApplications /></AdminRoute>} />
+          <Route path="/messages" element={<AdminRoute><AdminMessages /></AdminRoute>} />
+          <Route path="/delegates" element={<AdminRoute><DelegateManagement /></AdminRoute>} />
+          <Route path="/country-matrix" element={<AdminRoute><CountryMatrix /></AdminRoute>} />
+          <Route path="/chairs" element={<AdminRoute><ChairManagement /></AdminRoute>} />
+          <Route path="/analytics" element={<AdminRoute><AdminAnalytics /></AdminRoute>} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      );
+    }
+
+    if (subdomain === 'chair') {
+      return (
+        <Routes>
+          <Route path="/" element={<ChairLogin />} />
+          <Route path="/dashboard" element={<ChairRoute><ChairDashboardLayout /></ChairRoute>}>
+            <Route index element={<ChairOverview />} />
+            <Route path="announcements" element={<ChairAnnouncements />} />
+            <Route path="papers" element={<ChairPositionPapers />} />
+            <Route path="schedule" element={<ChairSchedule />} />
+            <Route path="delegates" element={<ChairDelegates />} />
+            <Route path="command" element={<CommandCenter />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      );
+    }
+
+    return (
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/event-updates" element={<EventUpdates />} />
+        <Route path="/committees" element={<Committees />} />
+        <Route path="/register" element={<RegistrationSelection />} />
+        <Route path="/register/delegate" element={<ProtectedRoute><Registration /></ProtectedRoute>} />
+        <Route path="/registration" element={<RegistrationSelection />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/reset-password-change" element={<ResetPasswordChange />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route path="/schedule" element={<Schedule />} />
+        <Route path="/resources" element={<ResourcesPage />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/past-conferences" element={<PastConferences />} />
+        <Route path="/seasons/1" element={<Season1 />} />
+        <Route path="/seasons/2" element={<Season2 />} />
+        <Route path="/seasons/3" element={<Season3 />} />
+        <Route path="/seasons/4" element={<Season4 />} />
+        <Route path="/seasons/Season5" element={<Season5 />} />
+        <Route path="/seasons/camu" element={<SeasonCAMU />} />
+        <Route path="/mun-command" element={<MunCommand />} />
+
+        {/* Existing /admin routes kept for fallback */}
+        <Route path="/admin" element={<AdminLogin />} />
+        <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+        <Route path="/admin/committees" element={<AdminRoute><AdminCommittees /></AdminRoute>} />
+        <Route path="/admin/schedule" element={<AdminRoute><AdminSchedule /></AdminRoute>} />
+        <Route path="/admin/resources" element={<AdminRoute><AdminResources /></AdminRoute>} />
+        <Route path="/admin/applications" element={<AdminRoute><AdminApplications /></AdminRoute>} />
+        <Route path="/admin/messages" element={<AdminRoute><AdminMessages /></AdminRoute>} />
+        <Route path="/admin/delegates" element={<AdminRoute><DelegateManagement /></AdminRoute>} />
+        <Route path="/admin/country-matrix" element={<AdminRoute><CountryMatrix /></AdminRoute>} />
+        <Route path="/admin/chairs" element={<AdminRoute><ChairManagement /></AdminRoute>} />
+        <Route path="/admin/analytics" element={<AdminRoute><AdminAnalytics /></AdminRoute>} />
+
+        <Route path="/chair-login" element={<ChairLogin />} />
+        <Route path="/chair-dashboard" element={<ChairRoute><ChairDashboardLayout /></ChairRoute>}>
+          <Route index element={<ChairOverview />} />
+          <Route path="announcements" element={<ChairAnnouncements />} />
+          <Route path="papers" element={<ChairPositionPapers />} />
+          <Route path="schedule" element={<ChairSchedule />} />
+          <Route path="delegates" element={<ChairDelegates />} />
+          <Route path="command" element={<CommandCenter />} />
+        </Route>
+
+        <Route path="/dashboard" element={<Dashboard />}>
+          <Route index element={<Overview />} />
+          <Route path="application" element={<MyApplication />} />
+          <Route path="committee" element={<MyCommittee />} />
+          <Route path="live" element={<LiveSession />} />
+        </Route>
+
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    );
+  };
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -130,68 +232,8 @@ const App = () => {
             {/* Secret Message Easter Egg */}
             <SecretMessage isOpen={isOpen} onClose={closeMessage} />
 
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/event-updates" element={<EventUpdates />} />
-              <Route path="/committees" element={<Committees />} />
-              <Route path="/register" element={<RegistrationSelection />} />
-              <Route path="/register/delegate" element={<ProtectedRoute><Registration /></ProtectedRoute>} />
-              <Route path="/registration" element={<RegistrationSelection />} /> {/* Keeping for backward compatibility */}
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/reset-password-change" element={<ResetPasswordChange />} />
-              <Route path="/auth/callback" element={<AuthCallback />} />
-              <Route path="/schedule" element={<Schedule />} />
-              <Route path="/resources" element={<ResourcesPage />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/past-conferences" element={<PastConferences />} />
-              <Route path="/seasons/1" element={<Season1 />} />
-              <Route path="/seasons/2" element={<Season2 />} />
-              <Route path="/seasons/3" element={<Season3 />} />
-              <Route path="/seasons/4" element={<Season4 />} />
-              <Route path="/seasons/Season5" element={<Season5 />} />
-              <Route path="/seasons/camu" element={<SeasonCAMU />} />
-              <Route path="/mun-command" element={<MunCommand />} />
-
-              <Route path="/admin" element={<AdminLogin />} />
-              <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-              <Route path="/admin/committees" element={<AdminRoute><AdminCommittees /></AdminRoute>} />
-              <Route path="/admin/schedule" element={<AdminRoute><AdminSchedule /></AdminRoute>} />
-              <Route path="/admin/resources" element={<AdminRoute><AdminResources /></AdminRoute>} />
-              <Route path="/admin/applications" element={<AdminRoute><AdminApplications /></AdminRoute>} />
-              <Route path="/admin/messages" element={<AdminRoute><AdminMessages /></AdminRoute>} />
-              <Route path="/admin/delegates" element={<AdminRoute><DelegateManagement /></AdminRoute>} />
-              <Route path="/admin/country-matrix" element={<AdminRoute><CountryMatrix /></AdminRoute>} />
-
-              <Route path="/admin/chairs" element={<AdminRoute><ChairManagement /></AdminRoute>} />
-              <Route path="/admin/analytics" element={<AdminRoute><AdminAnalytics /></AdminRoute>} />
-
-
-              {/* Chair Login */}
-              <Route path="/chair-login" element={<ChairLogin />} />
-
-              {/* Chair Dashboard Routes */}
-              <Route path="/chair-dashboard" element={<ChairRoute><ChairDashboardLayout /></ChairRoute>}>
-                <Route index element={<ChairOverview />} />
-                <Route path="announcements" element={<ChairAnnouncements />} />
-                <Route path="papers" element={<ChairPositionPapers />} />
-                <Route path="schedule" element={<ChairSchedule />} />
-                <Route path="delegates" element={<ChairDelegates />} />
-                <Route path="command" element={<CommandCenter />} />
-              </Route>
-
-              {/* Dashboard Routes */}
-              <Route path="/dashboard" element={<Dashboard />}>
-                <Route index element={<Overview />} />
-                <Route path="application" element={<MyApplication />} />
-                <Route path="committee" element={<MyCommittee />} />
-                <Route path="live" element={<LiveSession />} />
-              </Route>
-
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            {renderRoutes()}
+            
             <AIAssistant />
             <Analytics />
             <SpeedInsights />

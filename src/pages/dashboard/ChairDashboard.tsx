@@ -47,12 +47,15 @@ interface ChairSidebarItem {
   path: string;
 }
 
+// Use window.location.hostname to adjust paths if needed
+const isChairSubdomain = window.location.hostname.startsWith('chair.');
+
 const chairSidebarItems: ChairSidebarItem[] = [
-  { id: 'overview', label: 'Overview', icon: Home, path: '/chair-dashboard' },
-  { id: 'command', label: 'MUN Command', icon: Gavel, path: '/chair-dashboard/command' },
-  { id: 'papers', label: 'Position Papers', icon: FileText, path: '/chair-dashboard/papers' },
-  { id: 'schedule', label: 'Schedule', icon: Calendar, path: '/chair-dashboard/schedule' },
-  { id: 'delegates', label: 'Delegates', icon: Users, path: '/chair-dashboard/delegates' },
+  { id: 'overview', label: 'Overview', icon: Home, path: isChairSubdomain ? '/' : '/chair-dashboard' },
+  { id: 'command', label: 'MUN Command', icon: Gavel, path: isChairSubdomain ? '/command' : '/chair-dashboard/command' },
+  { id: 'papers', label: 'Position Papers', icon: FileText, path: isChairSubdomain ? '/papers' : '/chair-dashboard/papers' },
+  { id: 'schedule', label: 'Schedule', icon: Calendar, path: isChairSubdomain ? '/schedule' : '/chair-dashboard/schedule' },
+  { id: 'delegates', label: 'Delegates', icon: Users, path: isChairSubdomain ? '/delegates' : '/chair-dashboard/delegates' },
 ];
 
 export default function ChairDashboardLayout() {
@@ -77,11 +80,13 @@ export default function ChairDashboardLayout() {
         }
 
         // Get admin user record for the authenticated user
-        const { data: adminUser, error: adminError } = await supabase
+        const { data: adminData, error: adminError } = await supabase
           .from('admin_users')
           .select('*')
           .eq('email', user.email)
           .single();
+
+        const adminUser = adminData as any;
 
         if (adminError) {
           console.error('Error fetching admin user:', adminError);

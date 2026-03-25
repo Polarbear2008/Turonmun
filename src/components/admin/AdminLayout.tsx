@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useSubdomain } from '@/hooks/use-subdomain';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -26,13 +27,16 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title }) => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const subdomain = useSubdomain();
+  const isAdminSubdomain = subdomain === 'admin';
+
   const navItems = [
-    { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { path: '/admin/committees', label: 'Committees', icon: Users },
-    { path: '/admin/schedule', label: 'Schedule', icon: Calendar },
-    { path: '/admin/resources', label: 'Resources', icon: FileText },
-    { path: '/admin/applications', label: 'Applications', icon: Users },
-    { path: '/admin/messages', label: 'Messages', icon: Mail },
+    { path: isAdminSubdomain ? '/dashboard' : '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { path: isAdminSubdomain ? '/committees' : '/admin/committees', label: 'Committees', icon: Users },
+    { path: isAdminSubdomain ? '/schedule' : '/admin/schedule', label: 'Schedule', icon: Calendar },
+    { path: isAdminSubdomain ? '/resources' : '/admin/resources', label: 'Resources', icon: FileText },
+    { path: isAdminSubdomain ? '/applications' : '/admin/applications', label: 'Applications', icon: Users },
+    { path: isAdminSubdomain ? '/messages' : '/admin/messages', label: 'Messages', icon: Mail },
   ];
 
   const handleLogout = async () => {
@@ -42,7 +46,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, title }) => {
         title: "Logged Out",
         description: "You have been successfully logged out",
       });
-      navigate('/admin');
+      navigate(isAdminSubdomain ? '/' : '/admin');
     } catch (error) {
       console.error('Logout error:', error);
       toast({
